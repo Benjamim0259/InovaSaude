@@ -40,3 +40,15 @@ logs/
 # Docker
 .docker/
 docker-compose.override.yml
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+*.exe
+*.nupkg
+.vs/
