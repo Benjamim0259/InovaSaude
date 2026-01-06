@@ -1,0 +1,246 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PerfilUsuario {
+  ADMIN
+  COORDENADOR
+  GESTOR
+  AUDITOR
+}
+
+enum StatusUsuario {
+  ATIVO
+  INATIVO
+  BLOQUEADO
+}
+
+enum StatusDespesa {
+  PENDENTE
+  APROVADA
+  PAGA
+  REJEITADA
+  CANCELADA
+}
+
+enum TipoDespesa {
+  FIXA
+  VARIAVEL
+  EVENTUAL
+}
+
+enum StatusUBS {
+  ATIVA
+  INATIVA
+  EM_MANUTENCAO
+}
+
+enum StatusFornecedor {
+  ATIVO
+  INATIVO
+  BLOQUEADO
+}
+
+enum TipoCategoria {
+  PESSOAL
+  MATERIAL
+  SERVICO
+  EQUIPAMENTO
+  INFRAESTRUTURA
+  OUTROS
+}
+
+model Usuario {
+  id            String         @id @default(uuid())
+  nome          String
+  email         String         @unique
+  senhaHash     String         @map("senha_hash")
+  perfil        PerfilUsuario
+  status        StatusUsuario  @default(ATIVO)
+  telefone      String?
+  ubsId         String?        @map("ubs_id")
+  ultimoAcesso  DateTime?      @map("ultimo_acesso")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  ubs                  UBS?              @relation("UsuarioUBS", fields: [ubsId], references: [id])
+  ubsCoordenadas       UBS[]             @relation("CoordenadorUBS")
+  despesasCriadas      Despesa[]         @relation("UsuarioCriador")
+  despesasAprovadas    Despesa[]         @relation("UsuarioAprovador")
+  logsAuditoria        LogAuditoria[]
+
+  @@map("usuarios")
+}
+
+model UBS {
+  id                      String      @id @default(uuid())
+  nome                    String
+  codigo                  String      @unique
+  endereco                String?
+  bairro                  String?
+  cep                     String?
+  telefone                String?
+  email                   String?
+  coordenadorId           String?     @map("coordenador_id")
+  status                  StatusUBS   @default(ATIVA)
+  capacidadeAtendimento   Int?        @map("capacidade_atendimento")
+  observacoes             String?
+  createdAt               DateTime    @default(now()) @map("created_at")
+  updatedAt               DateTime    @updatedAt @map("updated_at")
+
+  coordenador  Usuario?   @relation("CoordenadorUBS", fields: [coordenadorId], references: [id])
+  usuarios     Usuario[]  @relation("UsuarioUBS")
+  despesas     Despesa[]
+
+  @@map("ubs")
+}
+
+model Fornecedor {
+  id            String            @id @default(uuid())
+  razaoSocial   String            @map("razao_social")
+  nomeFantasia  String?           @map("nome_fantasia")
+  cnpj          String            @unique
+  inscricaoEstadual String?       @map("inscricao_estadual")
+  endereco      String?
+  bairro        String?
+  cidade        String?
+  estado        String?
+  cep           String?
+  telefone      String?
+  email         String?
+  contato       String?
+  status        StatusFornecedor  @default(ATIVO)
+  observacoes   String?
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+
+  despesas      Despesa[]
+
+  @@map("fornecedores")
+}
+
+model Categoria {
+  id              String         @id @default(uuid())
+  nome            String
+  descricao       String?
+  tipo            TipoCategoria
+  orcamentoMensal Decimal?       @map("orcamento_mensal") @db.Decimal(15, 2)
+  cor             String?        // Cor para visualização nos gráficos
+  icone           String?        // Nome do ícone para UI
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  despesas        Despesa[]
+
+  @@map("categorias")
+}
+
+model Despesa {
+  id                String        @id @default(uuid())
+  descricao         String
+  valor             Decimal       @db.Decimal(15, 2)
+  dataVencimento    DateTime?     @map("data_vencimento")
+  dataPagamento     DateTime?     @map("data_pagamento")
+  categoriaId       String        @map("categoria_id")
+  tipo              TipoDespesa
+  status            StatusDespesa @default(PENDENTE)
+  ubsId             String        @map("ubs_id")
+  fornecedorId      String?       @map("fornecedor_id")
+  usuarioCriacaoId  String        @map("usuario_criacao_id")
+  usuarioAprovacaoId String?      @map("usuario_aprovacao_id")
+  dataAprovacao     DateTime?     @map("data_aprovacao")
+  observacoes       String?
+  numeroNota        String?       @map("numero_nota")
+  numeroEmpenho     String?       @map("numero_empenho")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  categoria         Categoria     @relation(fields: [categoriaId], references: [id])
+  ubs               UBS           @relation(fields: [ubsId], references: [id])
+  fornecedor        Fornecedor?   @relation(fields: [fornecedorId], references: [id])
+  usuarioCriacao    Usuario       @relation("UsuarioCriador", fields: [usuarioCriacaoId], references: [id])
+  usuarioAprovacao  Usuario?      @relation("UsuarioAprovador", fields: [usuarioAprovacaoId], references: [id])
+  anexos            Anexo[]
+  historicoStatus   HistoricoDespesa[]
+
+  @@index([ubsId])
+  @@index([categoriaId])
+  @@index([fornecedorId])
+  @@index([status])
+  @@index([dataVencimento])
+  @@map("despesas")
+}
+
+model Anexo {
+  id          String   @id @default(uuid())
+  despesaId   String   @map("despesa_id")
+  nomeArquivo String   @map("nome_arquivo")
+  caminhoArquivo String @map("caminho_arquivo")
+  tipoArquivo String   @map("tipo_arquivo")
+  tamanho     Int
+  descricao   String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  despesa     Despesa  @relation(fields: [despesaId], references: [id], onDelete: Cascade)
+
+  @@index([despesaId])
+  @@map("anexos")
+}
+
+model HistoricoDespesa {
+  id          String        @id @default(uuid())
+  despesaId   String        @map("despesa_id")
+  statusAnterior StatusDespesa? @map("status_anterior")
+  statusNovo  StatusDespesa @map("status_novo")
+  usuarioId   String?       @map("usuario_id")
+  observacao  String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  despesa     Despesa       @relation(fields: [despesaId], references: [id], onDelete: Cascade)
+
+  @@index([despesaId])
+  @@map("historico_despesas")
+}
+
+model LogAuditoria {
+  id          String   @id @default(uuid())
+  usuarioId   String?  @map("usuario_id")
+  acao        String
+  entidade    String
+  entidadeId  String?  @map("entidade_id")
+  dadosAntigos String? @map("dados_antigos") @db.Text
+  dadosNovos  String?  @map("dados_novos") @db.Text
+  ip          String?
+  userAgent   String?  @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  usuario     Usuario? @relation(fields: [usuarioId], references: [id])
+
+  @@index([usuarioId])
+  @@index([entidade])
+  @@index([createdAt])
+  @@map("logs_auditoria")
+}
+
+model ImportacaoLote {
+  id              String   @id @default(uuid())
+  nomeArquivo     String   @map("nome_arquivo")
+  totalRegistros  Int      @map("total_registros")
+  registrosProcessados Int  @map("registros_processados")
+  registrosErro   Int      @map("registros_erro")
+  status          String   // PROCESSANDO, CONCLUIDO, ERRO
+  usuarioId       String   @map("usuario_id")
+  erros           String?  @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("importacao_lotes")
+}

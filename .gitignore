@@ -10,6 +10,20 @@ node_modules/
 /build
 /dist
 
+# Backend specific
+backend/node_modules/
+backend/dist/
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/logs/*
+!backend/logs/.gitkeep
+
+# Frontend specific
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
 # Misc
 .DS_Store
 .env
@@ -40,3 +54,7 @@ logs/
 # Docker
 .docker/
 docker-compose.override.yml
+
+# OS
+.DS_Store
+Thumbs.db
