@@ -10,67 +10,119 @@ Plataforma web para gestão financeira de Unidades Básicas de Saúde (UBS), per
 
 ### Stack Tecnológica
 
+**Backend:**
+- C# / .NET 8
+- ASP.NET Core Web API
+- Entity Framework Core
+- PostgreSQL
+- JWT Authentication
+- Serilog (Logging)
+- Clean Architecture
+
 **Frontend:**
 - React 18+
 - TypeScript
 - Vite
-- TailwindCSS
+- React Router
 - React Query
-- React Hook Form
-- Zod (validação)
-
-**Backend:**
-- Node.js 20+
-- TypeScript
-- Express
-- PostgreSQL 15+
-- Prisma ORM
-- JWT Authentication
+- Axios
+- React Hook Form + Zod
 
 **Infraestrutura:**
 - Docker & Docker Compose
 - Nginx (reverse proxy)
+- GitHub Actions (CI/CD)
 
 ## 📁 Estrutura do Projeto
 
 ```
 InovaSaude/
-├── docs/                    # Documentação
-├── frontend/               # Aplicação React
-├── backend/                # API Node.js
-├── database/               # Scripts e migrations
-├── docker/                 # Configurações Docker
-└── infrastructure/         # Configs de infraestrutura
+├── backend/                # Backend .NET
+│   ├── src/
+│   │   ├── InovaSaude.API/           # Web API
+│   │   ├── InovaSaude.Core/          # Domain entities
+│   │   ├── InovaSaude.Application/   # Services & DTOs
+│   │   └── InovaSaude.Infrastructure/ # Data & Repositories
+│   └── tests/
+│       └── InovaSaude.Tests/         # Unit tests
+├── frontend/               # Frontend React
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   ├── pages/          # Page components
+│   │   ├── services/       # API services
+│   │   ├── contexts/       # React contexts
+│   │   ├── hooks/          # Custom hooks
+│   │   ├── types/          # TypeScript types
+│   │   └── utils/          # Utility functions
+│   └── public/
+└── docker-compose.yml      # Docker configuration
 ```
 
 ## 🚀 Início Rápido
 
 ### Pré-requisitos
+- .NET 8 SDK
 - Node.js 20+
-- Docker & Docker Compose
-- PostgreSQL 15+
+- PostgreSQL 15+ (ou Docker)
+- Docker & Docker Compose (opcional)
 
-### Instalação
+### Opção 1: Executar com Docker
 
 ```bash
 # Clone o repositório
 git clone https://github.com/Benjamim0259/InovaSaude.git
 cd InovaSaude
 
-# Configure as variáveis de ambiente
-cp .env.example .env
-
 # Suba os containers
 docker-compose up -d
+
+# Acesse a aplicação
+# Frontend: http://localhost
+# Backend API: http://localhost:5000
+# Swagger: http://localhost:5000/swagger
+```
+
+### Opção 2: Executar localmente
+
+#### Backend
+
+```bash
+# Navegue até o diretório do backend
+cd backend
+
+# Restaure as dependências
+dotnet restore
+
+# Configure a string de conexão no appsettings.json
+# Ajuste a ConnectionString para seu PostgreSQL local
+
+# Execute as migrations (quando criadas)
+# dotnet ef database update --project src/InovaSaude.Infrastructure
+
+# Execute a API
+dotnet run --project src/InovaSaude.API
+
+# A API estará disponível em http://localhost:5000
+# Swagger UI em http://localhost:5000/swagger
+```
+
+#### Frontend
+
+```bash
+# Navegue até o diretório do frontend
+cd frontend
 
 # Instale as dependências
 npm install
 
-# Execute as migrations
-npm run migrate
+# Configure o arquivo .env
+cp .env.example .env
+# Edite .env e ajuste VITE_API_URL se necessário
 
-# Inicie o desenvolvimento
+# Execute em modo desenvolvimento
 npm run dev
+
+# O frontend estará disponível em http://localhost:5173
 ```
 
 ## 📊 Funcionalidades Principais
@@ -79,41 +131,198 @@ npm run dev
 
 1. **Gestão de UBS**
    - Cadastro e gerenciamento de unidades
-   - Hierarquia organizacional
-   - Indicadores por unidade
+   - Associação com municípios
+   - Atribuição de coordenadores
 
 2. **Controle de Despesas**
-   - Lançamento manual de despesas
-   - Importação em massa (CSV/Excel)
-   - Categorização automática
-   - Anexo de documentos
+   - Lançamento de despesas
+   - Categorização
+   - Upload de comprovantes
+   - Aprovação e rejeição
+   - Status (Pendente, Aprovada, Rejeitada)
 
 3. **Análise e Relatórios**
-   - Dashboards interativos
-   - Comparativos entre UBS
-   - Séries históricas
-   - Alertas de desvios
+   - Dashboard com indicadores
+   - Relatórios por UBS
+   - Relatórios por categoria
+   - Comparativos por período
+   - Exportação (Excel/PDF - futuro)
 
 4. **Administração**
    - Gestão de usuários e permissões
    - Auditoria de ações
-   - Configurações do sistema
+   - Logs do sistema
 
 ## 👥 Perfis de Usuário
 
-- **Administrador:** Acesso total ao sistema
-- **Coordenador:** Gestão de UBS específicas
-- **Analista:** Visualização e relatórios
-- **Operador:** Lançamento de despesas
+- **Admin:** Acesso total ao sistema
+- **Gestor:** Gestão de UBS e despesas do município
+- **Coordenador:** Lançamento de despesas da UBS específica
 
-## 📝 Licença
+## 🔐 Autenticação e Segurança
 
-Este projeto está sob licença proprietária.
+- JWT (JSON Web Tokens) para autenticação
+- Senhas criptografadas com bcrypt
+- Autorização baseada em roles (Admin, Gestor, Coordenador)
+- CORS configurado
+- HTTPS obrigatório em produção
+- Proteção contra SQL Injection (EF Core)
+- Proteção contra XSS (React)
+
+## 📡 API Endpoints
+
+### Autenticação
+```
+POST   /api/auth/login      - Login
+POST   /api/auth/register   - Registrar usuário (Admin only)
+GET    /api/auth/me         - Obter usuário atual
+POST   /api/auth/refresh    - Refresh token
+```
+
+### UBS
+```
+GET    /api/ubs             - Listar UBS
+GET    /api/ubs/{id}        - Obter UBS por ID
+POST   /api/ubs             - Criar UBS
+PUT    /api/ubs/{id}        - Atualizar UBS
+DELETE /api/ubs/{id}        - Deletar UBS
+```
+
+### Despesas
+```
+GET    /api/despesas                    - Listar despesas
+GET    /api/despesas/{id}               - Obter despesa por ID
+POST   /api/despesas                    - Criar despesa
+PUT    /api/despesas/{id}               - Atualizar despesa
+DELETE /api/despesas/{id}               - Deletar despesa
+POST   /api/despesas/{id}/comprovante   - Upload de comprovante
+```
+
+### Health Check
+```
+GET    /health              - Status da API e banco de dados
+```
+
+## 🛠️ Desenvolvimento
+
+### Rodando Testes
+
+```bash
+# Backend
+cd backend
+dotnet test
+
+# Frontend
+cd frontend
+npm test
+```
+
+### Linting e Formatação
+
+```bash
+# Backend (use ferramentas do .NET)
+dotnet format
+
+# Frontend
+npm run lint
+```
+
+### Build para Produção
+
+```bash
+# Backend
+cd backend
+dotnet publish -c Release -o ./publish
+
+# Frontend
+cd frontend
+npm run build
+```
+
+## 🚢 Deploy
+
+### Opção 1: Azure App Service
+
+1. Configure Azure App Service e Azure SQL Database
+2. Configure variáveis de ambiente no App Service
+3. Use GitHub Actions para deploy automático
+
+### Opção 2: Heroku
+
+1. Configure Heroku Postgres
+2. Configure variáveis de ambiente
+3. Faça deploy via Git ou Docker
+
+### Opção 3: Docker em VPS
+
+```bash
+# No servidor
+git clone https://github.com/Benjamim0259/InovaSaude.git
+cd InovaSaude
+docker-compose up -d
+```
+
+## 📝 Configuração
+
+### Variáveis de Ambiente (Backend)
+
+```env
+ConnectionStrings__DefaultConnection=Host=localhost;Port=5432;Database=inovasaude;Username=postgres;Password=postgres
+Jwt__SecretKey=your-secret-key-min-32-characters-long
+Jwt__Issuer=InovaSaude
+Jwt__Audience=InovaSaude
+Jwt__ExpirationMinutes=60
+Cors__AllowedOrigins=http://localhost:3000
+```
+
+### Variáveis de Ambiente (Frontend)
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+## 📈 Roadmap
+
+### Fase 1 (MVP) - Concluído
+- ✅ Estrutura backend com Clean Architecture
+- ✅ Autenticação JWT
+- ✅ CRUD de UBS e Despesas
+- ✅ Frontend React com TypeScript
+- ✅ Login e rotas protegidas
+- ✅ Dashboard básico
+
+### Fase 2 (Em desenvolvimento)
+- [ ] Relatórios avançados
+- [ ] Gráficos e visualizações
+- [ ] Export para Excel/PDF
+- [ ] Testes automatizados
+- [ ] CI/CD completo
+
+### Fase 3 (Futuro)
+- [ ] App mobile (React Native)
+- [ ] Notificações push
+- [ ] Integração com sistemas da prefeitura
+- [ ] Machine Learning para detecção de anomalias
+- [ ] Dashboard avançado com BI
 
 ## 🤝 Contribuindo
 
-Contribuições são bem-vindas! Por favor, leia o guia de contribuição.
+Contribuições são bem-vindas! Por favor:
+
+1. Faça um Fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob licença proprietária.
 
 ## 📧 Contato
 
 Para mais informações, entre em contato através das issues do GitHub.
+
+---
+
+**Desenvolvido com ❤️ para melhorar a gestão pública de saúde**
