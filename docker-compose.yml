@@ -4,70 +4,25 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: inovasaude-db
-    environment:
-      POSTGRES_DB: inovasaude
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - inovasaude-network
 
-  redis:
-    image: redis:7-alpine
-    container_name: inovasaude-cache
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - inovasaude-network
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: inovasaude-api
-    environment:
-      NODE_ENV: development
-      PORT: 3000
-      DATABASE_URL: postgresql://admin:${DB_PASSWORD:-changeme}@postgres:5432/inovasaude
-      REDIS_URL: redis://redis:6379
-      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
-    ports:
-      - "3000:3000"
-    depends_on:
-      - postgres
-      - redis
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    networks:
-      - inovasaude-network
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: inovasaude-web
-    environment:
-      VITE_API_URL: http://localhost:3000
-    ports:
-      - "5173:5173"
+
     depends_on:
       - backend
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    networks:
-      - inovasaude-network
-
-volumes:
-  postgres_data:
-  redis_data:
-
-networks:
-  inovasaude-network:
-    driver: bridge
