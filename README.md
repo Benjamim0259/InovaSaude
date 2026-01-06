@@ -1,8 +1,8 @@
-# Inova + Saúde
+# InovaSaude 🏥
 
 Sistema de análise e gerenciamento de gastos por UBS (Unidade Básica de Saúde) para prefeituras.
 
-## 🎯 Objetivo
+## Arquitetura
 
 Plataforma web para gestão financeira de Unidades Básicas de Saúde, permitindo análise, controle e otimização de despesas municipais na área da saúde.
 
@@ -90,11 +90,9 @@ InovaSaude/
 git clone https://github.com/Benjamim0259/InovaSaude.git
 cd InovaSaude
 
-# Configure as variáveis de ambiente
-cp .env.example .env
-
-# Suba os containers
+# Execute com Docker
 docker-compose up -d
+<<<<<<< copilot/create-initial-structure-ubs-system
 
 # Execute as migrations do Prisma
 docker-compose exec backend npx prisma migrate dev
@@ -397,11 +395,26 @@ Contribuições são bem-vindas! Por favor:
 - Escreva testes para novas funcionalidades
 - Documente código complexo
 - Use commits semânticos
+=======
+```
 
-## 📧 Contato
+## Funcionalidades
 
+- ✅ Gestão de despesas por UBS
+- ✅ Importação em massa de dados
+- ✅ Relatórios e dashboards
+- ✅ Controle de acesso por perfil
+- ✅ Autenticação 2FA
+main
+
+## Status
+
+<<<<<<< copilot/create-initial-structure-ubs-system
 Para mais informações, entre em contato através das issues do GitHub.
 
 ## 🙏 Agradecimentos
 
 Projeto desenvolvido para modernizar a gestão financeira de UBS em municípios brasileiros.
+=======
+🚧 Em desenvolvimento inicial
+main
