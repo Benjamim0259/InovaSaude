@@ -4,25 +4,61 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: inovasaude-db
-
+    environment:
+      POSTGRES_DB: inovasaude
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+    networks:
+      - inovasaude-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: inovasaude-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=inovasaude;Username=postgres;Password=postgres
+      - Jwt__SecretKey=your-secret-key-min-32-characters-long-change-in-production-12345
+      - Jwt__Issuer=InovaSaude
+      - Jwt__Audience=InovaSaude
+      - Jwt__ExpirationMinutes=60
+      - Cors__AllowedOrigins=http://localhost:3000,http://localhost:80
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - inovasaude-network
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/logs:/app/logs
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
-
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: inovasaude-frontend
+    ports:
+      - "80:80"
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+    networks:
+      - inovasaude-network
+
+networks:
+  inovasaude-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

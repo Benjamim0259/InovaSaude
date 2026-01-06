@@ -1,16 +1,18 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authService } from '@services/auth.service';
-import { Usuario } from '@types/index';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
+import type { Usuario } from '../types';
+import { authService } from '../services/authService';
 
-interface AuthContextData {
+interface AuthContextType {
   user: Usuario | null;
-  loading: boolean;
-  login: (email: string, senha: string) => Promise<void>;
-  logout: () => Promise<void>;
+  token: string | null;
+  login: (token: string, user: Usuario) => void;
+  logout: () => void;
   isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
-const AuthContext = createContext<AuthContextData>({} as AuthContextData);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -26,34 +28,47 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<Usuario | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadUser = () => {
-      const currentUser = authService.getCurrentUser();
-      setUser(currentUser);
-      setLoading(false);
+    const initAuth = async () => {
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        try {
+          const currentUser = await authService.getCurrentUser();
+          setUser(currentUser);
+          setToken(storedToken);
+        } catch (error) {
+          localStorage.removeItem('token');
+          setToken(null);
+        }
+      }
+      setIsLoading(false);
     };
 
-    loadUser();
+    initAuth();
   }, []);
 
-  const login = async (email: string, senha: string) => {
-    const response = await authService.login(email, senha);
-    setUser(response.usuario);
+  const login = (newToken: string, newUser: Usuario) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken);
+    setUser(newUser);
   };
 
-  const logout = async () => {
-    await authService.logout();
+  const logout = () => {
+    authService.logout();
+    setToken(null);
     setUser(null);
   };
 
   const value = {
     user,
-    loading,
+    token,
     login,
     logout,
-    isAuthenticated: !!user,
+    isAuthenticated: !!token && !!user,
+    isLoading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

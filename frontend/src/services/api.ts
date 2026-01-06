@@ -1,11 +1,15 @@
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000/api',
-  timeout: 10000,
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// Request interceptor para adicionar o token
+// Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -19,7 +23,7 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor para tratamento de erros
+// Response interceptor to handle errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
