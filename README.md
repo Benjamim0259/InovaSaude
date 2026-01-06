@@ -1,10 +1,10 @@
-# Inova + Saúde
+# InovaSaude 🏥
 
-Sistema de análise e gerenciamento de gastos por UBS para prefeituras.
+Sistema de análise e gerenciamento de gastos por UBS (Unidade Básica de Saúde) para prefeituras.
 
-## 🎯 Objetivo
+## Arquitetura
 
-Plataforma web para gestão financeira de Unidades Básicas de Saúde (UBS), permitindo análise, controle e otimização de despesas municipais na área da saúde.
+Plataforma web para gestão financeira de Unidades Básicas de Saúde, permitindo análise, controle e otimização de despesas municipais na área da saúde.
 
 ## 🏗️ Arquitetura
 
@@ -20,8 +20,7 @@ Plataforma web para gestão financeira de Unidades Básicas de Saúde (UBS), per
 - Clean Architecture
 
 **Frontend:**
-- React 18+
-- TypeScript
+- React 18+ com TypeScript
 - Vite
 - React Router
 - React Query
@@ -75,6 +74,45 @@ cd InovaSaude
 
 # Suba os containers
 docker-compose up -d
+# Execute com Docker
+docker-compose up -d
+
+# Execute as migrations do Prisma
+docker-compose exec backend npx prisma migrate dev
+
+# Acesse a aplicação
+# Frontend: http://localhost:3000
+# Backend: http://localhost:4000
+# Health check: http://localhost:4000/health
+```
+
+### Instalação Manual
+
+#### Backend
+
+```bash
+cd backend
+
+# Instale as dependências
+npm install
+
+# Configure as variáveis de ambiente
+cp .env.example .env
+
+# Gere o Prisma Client
+npx prisma generate
+
+# Execute as migrations
+npx prisma migrate dev
+
+# Inicie o servidor de desenvolvimento
+npm run dev
+```
+
+#### Frontend
+
+```bash
+cd frontend
 
 # Acesse a aplicação
 # Frontend: http://localhost
@@ -115,11 +153,10 @@ cd frontend
 # Instale as dependências
 npm install
 
-# Configure o arquivo .env
+# Configure as variáveis de ambiente
 cp .env.example .env
-# Edite .env e ajuste VITE_API_URL se necessário
 
-# Execute em modo desenvolvimento
+# Inicie o servidor de desenvolvimento
 npm run dev
 
 # O frontend estará disponível em http://localhost:5173
@@ -153,7 +190,16 @@ npm run dev
    - Auditoria de ações
    - Logs do sistema
 
-## 👥 Perfis de Usuário
+- **Autenticação:** JWT com expiração configurável
+- **Senhas:** Hash com Bcrypt (10 rounds)
+- **Rate Limiting:** 100 requisições/minuto por IP
+- **CORS:** Configurado para origens permitidas
+- **Headers de Segurança:** Helmet.js
+- **Validação de Dados:** Zod schemas
+- **Sanitização:** Inputs sanitizados
+- **Auditoria:** Logs de ações críticas
+
+## 📡 API Endpoints
 
 - **Admin:** Acesso total ao sistema
 - **Gestor:** Gestão de UBS e despesas do município
@@ -318,8 +364,9 @@ Contribuições são bem-vindas! Por favor:
 ## 📄 Licença
 
 Este projeto está sob licença proprietária.
+Para mais informações, entre em contato através das issues do GitHub.
 
-## 📧 Contato
+## 🙏 Agradecimentos
 
 Para mais informações, entre em contato através das issues do GitHub.
 
