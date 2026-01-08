@@ -48,6 +48,5 @@ services:
 
 databases:
   - name: inovasaude-db
-    engine: postgres
-    version: "18"
     plan: free
+    postgresMajorVersion: "18"
