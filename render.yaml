@@ -1,7 +1,7 @@
 services:
   # Backend API (.NET) via Docker
   - type: web
-    name: inovasaude-backend
+    name: inovasaude-backend-2
     runtime: docker
     plan: starter
     dockerfilePath: backend/Dockerfile
@@ -24,12 +24,12 @@ services:
       - key: Jwt__ExpirationMinutes
         value: "60"
       - key: Cors__AllowedOrigins
-        value: "https://inovasaude-frontend.onrender.com"
+        value: "https://inovasaude-frontend-static.onrender.com"
     healthCheckPath: /health
 
   # Frontend Static Site (Render spec: type web + runtime static)
   - type: web
-    name: inovasaude-frontend
+    name: inovasaude-frontend-static
     runtime: static
     plan: free
     rootDir: frontend
