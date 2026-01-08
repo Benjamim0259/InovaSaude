@@ -9,7 +9,7 @@ services:
   # Backend API (.NET) via Docker
   - type: web
     name: inovasaude-backend
-    env: docker
+    runtime: docker
     plan: free
     dockerfilePath: backend/Dockerfile
     autoDeploy: true
@@ -39,8 +39,9 @@ services:
     name: inovasaude-frontend
     runtime: static
     plan: free
-    buildCommand: "cd frontend && npm install && npm run build"
-    staticPublishPath: frontend/dist
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
         value: "https://inovasaude-backend.onrender.com/api"
