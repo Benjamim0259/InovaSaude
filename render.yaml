@@ -3,7 +3,7 @@ services:
   - type: web
     name: inovasaude-backend
     runtime: docker
-    plan: free
+    plan: starter
     dockerfilePath: backend/Dockerfile
     autoDeploy: true
     envVars:
