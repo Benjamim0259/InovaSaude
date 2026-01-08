@@ -1,0 +1,51 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: inovasaude-db
+    env: postgres
+    plan: free
+    postgresMajorVersion: 15
+
+  # Backend API (.NET) via Docker
+  - type: web
+    name: inovasaude-backend
+    env: docker
+    plan: free
+    dockerfilePath: backend/Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: PORT
+        value: "5000"
+      - key: ConnectionStrings__DefaultConnection
+        fromDatabase:
+          name: inovasaude-db
+          property: connectionString
+      - key: Jwt__SecretKey
+        generateValue: true
+      - key: Jwt__Issuer
+        value: InovaSaude
+      - key: Jwt__Audience
+        value: InovaSaude
+      - key: Jwt__ExpirationMinutes
+        value: "60"
+      - key: Cors__AllowedOrigins
+        value: "https://inovasaude-frontend.onrender.com"
+    healthCheckPath: /health
+
+  # Frontend Static Site
+  - type: static_site
+    name: inovasaude-frontend
+    plan: free
+    buildCommand: "cd frontend && npm install && npm run build"
+    publishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: "https://inovasaude-backend.onrender.com/api"
+
+databases:
+  - name: inovasaude-db
+    engine: postgres
+    version: "15"
+    plan: free

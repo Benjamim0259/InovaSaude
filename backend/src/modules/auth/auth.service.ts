@@ -39,8 +39,8 @@ export class AuthService {
         perfil: usuario.perfil,
         ubsId: usuario.ubsId,
       },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
+      config.jwt.secret as jwt.Secret,
+      { expiresIn: config.jwt.expiresIn as jwt.SignOptions['expiresIn'] }
     );
 
     logger.info(`Usuário ${usuario.email} autenticado com sucesso`);
@@ -94,8 +94,8 @@ export class AuthService {
         perfil: usuario.perfil,
         ubsId: usuario.ubsId,
       },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
+      config.jwt.secret as jwt.Secret,
+      { expiresIn: config.jwt.expiresIn as jwt.SignOptions['expiresIn'] }
     );
 
     return {
@@ -126,7 +126,7 @@ export class AuthService {
     return { message: 'Se o email existir, você receberá instruções de recuperação' };
   }
 
-  async resetPassword(token: string, novaSenha: string) {
+  async resetPassword(_token: string, _novaSenha: string) {
     // TODO: Implementar lógica de validação de token e reset de senha
     throw new AppError('Funcionalidade em desenvolvimento', 501);
   }

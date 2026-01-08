@@ -4,19 +4,19 @@ dotenv.config();
 
 export const config = {
   env: process.env.NODE_ENV || 'development',
-  port: parseInt(process.env.API_PORT || '4000', 10),
+  port: parseInt(process.env.PORT || process.env.API_PORT || '5000', 10),
   
   database: {
     url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/inovasaude',
   },
   
   jwt: {
-    secret: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
+    secret: process.env.JWT_SECRET || 'your-secret-key-change-in-production-min-32-chars-required-12345',
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   },
   
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: (process.env.CORS_ORIGINS || 'http://localhost:3000').split(','),
   },
   
   upload: {

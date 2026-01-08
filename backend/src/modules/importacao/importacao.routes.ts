@@ -8,10 +8,10 @@ const router = Router();
 
 // Configuração do multer para upload
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, _file, cb) => {
     cb(null, config.upload.uploadDir);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   },
@@ -22,7 +22,7 @@ const upload = multer({
   limits: {
     fileSize: config.upload.maxFileSize,
   },
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     const allowedMimes = ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
     
     if (allowedMimes.includes(file.mimetype)) {
@@ -64,7 +64,7 @@ router.post(
 );
 
 // Download de template
-router.get('/template', async (req, res) => {
+router.get('/template', async (_req, res) => {
   // TODO: Retornar template CSV/XLSX para importação
   const template = {
     headers: [
@@ -95,7 +95,7 @@ router.get('/template', async (req, res) => {
 });
 
 // Listar importações
-router.get('/lotes', authorize('ADMIN', 'GESTOR'), async (req, res, next) => {
+router.get('/lotes', authorize('ADMIN', 'GESTOR'), async (_req, res, next) => {
   try {
     // TODO: Implementar listagem de lotes de importação
     res.json({
