@@ -3,7 +3,6 @@ services:
   - type: web
     name: inovasaude-backend-2
     runtime: docker
-    plan: starter
     dockerfilePath: backend/Dockerfile
     autoDeploy: true
     envVars:
@@ -31,7 +30,6 @@ services:
   - type: web
     name: inovasaude-frontend-static
     runtime: static
-    plan: starter
     rootDir: frontend
     buildCommand: "npm install && npm run build"
     staticPublishPath: dist
