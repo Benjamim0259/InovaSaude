@@ -1,11 +1,4 @@
 services:
-  # PostgreSQL Database
-  - type: pserv
-    name: inovasaude-db
-    env: postgres
-    plan: free
-    postgresMajorVersion: 18
-
   # Backend API (.NET) via Docker
   - type: web
     name: inovasaude-backend
