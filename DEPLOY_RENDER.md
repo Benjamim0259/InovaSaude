@@ -25,20 +25,18 @@ git commit -m "Preparar para deploy no Render"
 git push origin main
 ```
 
-### 2. Conectar ao Render
+### 2. Deploy com Blueprint (mais simples)
 
 1. Acesse [render.com](https://render.com)
-2. Faça login ou crie uma conta
-3. Clique em "New +" → "Web Service"
-4. Selecione seu repositório
-5. Preencha as informações:
-   - **Name:** `inovasaude-backend`
-   - **Branch:** `main`
-   - **Root Directory:** `backend`
-   - **Build Command:** `npm install && npm run build`
-   - **Start Command:** `npm start`
-   - **Environment:** `Node`
-   - **Plan:** `Free`
+2. Faça login e clique em "New +" → "Blueprint"
+3. Selecione o repositório com este projeto
+4. Confirme o arquivo `render.yaml` na raiz
+5. Clique em "Apply" para criar automaticamente:
+   - `inovasaude-backend` (Docker, .NET 8)
+   - `inovasaude-frontend` (Static Site)
+   - `inovasaude-db` (PostgreSQL Free)
+
+Se você já criou serviços manualmente, remova o serviço de frontend em Docker e use o Static Site criado pelo Blueprint.
 
 ### 3. Configurar Variáveis de Ambiente
 
@@ -51,19 +49,17 @@ NODE_ENV=production
 CORS_ORIGINS=https://seu-frontend-url.onrender.com
 ```
 
-### 4. Deploy do Frontend
+### 4. Frontend como Static Site (recomendado)
 
-1. Crie outro Web Service para o frontend
-2. Preencha:
-   - **Name:** `inovasaude-frontend`
-   - **Root Directory:** `frontend`
-   - **Build Command:** `npm install && npm run build`
-   - **Start Command:** `npx serve -s dist -l 3000`
+O `render.yaml` já configura o frontend como Static Site:
+- **Build Command:** `cd frontend && npm install && npm run build`
+- **Publish Path:** `frontend/dist`
 
-3. Adicione variável de ambiente:
-   ```
-   VITE_API_URL=https://seu-backend-url.onrender.com/api
-   ```
+Variável de ambiente necessária:
+```
+VITE_API_URL=https://inovasaude-backend.onrender.com/api
+```
+Observação: O domínio padrão do Render é baseado no nome do serviço. Se você renomear o backend, ajuste a URL acima.
 
 ### 5. Criar Banco de Dados
 
