@@ -4,7 +4,7 @@ services:
     name: inovasaude-db
     env: postgres
     plan: free
-    postgresMajorVersion: 15
+    postgresMajorVersion: 18
 
   # Backend API (.NET) via Docker
   - type: web
@@ -49,5 +49,5 @@ services:
 databases:
   - name: inovasaude-db
     engine: postgres
-    version: "15"
+    version: "18"
     plan: free
