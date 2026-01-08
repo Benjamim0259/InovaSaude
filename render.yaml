@@ -31,13 +31,13 @@ services:
   - type: web
     name: inovasaude-frontend-static
     runtime: static
-    plan: free
+    plan: starter
     rootDir: frontend
     buildCommand: "npm install && npm run build"
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: "https://inovasaude-backend.onrender.com/api"
+        value: "https://inovasaude-backend-2.onrender.com/api"
 
 databases:
   - name: inovasaude-db
