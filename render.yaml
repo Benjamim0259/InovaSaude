@@ -34,12 +34,13 @@ services:
         value: "https://inovasaude-frontend.onrender.com"
     healthCheckPath: /health
 
-  # Frontend Static Site
-  - type: static_site
+  # Frontend Static Site (Render spec: type web + runtime static)
+  - type: web
     name: inovasaude-frontend
+    runtime: static
     plan: free
     buildCommand: "cd frontend && npm install && npm run build"
-    publishPath: frontend/dist
+    staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
         value: "https://inovasaude-backend.onrender.com/api"
