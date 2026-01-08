@@ -1,12 +1,11 @@
 services:
-  # Backend API (.NET) via native build (free tier)
+  # Backend API (.NET) via Docker (Render does not support native dotnet runtime; requires Docker, plan starter)
   - type: web
     name: inovasaude-backend-2
-    runtime: dotnet
-    plan: free
-    rootDir: backend
-    buildCommand: "dotnet restore && dotnet publish src/InovaSaude.API/InovaSaude.API.csproj -c Release -o out"
-    startCommand: "dotnet out/InovaSaude.API.dll"
+    runtime: docker
+    plan: starter
+    dockerfilePath: backend/Dockerfile
+    autoDeploy: true
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
