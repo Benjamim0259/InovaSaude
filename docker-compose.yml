@@ -22,19 +22,25 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: inovasaude-backend
     ports:
-      - "5000:5000"
+      - "4000:4000"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=inovasaude;Username=postgres;Password=postgres
-      - Jwt__SecretKey=your-secret-key-min-32-characters-long-change-in-production-12345
-      - Jwt__Issuer=InovaSaude
-      - Jwt__Audience=InovaSaude
-      - Jwt__ExpirationMinutes=60
-      - Cors__AllowedOrigins=http://localhost:3000,http://localhost:80
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inovasaude
+      - JWT_SECRET=your-secret-key-min-32-characters-long-change-in-production-12345
+      - JWT_EXPIRES_IN=24h
+      - API_PORT=4000
+      - FRONTEND_URL=http://localhost:3000
+      - EMAIL_SERVICE=gmail
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_SECURE=false
+      - EMAIL_USER=seu_email@gmail.com
+      - EMAIL_PASSWORD=sua_senha_app
+      - EMAIL_FROM=noreply@inovasaude.com.br
     depends_on:
       postgres:
         condition: service_healthy
@@ -43,18 +49,26 @@ services:
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/logs:/app/logs
+      - ./backend/src:/app/src
+    command: npm run dev
 
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: inovasaude-frontend
     ports:
+      - "3000:3000"
       - "80:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:4000/api
+      - VITE_API_URL=http://localhost:4000/api
     depends_on:
       - backend
     networks:
       - inovasaude-network
+    volumes:
+      - ./frontend/src:/app/src
 
 networks:
   inovasaude-network:

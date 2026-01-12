@@ -23,7 +23,7 @@ async function main() {
   console.log('👤 Criando usuário admin...');
   const senhaHash = await bcrypt.hash('admin123', 10);
   
-  const admin = await prisma.usuario.create({
+  await prisma.usuario.create({
     data: {
       nome: 'Administrador',
       email: 'admin@inovasaude.com.br',
@@ -87,6 +87,26 @@ async function main() {
         icone: 'building',
       },
     }),
+    prisma.categoria.create({
+      data: {
+        nome: 'Medicamentos',
+        descricao: 'Compra de medicamentos e drogas',
+        tipo: 'MATERIAL',
+        orcamentoMensal: 35000,
+        cor: '#06b6d4',
+        icone: 'pill',
+      },
+    }),
+    prisma.categoria.create({
+      data: {
+        nome: 'Utilidades Públicas',
+        descricao: 'Água, luz, internet e telefone',
+        tipo: 'SERVICO',
+        orcamentoMensal: 8000,
+        cor: '#ec4899',
+        icone: 'zap',
+      },
+    }),
   ]);
 
   // Criar UBS
@@ -119,6 +139,48 @@ async function main() {
     },
   });
 
+  const ubs3 = await prisma.uBS.create({
+    data: {
+      nome: 'UBS Vila Esperança',
+      codigo: 'UBS-003',
+      endereco: 'Rua Esperança, 250',
+      bairro: 'Vila Esperança',
+      cep: '12346-000',
+      telefone: '(11) 3333-3333',
+      email: 'ubs.esperanca@municipio.gov.br',
+      status: 'ATIVA',
+      capacidadeAtendimento: 650,
+    },
+  });
+
+  const ubs4 = await prisma.uBS.create({
+    data: {
+      nome: 'UBS Alto do Morro',
+      codigo: 'UBS-004',
+      endereco: 'Av. do Morro, 1000',
+      bairro: 'Alto do Morro',
+      cep: '12346-111',
+      telefone: '(11) 3333-4444',
+      email: 'ubs.morro@municipio.gov.br',
+      status: 'ATIVA',
+      capacidadeAtendimento: 900,
+    },
+  });
+
+  const ubs5 = await prisma.uBS.create({
+    data: {
+      nome: 'UBS São Benedito',
+      codigo: 'UBS-005',
+      endereco: 'Rua São Benedito, 750',
+      bairro: 'São Benedito',
+      cep: '12346-222',
+      telefone: '(11) 3333-5555',
+      email: 'ubs.benedito@municipio.gov.br',
+      status: 'ATIVA',
+      capacidadeAtendimento: 700,
+    },
+  });
+
   // Criar coordenadores
   console.log('👥 Criando coordenadores...');
   const coordenador1 = await prisma.usuario.create({
@@ -145,6 +207,42 @@ async function main() {
     },
   });
 
+  const coordenador3 = await prisma.usuario.create({
+    data: {
+      nome: 'Ana Costa',
+      email: 'ana.costa@inovasaude.com.br',
+      senhaHash: await bcrypt.hash('senha123', 10),
+      perfil: 'COORDENADOR',
+      status: 'ATIVO',
+      telefone: '(11) 98888-3333',
+      ubsId: ubs3.id,
+    },
+  });
+
+  const coordenador4 = await prisma.usuario.create({
+    data: {
+      nome: 'Roberto Ferreira',
+      email: 'roberto.ferreira@inovasaude.com.br',
+      senhaHash: await bcrypt.hash('senha123', 10),
+      perfil: 'COORDENADOR',
+      status: 'ATIVO',
+      telefone: '(11) 98888-4444',
+      ubsId: ubs4.id,
+    },
+  });
+
+  const coordenador5 = await prisma.usuario.create({
+    data: {
+      nome: 'Juliana Mendes',
+      email: 'juliana.mendes@inovasaude.com.br',
+      senhaHash: await bcrypt.hash('senha123', 10),
+      perfil: 'COORDENADOR',
+      status: 'ATIVO',
+      telefone: '(11) 98888-5555',
+      ubsId: ubs5.id,
+    },
+  });
+
   // Atualizar UBS com coordenadores
   await prisma.uBS.update({
     where: { id: ubs1.id },
@@ -154,6 +252,21 @@ async function main() {
   await prisma.uBS.update({
     where: { id: ubs2.id },
     data: { coordenadorId: coordenador2.id },
+  });
+
+  await prisma.uBS.update({
+    where: { id: ubs3.id },
+    data: { coordenadorId: coordenador3.id },
+  });
+
+  await prisma.uBS.update({
+    where: { id: ubs4.id },
+    data: { coordenadorId: coordenador4.id },
+  });
+
+  await prisma.uBS.update({
+    where: { id: ubs5.id },
+    data: { coordenadorId: coordenador5.id },
   });
 
   // Criar gestor
@@ -166,6 +279,19 @@ async function main() {
       perfil: 'GESTOR',
       status: 'ATIVO',
       telefone: '(11) 98888-3333',
+    },
+  });
+
+  // Criar auditor
+  console.log('🔍 Criando auditor...');
+  await prisma.usuario.create({
+    data: {
+      nome: 'Patricia Ribeiro',
+      email: 'patricia.ribeiro@inovasaude.com.br',
+      senhaHash: await bcrypt.hash('senha123', 10),
+      perfil: 'AUDITOR',
+      status: 'ATIVO',
+      telefone: '(11) 98888-6666',
     },
   });
 
@@ -235,12 +361,121 @@ async function main() {
     },
   });
 
+  await prisma.despesa.create({
+    data: {
+      descricao: 'Medicamentos essenciais',
+      valor: 5000.00,
+      dataVencimento: new Date('2024-02-05'),
+      categoriaId: categorias[5].id,
+      tipo: 'FIXA',
+      status: 'PAGA',
+      ubsId: ubs3.id,
+      fornecedorId: fornecedor1.id,
+      usuarioCriacaoId: coordenador3.id,
+      usuarioAprovacaoId: gestor.id,
+      dataAprovacao: new Date('2024-01-30'),
+      dataPagamento: new Date('2024-02-02'),
+      numeroNota: 'NF-2024-003',
+      observacoes: 'Compra trimestral de medicamentos',
+    },
+  });
+
+  await prisma.despesa.create({
+    data: {
+      descricao: 'Água e energia - Janeiro',
+      valor: 2800.00,
+      dataVencimento: new Date('2024-02-10'),
+      categoriaId: categorias[6].id,
+      tipo: 'FIXA',
+      status: 'PENDENTE',
+      ubsId: ubs4.id,
+      usuarioCriacaoId: coordenador4.id,
+      numeroNota: 'UTIL-2024-001',
+      observacoes: 'Despesa com utilidades públicas',
+    },
+  });
+
+  await prisma.despesa.create({
+    data: {
+      descricao: 'Contratação de serviço de limpeza',
+      valor: 4200.00,
+      dataVencimento: new Date('2024-02-20'),
+      categoriaId: categorias[2].id,
+      tipo: 'FIXA',
+      status: 'APROVADA',
+      ubsId: ubs5.id,
+      fornecedorId: fornecedor2.id,
+      usuarioCriacaoId: coordenador5.id,
+      usuarioAprovacaoId: gestor.id,
+      dataAprovacao: new Date(),
+      numeroNota: 'NF-2024-004',
+      observacoes: 'Serviço mensal de limpeza e higienização',
+    },
+  });
+
+  await prisma.despesa.create({
+    data: {
+      descricao: 'Impressoras e scanners',
+      valor: 8500.00,
+      dataVencimento: new Date('2024-02-15'),
+      categoriaId: categorias[3].id,
+      tipo: 'EVENTUAL',
+      status: 'PENDENTE',
+      ubsId: ubs1.id,
+      fornecedorId: fornecedor1.id,
+      usuarioCriacaoId: coordenador1.id,
+      numeroNota: 'NF-2024-005',
+      observacoes: 'Equipamentos para modernizar centro administrativo',
+    },
+  });
+
+  await prisma.despesa.create({
+    data: {
+      descricao: 'Materiais de escritório',
+      valor: 950.00,
+      dataVencimento: new Date('2024-02-25'),
+      categoriaId: categorias[1].id,
+      tipo: 'VARIAVEL',
+      status: 'APROVADA',
+      ubsId: ubs2.id,
+      fornecedorId: fornecedor2.id,
+      usuarioCriacaoId: coordenador2.id,
+      usuarioAprovacaoId: gestor.id,
+      dataAprovacao: new Date(),
+      numeroNota: 'NF-2024-006',
+      observacoes: 'Reposição de estoque de materiais',
+    },
+  });
+
+  await prisma.despesa.create({
+    data: {
+      descricao: 'Reforma da ala de pediatria',
+      valor: 15000.00,
+      dataVencimento: new Date('2024-03-15'),
+      categoriaId: categorias[4].id,
+      tipo: 'EVENTUAL',
+      status: 'PENDENTE',
+      ubsId: ubs3.id,
+      usuarioCriacaoId: coordenador3.id,
+      numeroNota: 'NF-2024-007',
+      observacoes: 'Obra de manutenção estrutural e pintura',
+    },
+  });
+
   console.log('✅ Seed concluído com sucesso!');
   console.log('\n📋 Usuários criados:');
   console.log('  Admin: admin@inovasaude.com.br / admin123');
   console.log('  Coordenador 1: maria.silva@inovasaude.com.br / senha123');
   console.log('  Coordenador 2: joao.santos@inovasaude.com.br / senha123');
+  console.log('  Coordenador 3: ana.costa@inovasaude.com.br / senha123');
+  console.log('  Coordenador 4: roberto.ferreira@inovasaude.com.br / senha123');
+  console.log('  Coordenador 5: juliana.mendes@inovasaude.com.br / senha123');
   console.log('  Gestor: carlos.oliveira@inovasaude.com.br / senha123');
+  console.log('  Auditor: patricia.ribeiro@inovasaude.com.br / senha123');
+  console.log('\n🏥 UBS criadas: 5');
+  console.log('\n📁 Categorias criadas: 7');
+  console.log('\n💰 Despesas de exemplo: 8');
+  console.log('\n🚀 Sistema pronto para teste!')
 }
 
 main()

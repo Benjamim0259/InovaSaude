@@ -1,9 +1,11 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import prisma from '../../config/database';
 import { config } from '../../config';
 import logger from '../../config/logger';
 import { AppError } from '../../shared/middlewares/error.middleware';
+import { emailService } from '../../shared/services/email.service';
 
 export class AuthService {
   async login(email: string, senha: string) {
@@ -120,15 +122,73 @@ export class AuthService {
       return { message: 'Se o email existir, você receberá instruções de recuperação' };
     }
 
-    // TODO: Implementar envio de email com token de recuperação
-    logger.info(`Recuperação de senha solicitada para: ${email}`);
+    // Gerar token seguro
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiradoEm = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
+
+    // Salvar token no banco
+    await prisma.tokenRecuperacaoSenha.create({
+      data: {
+        usuarioId: usuario.id,
+        token,
+        expiradoEm,
+      },
+    });
+
+    try {
+      // Enviar email com link de recuperação
+      await emailService.enviarEmailRecuperacaoSenha(
+        email,
+        token,
+        usuario.nome
+      );
+      logger.info(`Email de recuperação de senha enviado para: ${email}`);
+    } catch (error) {
+      logger.error(`Erro ao enviar email para ${email}:`, error);
+      // Não lançar erro para não revelar problemas de email
+    }
 
     return { message: 'Se o email existir, você receberá instruções de recuperação' };
   }
 
-  async resetPassword(_token: string, _novaSenha: string) {
-    // TODO: Implementar lógica de validação de token e reset de senha
-    throw new AppError('Funcionalidade em desenvolvimento', 501);
+  async resetPassword(token: string, novaSenha: string) {
+    // Validar token
+    const tokenRecord = await prisma.tokenRecuperacaoSenha.findUnique({
+      where: { token },
+      include: { usuario: true },
+    });
+
+    if (!tokenRecord) {
+      throw new AppError('Token de recuperação inválido', 400);
+    }
+
+    // Verificar se token expirou
+    if (new Date() > tokenRecord.expiradoEm) {
+      throw new AppError('Token de recuperação expirado', 400);
+    }
+
+    // Verificar se token já foi usado
+    if (tokenRecord.utilizadoEm) {
+      throw new AppError('Este token já foi utilizado', 400);
+    }
+
+    // Atualizar senha
+    const senhaHash = await bcrypt.hash(novaSenha, config.bcrypt.rounds);
+    
+    await prisma.usuario.update({
+      where: { id: tokenRecord.usuarioId },
+      data: { senhaHash },
+    });
+
+    // Marcar token como utilizado
+    await prisma.tokenRecuperacaoSenha.update({
+      where: { id: tokenRecord.id },
+      data: { utilizadoEm: new Date() },
+    });
+
+    logger.info(`Senha resetada para usuário: ${tokenRecord.usuario.email}`);
+
+    return { message: 'Senha atualizada com sucesso' };
   }
 
   async validateToken(token: string) {

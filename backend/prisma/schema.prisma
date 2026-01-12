@@ -230,6 +230,19 @@ model LogAuditoria {
   @@map("logs_auditoria")
 }
 
+model TokenRecuperacaoSenha {
+  id        String   @id @default(uuid())
+  usuarioId String   @map("usuario_id")
+  token     String   @unique
+  expiradoEm DateTime @map("expirado_em")
+  utilizadoEm DateTime? @map("utilizado_em")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([usuarioId])
+  @@index([token])
+  @@map("tokens_recuperacao_senha")
+}
+
 model ImportacaoLote {
   id              String   @id @default(uuid())
   nomeArquivo     String   @map("nome_arquivo")

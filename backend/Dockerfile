@@ -1,27 +1,41 @@
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+FROM node:20-alpine AS build
+WORKDIR /app
 
-# Copy csproj files and restore
-COPY InovaSaude.sln ./
-COPY src/InovaSaude.API/InovaSaude.API.csproj ./src/InovaSaude.API/
-COPY src/InovaSaude.Application/InovaSaude.Application.csproj ./src/InovaSaude.Application/
-COPY src/InovaSaude.Core/InovaSaude.Core.csproj ./src/InovaSaude.Core/
-COPY src/InovaSaude.Infrastructure/InovaSaude.Infrastructure.csproj ./src/InovaSaude.Infrastructure/
-COPY tests/InovaSaude.Tests/InovaSaude.Tests.csproj ./tests/InovaSaude.Tests/
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY prisma ./prisma
 
-RUN dotnet restore
+# Install dependencies and generate Prisma Client
+RUN npm ci
+RUN npm run prisma:generate
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish src/InovaSaude.API/InovaSaude.API.csproj -c Release -o /app/publish
+# Copy source code
+COPY src ./src
+
+# Build TypeScript
+RUN npm run build
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM node:20-alpine AS runtime
 WORKDIR /app
-COPY --from=build /app/publish .
 
-EXPOSE 5000
-ENV ASPNETCORE_URLS=http://+:5000
+# Install only production dependencies
+COPY package*.json ./
+RUN npm ci --only=production
 
-ENTRYPOINT ["dotnet", "InovaSaude.API.dll"]
+# Copy Prisma schema and client
+COPY prisma ./prisma
+RUN npm run prisma:generate
+
+# Copy built application
+COPY --from=build /app/dist ./dist
+
+# Create uploads directory
+RUN mkdir -p uploads logs
+
+EXPOSE 4000
+ENV NODE_ENV=production
+
+CMD ["npm", "start"]
