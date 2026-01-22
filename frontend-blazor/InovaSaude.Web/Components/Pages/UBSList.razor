@@ -1,0 +1,171 @@
+@page "/ubs"
+@attribute [Authorize]
+
+<PageTitle>UBS - InovaSaúde</PageTitle>
+
+<MudText Typo="Typo.h3" Class="mb-4">Unidades Básicas de Saúde</MudText>
+
+<MudPaper Class="pa-4 mb-4">
+    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+        <MudTextField @bind-Value="searchString" 
+                      Placeholder="Buscar UBS..." 
+                      Adornment="Adornment.Start" 
+                      AdornmentIcon="@Icons.Material.Filled.Search" 
+                      Style="max-width: 400px;" />
+        
+        <MudStack Row="true" Spacing="2">
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Success" 
+                       StartIcon="@Icons.Material.Filled.Download" 
+                       OnClick="ExportToExcel">
+                Excel
+            </MudButton>
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Info" 
+                       StartIcon="@Icons.Material.Filled.Download" 
+                       OnClick="ExportToCsv">
+                CSV
+            </MudButton>
+            <AuthorizeView Roles="Admin,Gestor">
+                <MudButton Variant="Variant.Filled" 
+                           Color="Color.Primary" 
+                           StartIcon="@Icons.Material.Filled.Add" 
+                           Href="/ubs/create">
+                    Nova UBS
+                </MudButton>
+            </AuthorizeView>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+@if (isLoading)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+else
+{
+    <MudTable Items="@FilteredUbs" Hover="true" Striped="true" Dense="true">
+        <HeaderContent>
+            <MudTh>Nome</MudTh>
+            <MudTh>CNES</MudTh>
+            <MudTh>Município</MudTh>
+            <MudTh>Telefone</MudTh>
+            <MudTh>Ações</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nome">@context.Nome</MudTd>
+            <MudTd DataLabel="CNES">@context.Cnes</MudTd>
+            <MudTd DataLabel="Município">@context.MunicipioNome</MudTd>
+            <MudTd DataLabel="Telefone">@context.Telefone</MudTd>
+            <MudTd DataLabel="Ações">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                               Color="Color.Primary" 
+                               Size="Size.Small" 
+                               Href="@($"/ubs/edit/{context.Id}")" />
+                <AuthorizeView Roles="Admin" Context="authContext">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                   Color="Color.Error" 
+                                   Size="Size.Small" 
+                                   OnClick="@(() => DeleteUbs(context.Id))" />
+                </AuthorizeView>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+@code {
+    [Inject]
+    private IApiService? ApiService { get; set; }
+    
+    [Inject]
+    private IExportService? ExportService { get; set; }
+    
+    [Inject]
+    private IJSRuntime? JS { get; set; }
+    
+    [Inject]
+    private ISnackbar? Snackbar { get; set; }
+
+    private List<UbsDto> ubsList = new();
+    private string searchString = "";
+    private bool isLoading = true;
+
+    private IEnumerable<UbsDto> FilteredUbs => 
+        ubsList.Where(u => string.IsNullOrWhiteSpace(searchString) ||
+                          u.Nome.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        if (ApiService == null || Snackbar == null)
+            return;
+
+        try
+        {
+            isLoading = true;
+            ubsList = await ApiService.GetUbsListAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Erro: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ExportToExcel()
+    {
+        if (ExportService == null || JS == null)
+            return;
+
+        var data = FilteredUbs.ToList();
+        var bytes = ExportService.ExportToExcel(data, "UBS");
+        await DownloadFile(bytes, "ubs_export.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    }
+
+    private async Task ExportToCsv()
+    {
+        if (ExportService == null || JS == null)
+            return;
+
+        var data = FilteredUbs.ToList();
+        var bytes = ExportService.ExportToCsv(data);
+        await DownloadFile(bytes, "ubs_export.csv", "text/csv");
+    }
+
+    private async Task DownloadFile(byte[] bytes, string fileName, string contentType)
+    {
+        if (JS == null)
+            return;
+
+        var base64 = Convert.ToBase64String(bytes);
+        await JS.InvokeVoidAsync("downloadFile", fileName, contentType, base64);
+    }
+
+    private async Task DeleteUbs(Guid id)
+    {
+        if (ApiService == null || Snackbar == null || JS == null)
+            return;
+
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "Tem certeza que deseja excluir esta UBS?");
+        if (confirmed)
+        {
+            try
+            {
+                await ApiService.DeleteUbsAsync(id);
+                Snackbar.Add("UBS excluída com sucesso!", Severity.Success);
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Erro: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+}

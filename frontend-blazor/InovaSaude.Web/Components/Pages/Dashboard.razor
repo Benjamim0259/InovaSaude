@@ -1,0 +1,76 @@
+@page "/dashboard"
+@attribute [Authorize]
+
+<PageTitle>Dashboard - InovaSaúde</PageTitle>
+
+<MudText Typo="Typo.h3" Class="mb-6">Dashboard</MudText>
+
+@if (dashboardData == null)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="2">
+                <MudCardContent>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">Total de Despesas</MudText>
+                    <MudText Typo="Typo.h4">@dashboardData.TotalDespesas.ToString("C")</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="2">
+                <MudCardContent>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">Total UBS</MudText>
+                    <MudText Typo="Typo.h4">@dashboardData.TotalUbs</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="2">
+                <MudCardContent>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">Quantidade de Despesas</MudText>
+                    <MudText Typo="Typo.h4">@dashboardData.TotalDespesasCount</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="2">
+                <MudCardContent>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">Despesas Pendentes</MudText>
+                    <MudText Typo="Typo.h4" Color="Color.Warning">@dashboardData.DespesasPendentes</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    [Inject]
+    private IApiService? ApiService { get; set; }
+    
+    [Inject]
+    private ISnackbar? Snackbar { get; set; }
+
+    private DashboardDto? dashboardData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ApiService == null || Snackbar == null)
+            return;
+
+        try
+        {
+            dashboardData = await ApiService.GetDashboardDataAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Erro ao carregar dashboard: {ex.Message}", Severity.Error);
+        }
+    }
+}
