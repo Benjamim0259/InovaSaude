@@ -1,0 +1,87 @@
+@page "/login"
+@layout Layout.MainLayout
+@using InovaSaude.Web.Auth
+
+<PageTitle>Login - InovaSaúde</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-16">
+    <MudPaper Elevation="3" Class="pa-8">
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.LocalHospital" Size="Size.Large" Color="Color.Primary" />
+            InovaSaúde
+        </MudText>
+        
+        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            
+            <MudTextField @bind-Value="loginModel.Email" 
+                          Label="Email" 
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Email"
+                          Required="true"
+                          Class="mb-4" />
+            
+            <MudTextField @bind-Value="loginModel.Password" 
+                          Label="Senha" 
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          Required="true"
+                          Class="mb-4" />
+            
+            <MudButton ButtonType="ButtonType.Submit" 
+                       Variant="Variant.Filled" 
+                       Color="Color.Primary" 
+                       FullWidth="true"
+                       Disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                }
+                else
+                {
+                    <span>Entrar</span>
+                }
+            </MudButton>
+        </EditForm>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    [Inject]
+    private IApiService? ApiService { get; set; }
+    
+    [Inject]
+    private CustomAuthStateProvider? AuthStateProvider { get; set; }
+    
+    [Inject]
+    private NavigationManager? Navigation { get; set; }
+    
+    [Inject]
+    private ISnackbar? Snackbar { get; set; }
+
+    private LoginRequest loginModel = new();
+    private bool isLoading = false;
+
+    private async Task HandleLogin()
+    {
+        if (ApiService == null || AuthStateProvider == null || Navigation == null || Snackbar == null)
+            return;
+
+        isLoading = true;
+        try
+        {
+            var response = await ApiService.LoginAsync(loginModel);
+            await AuthStateProvider.MarkUserAsAuthenticated(response.Token);
+            Snackbar.Add("Login realizado com sucesso!", Severity.Success);
+            Navigation.NavigateTo("/dashboard");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Erro ao fazer login: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

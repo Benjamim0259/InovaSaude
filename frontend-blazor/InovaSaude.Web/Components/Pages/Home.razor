@@ -1,0 +1,26 @@
+﻿@page "/"
+
+<PageTitle>Home - InovaSaúde</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
+    <MudPaper Elevation="3" Class="pa-8">
+        <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.LocalHospital" Size="Size.Large" Color="Color.Primary" /> 
+            Bem-vindo ao InovaSaúde
+        </MudText>
+        <MudText Typo="Typo.body1" Align="Align.Center" Class="mb-4">
+            Sistema de Gestão de Despesas para Unidades Básicas de Saúde
+        </MudText>
+        <MudDivider Class="my-4" />
+        <MudText Typo="Typo.body2" Align="Align.Center">
+            <AuthorizeView>
+                <Authorized>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/dashboard">Acessar Dashboard</MudButton>
+                </Authorized>
+                <NotAuthorized>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/login">Fazer Login</MudButton>
+                </NotAuthorized>
+            </AuthorizeView>
+        </MudText>
+    </MudPaper>
+</MudContainer>
