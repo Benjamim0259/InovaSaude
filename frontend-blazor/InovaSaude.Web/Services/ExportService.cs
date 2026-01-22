@@ -36,17 +36,18 @@ public class ExportService : IExportService
         
         using var stream = new MemoryStream();
         workbook.SaveAs(stream);
-        return stream.ToArray();
+        return stream.GetBuffer()[..(int)stream.Length];
     }
 
     public byte[] ExportToCsv<T>(IEnumerable<T> data)
     {
         using var stream = new MemoryStream();
-        using var writer = new StreamWriter(stream, System.Text.Encoding.UTF8);
+        using var writer = new StreamWriter(stream, System.Text.Encoding.UTF8, leaveOpen: true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
         
         csv.WriteRecords(data);
         writer.Flush();
-        return stream.ToArray();
+        stream.Position = 0;
+        return stream.GetBuffer()[..(int)stream.Length];
     }
 }
