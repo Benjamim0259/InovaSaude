@@ -2,13 +2,16 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { config } from '../../config';
 import logger from '../../config/logger';
+import { Permissao } from '@prisma/client';
 
 export interface AuthRequest extends Request {
   user?: {
     id: string;
+    nome: string;
     email: string;
     perfil: string;
     ubsId?: string;
+    permissoes?: Permissao[];
   };
 }
 
@@ -40,6 +43,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
 
       req.user = {
         id: decoded.id,
+        nome: decoded.nome,
         email: decoded.email,
         perfil: decoded.perfil,
         ubsId: decoded.ubsId,

@@ -15,47 +15,87 @@ enum PerfilUsuario {
   COORDENADOR
   GESTOR
   AUDITOR
+  OPERADOR
+  VISUALIZADOR
 }
 
-enum StatusUsuario {
-  ATIVO
-  INATIVO
-  BLOQUEADO
+enum Permissao {
+  USUARIOS_VISUALIZAR
+  USUARIOS_CRIAR
+  USUARIOS_EDITAR
+  USUARIOS_EXCLUIR
+  USUARIOS_BLOQUEAR
+  UBS_VISUALIZAR
+  UBS_CRIAR
+  UBS_EDITAR
+  UBS_EXCLUIR
+  UBS_GERENCIAR_COORDENADORES
+  DESPESAS_VISUALIZAR
+  DESPESAS_CRIAR
+  DESPESAS_EDITAR
+  DESPESAS_EXCLUIR
+  DESPESAS_APROVAR
+  DESPESAS_REJEITAR
+  DESPESAS_PAGAR
+  RELATORIOS_VISUALIZAR
+  RELATORIOS_EXPORTAR
 }
 
-enum StatusDespesa {
-  PENDENTE
-  APROVADA
-  PAGA
-  REJEITADA
-  CANCELADA
+enum WebhookEventType {
+  DESPESA_CREATED
+  DESPESA_UPDATED
+  DESPESA_DELETED
+  DESPESA_APPROVED
+  DESPESA_REJECTED
+  UBS_CREATED
+  UBS_UPDATED
+  UBS_DELETED
+  USER_CREATED
+  USER_UPDATED
+  WORKFLOW_COMPLETED
+  PAYMENT_RECEIVED
+  INTEGRATION_SYNC
 }
 
-enum TipoDespesa {
-  FIXA
-  VARIAVEL
-  EVENTUAL
+enum WebhookStatus {
+  ACTIVE
+  INACTIVE
+  FAILED
 }
 
-enum StatusUBS {
-  ATIVA
-  INATIVA
-  EM_MANUTENCAO
+enum WorkflowStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
 }
 
-enum StatusFornecedor {
-  ATIVO
-  INATIVO
-  BLOQUEADO
+enum WorkflowTriggerType {
+  MANUAL
+  AUTOMATIC
+  SCHEDULED
 }
 
-enum TipoCategoria {
-  PESSOAL
-  MATERIAL
-  SERVICO
-  EQUIPAMENTO
-  INFRAESTRUTURA
-  OUTROS
+enum WorkflowStepType {
+  APPROVAL
+  REVIEW
+  NOTIFICATION
+  ACTION
+  CONDITION
+}
+
+enum WorkflowStepStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  SKIPPED
+}
+
+enum ApprovalAction {
+  APPROVE
+  REJECT
+  RETURN
+  ESCALATE
 }
 
 model Usuario {
@@ -64,7 +104,7 @@ model Usuario {
   email         String         @unique
   senhaHash     String         @map("senha_hash")
   perfil        PerfilUsuario
-  status        StatusUsuario  @default(ATIVO)
+  status        String  @default("ATIVO")
   telefone      String?
   ubsId         String?        @map("ubs_id")
   ultimoAcesso  DateTime?      @map("ultimo_acesso")
@@ -77,8 +117,22 @@ model Usuario {
   despesasAprovadas    Despesa[]         @relation("UsuarioAprovador")
   logsAuditoria        LogAuditoria[]
   tokensRecuperacao    TokenRecuperacaoSenha[]
+  permissoes           PermissaoUsuario[]
 
   @@map("usuarios")
+}
+
+model PermissaoUsuario {
+  id          String     @id @default(uuid())
+  usuarioId   String     @map("usuario_id")
+  permissao   Permissao
+  concedidaEm DateTime   @default(now()) @map("concedida_em")
+  concedidaPor String?   @map("concedida_por")
+
+  usuario     Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, permissao])
+  @@map("permissoes_usuario")
 }
 
 model UBS {
@@ -91,7 +145,7 @@ model UBS {
   telefone                String?
   email                   String?
   coordenadorId           String?     @map("coordenador_id")
-  status                  StatusUBS   @default(ATIVA)
+  status                  String   @default("ATIVA")
   capacidadeAtendimento   Int?        @map("capacidade_atendimento")
   observacoes             String?
   createdAt               DateTime    @default(now()) @map("created_at")
@@ -118,7 +172,7 @@ model Fornecedor {
   telefone      String?
   email         String?
   contato       String?
-  status        StatusFornecedor  @default(ATIVO)
+  status        String  @default("ATIVO")
   observacoes   String?
   createdAt     DateTime          @default(now()) @map("created_at")
   updatedAt     DateTime          @updatedAt @map("updated_at")
@@ -132,8 +186,8 @@ model Categoria {
   id              String         @id @default(uuid())
   nome            String
   descricao       String?
-  tipo            TipoCategoria
-  orcamentoMensal Decimal?       @map("orcamento_mensal") @db.Decimal(15, 2)
+  tipo            String
+  orcamentoMensal Float?         @map("orcamento_mensal")
   cor             String?        // Cor para visualização nos gráficos
   icone           String?        // Nome do ícone para UI
   createdAt       DateTime       @default(now()) @map("created_at")
@@ -147,12 +201,12 @@ model Categoria {
 model Despesa {
   id                String        @id @default(uuid())
   descricao         String
-  valor             Decimal       @db.Decimal(15, 2)
+  valor             Float
   dataVencimento    DateTime?     @map("data_vencimento")
   dataPagamento     DateTime?     @map("data_pagamento")
   categoriaId       String        @map("categoria_id")
-  tipo              TipoDespesa
-  status            StatusDespesa @default(PENDENTE)
+  tipo              String
+  status            String @default("PENDENTE")
   ubsId             String        @map("ubs_id")
   fornecedorId      String?       @map("fornecedor_id")
   usuarioCriacaoId  String        @map("usuario_criacao_id")
@@ -199,8 +253,8 @@ model Anexo {
 model HistoricoDespesa {
   id          String        @id @default(uuid())
   despesaId   String        @map("despesa_id")
-  statusAnterior StatusDespesa? @map("status_anterior")
-  statusNovo  StatusDespesa @map("status_novo")
+  statusAnterior String? @map("status_anterior")
+  statusNovo  String @map("status_novo")
   usuarioId   String?       @map("usuario_id")
   observacao  String?
   createdAt   DateTime      @default(now()) @map("created_at")
@@ -217,8 +271,8 @@ model LogAuditoria {
   acao        String
   entidade    String
   entidadeId  String?  @map("entidade_id")
-  dadosAntigos String? @map("dados_antigos") @db.Text
-  dadosNovos  String?  @map("dados_novos") @db.Text
+  dadosAntigos String? @map("dados_antigos")
+  dadosNovos  String?
   ip          String?
   userAgent   String?  @map("user_agent")
   createdAt   DateTime @default(now()) @map("created_at")
@@ -254,9 +308,364 @@ model ImportacaoLote {
   registrosErro   Int      @map("registros_erro")
   status          String   // PROCESSANDO, CONCLUIDO, ERRO
   usuarioId       String   @map("usuario_id")
-  erros           String?  @db.Text
+  erros           String?
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@map("importacao_lotes")
+}
+
+// ===== NOVAS FUNCIONALIDADES PARA PRODUTO FINAL =====
+
+
+
+// Webhooks
+model Webhook {
+  id         String           @id @default(uuid())
+  name       String
+  description String          
+  url        String
+  events     WebhookEventType[]
+  status     WebhookStatus    @default(ACTIVE)
+  secret     String?
+  retryCount Int              @default(3)
+  timeout    Int              @default(5000)
+  headers    String?
+  createdBy  String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  logs       WebhookLog[]
+
+  @@map("webhooks")
+}
+
+model WebhookLog {
+  id         String           @id @default(uuid())
+  webhookId  String
+  event      WebhookEventType
+  payload    String
+  statusCode Int
+  response   String?          
+  error      String?          
+  retryCount Int              @default(0)
+  success    Boolean          @default(false)
+  createdAt  DateTime         @default(now())
+
+  webhook    Webhook          @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+
+  @@index([webhookId])
+  @@index([event])
+  @@index([createdAt])
+  @@map("webhook_logs")
+}
+
+
+
+
+
+
+// Workflows
+model Workflow {
+  id             String              @id @default(uuid())
+  name           String
+  description    String              
+  status         WorkflowStatus      @default(DRAFT)
+  triggerType    WorkflowTriggerType @default(MANUAL)
+  entityType     String
+  triggerConditions String?
+  version        Int                 @default(1)
+  createdBy      String
+  updatedBy      String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  steps          WorkflowStep[]
+  instances      WorkflowInstance[]
+
+  @@map("workflows")
+}
+
+model WorkflowStep {
+  id          String            @id @default(uuid())
+  workflowId  String
+  order       Int
+  name        String
+  description String?
+  type        WorkflowStepType
+  configuration String
+  conditions  String?
+  assignedTo  String?
+  timeoutHours Int?
+  required    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  workflow    Workflow          @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId])
+  @@map("workflow_steps")
+}
+
+model WorkflowInstance {
+  id             String              @id @default(uuid())
+  workflowId     String
+  entityType     String
+  entityId       String
+  status         WorkflowStepStatus  @default(PENDING)
+  initiatedBy    String
+  context        String?
+  completedAt    DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  workflow       Workflow            @relation(fields: [workflowId], references: [id])
+  stepInstances  WorkflowStepInstance[]
+
+  @@index([workflowId])
+  @@index([entityType])
+  @@index([entityId])
+  @@map("workflow_instances")
+}
+
+model WorkflowStepInstance {
+  id                String              @id @default(uuid())
+  workflowInstanceId String
+  stepId            String
+  status            WorkflowStepStatus  @default(PENDING)
+  assignedTo        String?
+  completedBy       String?
+  comments          String?             
+  action            ApprovalAction?
+  actionData        String?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  dueDate           DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  workflowInstance  WorkflowInstance    @relation(fields: [workflowInstanceId], references: [id], onDelete: Cascade)
+
+  @@index([workflowInstanceId])
+  @@index([assignedTo])
+  @@map("workflow_step_instances")
+}
+
+model WorkflowRule {
+  id             String   @id @default(uuid())
+  name           String
+  description    String   
+  entityType     String
+  triggerEvent   String
+  conditions     String
+  workflowId     String
+  active         Boolean  @default(true)
+  priority       Int      @default(1)
+  createdBy      String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([entityType])
+  @@index([triggerEvent])
+  @@map("workflow_rules")
+}
+
+
+
+
+// Auditoria e Histórico
+model AuditLog {
+  id          String           @id @default(uuid())
+  action      String
+  entityType  String
+  entityId    String?
+  userId      String?
+  userEmail   String?
+  userName    String?
+  oldValues   String?
+  newValues   String?
+  changes     String?
+  ipAddress   String?
+  userAgent   String?
+  sessionId   String?
+  severity    String    @default("LOW")
+  description String?
+  metadata    String?
+  createdAt   DateTime         @default(now())
+
+  @@index([entityType, entityId])
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model EntityVersion {
+  id            String           @id @default(uuid())
+  entityType    String
+  entityId      String
+  version       Int
+  data          String
+  changedBy     String
+  changedByEmail String?
+  changeReason  String?
+  isActive      Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+
+  @@unique([entityType, entityId, version])
+  @@index([entityType, entityId, version])
+  @@map("entity_versions")
+}
+
+model SystemEvent {
+  id            String         @id @default(uuid())
+  eventType     String
+  title         String
+  description   String?        
+  severity      String  @default("LOW")
+  data          String?
+  source        String?
+  acknowledged  Boolean        @default(false)
+  acknowledgedBy String?
+  acknowledgedAt DateTime?
+  createdAt     DateTime       @default(now())
+
+  @@index([eventType, createdAt])
+  @@map("system_events")
+}
+
+model DataExport {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  exportType      String
+  filters         String
+  data            String
+  fileUrl         String?
+  fileSize        BigInt
+  requestedBy     String
+  requestedByEmail String?
+  completedAt     DateTime?
+  recordCount     Int?
+  createdAt       DateTime @default(now())
+
+  @@map("data_exports")
+}
+
+
+
+
+
+
+// Integrações Externas
+model Integration {
+  id             String            @id @default(uuid())
+  name           String
+  description    String            
+  type           String
+  status         String @default("INACTIVE")
+  configuration  String
+  settings       String?
+  createdBy      String
+  updatedBy      String?
+  lastSyncAt     DateTime?
+  lastSyncError  String?           
+  syncCount      Int               @default(0)
+  errorCount     Int               @default(0)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  logs           IntegrationLog[]
+  syncs          ExternalSync[]
+  endpoints      ApiEndpoint[]
+  payments       PaymentTransaction[]
+
+  @@map("integrations")
+}
+
+model IntegrationLog {
+  id             String        @id @default(uuid())
+  integrationId  String
+  operation      String
+  status         String    @default("PENDING")
+  requestData    String?       
+  responseData   String?       
+  errorMessage   String?       
+  recordsProcessed Int?
+  recordsFailed  Int?
+  duration       BigInt?
+  metadata       String?
+  createdAt      DateTime      @default(now())
+
+  integration    Integration   @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@index([integrationId])
+  @@map("integration_logs")
+}
+
+model PaymentTransaction {
+  id             String          @id @default(uuid())
+  integrationId  String?
+  provider       String
+  transactionId  String
+  status         String
+  amount         Float
+  currency       String          @default("BRL")
+  description    String?
+  relatedEntityId String?
+  relatedEntityType String?
+  paymentData    String?
+  metadata       String?
+  processedAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  integration    Integration?   @relation(fields: [integrationId], references: [id])
+
+  @@index([integrationId])
+  @@index([transactionId])
+  @@map("payment_transactions")
+}
+
+model ExternalSync {
+  id             String        @id @default(uuid())
+  integrationId  String
+  direction      String
+  entityType     String
+  status         String    @default("PENDING")
+  recordsTotal   Int           @default(0)
+  recordsProcessed Int         @default(0)
+  recordsFailed  Int           @default(0)
+  errorMessage   String?       
+  syncData       String?
+  initiatedBy    String
+  completedAt    DateTime?
+  createdAt      DateTime      @default(now())
+
+  integration    Integration   @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@index([integrationId])
+  @@map("external_syncs")
+}
+
+model ApiEndpoint {
+  id             String   @id @default(uuid())
+  integrationId  String
+  name           String
+  method         String
+  path           String
+  description    String?
+  requestSchema  String?
+  responseSchema String?
+  headers        String?
+  active         Boolean  @default(true)
+  callCount      Int      @default(0)
+  errorCount     Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  integration    Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@index([integrationId])
+  @@map("api_endpoints")
 }

@@ -1,0 +1,55 @@
+@page "/dashboard"
+@inject InovaSaude.Blazor.Services.DashboardService DashboardService
+
+<h3>Dashboard</h3>
+
+@if (stats == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card p-3 mb-3">
+                <h5>Total UBS</h5>
+                <h2>@stats.TotalUBS</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 mb-3">
+                <h5>Despesas (mês)</h5>
+                <h2>@stats.TotalDespesasMes.ToString("C")</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 mb-3">
+                <h5>Despesas pendentes</h5>
+                <h2>@stats.DespesasPendentes</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 mb-3">
+                <h5>Usuários ativos</h5>
+                <h2>@stats.TotalUsuarios</h2>
+            </div>
+        </div>
+    </div>
+
+    <h5>Últimas atividades</h5>
+    <ul class="list-group mb-3">
+        @foreach (var a in stats.UltimasAtividades)
+        {
+            <li class="list-group-item">@a.DataHora.ToLocalTime(): @a.Descricao (<strong>@a.Usuario</strong>)</li>
+        }
+    </ul>
+}
+
+@code {
+    private InovaSaude.Blazor.Services.DashboardStats? stats;
+
+    protected override async Task OnInitializedAsync()
+    {
+        stats = await DashboardService.GetDashboardStatsAsync();
+    }
+}

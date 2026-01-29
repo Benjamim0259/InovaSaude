@@ -13,6 +13,15 @@ import ubsRoutes from './modules/ubs/ubs.routes';
 import usuariosRoutes from './modules/usuarios/usuarios.routes';
 import relatoriosRoutes from './modules/relatorios/relatorios.routes';
 import importacaoRoutes from './modules/importacao/importacao.routes';
+import permissoesRoutes from './InovaSaude.API/Controllers/PermissoesController';
+import dashboardRoutes from './InovaSaude.API/Controllers/DashboardController';
+import webhookRoutes from './modules/webhooks/webhook.routes';
+import workflowRoutes from './modules/workflows/workflow.routes';
+import auditRoutes from './modules/audit/audit.routes';
+import integrationRoutes from './modules/integrations/integration.routes';
+
+// Middlewares
+import { AuthMiddleware } from './InovaSaude.Core/Middlewares/AuthMiddleware';
 
 const app: Application = express();
 
@@ -49,11 +58,17 @@ app.get('/health', (_req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/despesas', despesasRoutes);
-app.use('/api/ubs', ubsRoutes);
-app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/relatorios', relatoriosRoutes);
-app.use('/api/importacao', importacaoRoutes);
+app.use('/api/despesas', AuthMiddleware.authenticate, despesasRoutes);
+app.use('/api/ubs', AuthMiddleware.authenticate, ubsRoutes);
+app.use('/api/usuarios', AuthMiddleware.authenticate, usuariosRoutes);
+app.use('/api/relatorios', AuthMiddleware.authenticate, relatoriosRoutes);
+app.use('/api/importacao', AuthMiddleware.authenticate, importacaoRoutes);
+app.use('/api/permissoes', AuthMiddleware.authenticate, permissoesRoutes);
+app.use('/api/dashboard', AuthMiddleware.authenticate, dashboardRoutes);
+app.use('/api/webhooks', AuthMiddleware.authenticate, webhookRoutes);
+app.use('/api/workflows', AuthMiddleware.authenticate, workflowRoutes);
+app.use('/api/audit', AuthMiddleware.authenticate, auditRoutes);
+app.use('/api/integrations', AuthMiddleware.authenticate, integrationRoutes);
 
 // Error handling
 app.use(notFoundHandler);

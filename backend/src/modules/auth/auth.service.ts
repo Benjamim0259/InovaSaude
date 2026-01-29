@@ -191,6 +191,26 @@ export class AuthService {
     return { message: 'Senha atualizada com sucesso' };
   }
 
+  async getUserById(id: string) {
+    const usuario = await prisma.usuario.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        perfil: true,
+        status: true,
+        telefone: true,
+        ubsId: true,
+        ultimoAcesso: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return usuario;
+  }
+
   async validateToken(token: string) {
     try {
       const decoded = jwt.verify(token, config.jwt.secret);
