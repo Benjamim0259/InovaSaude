@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import { config } from '../../config';
 import logger from '../../config/logger';
 
 interface EmailOptions {

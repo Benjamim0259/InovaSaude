@@ -47,11 +47,12 @@ public class AuthService : IAuthService
         };
     }
 
-    public async Task<LoginResponseDto> RefreshTokenAsync(string refreshToken)
+    public Task<LoginResponseDto> RefreshTokenAsync(string refreshToken)
     {
         // In production, validate refresh token against database
         // For now, this is a simplified implementation
-        throw new NotImplementedException("Refresh token not implemented yet");
+        return Task.FromException<LoginResponseDto>(
+            new NotImplementedException("Refresh token not implemented yet"));
     }
 
     public async Task<UserDto> GetCurrentUserAsync(Guid userId)
@@ -86,9 +87,9 @@ public class AuthService : IAuthService
         return true;
     }
 
-    private async Task<UserDto> MapToUserDto(Usuario user, IList<string> roles)
+    private Task<UserDto> MapToUserDto(Usuario user, IList<string> roles)
     {
-        return new UserDto
+        return Task.FromResult(new UserDto
         {
             Id = user.Id,
             Nome = user.Nome,
@@ -97,6 +98,6 @@ public class AuthService : IAuthService
             Roles = roles,
             MunicipioId = user.MunicipioId,
             UbsId = user.UbsId
-        };
+        });
     }
 }

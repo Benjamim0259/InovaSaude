@@ -187,6 +187,43 @@ using (var scope = app.Services.CreateScope())
                 await roleManager.CreateAsync(new IdentityRole<Guid>(role));
             }
         }
+
+        // Seed users
+        var adminUser = await userManager.FindByEmailAsync("admin@inovasaude.com.br");
+        if (adminUser == null)
+        {
+            adminUser = new Usuario
+            {
+                UserName = "admin@inovasaude.com.br",
+                Email = "admin@inovasaude.com.br",
+                Nome = "Administrador",
+                Cpf = "00000000000",
+                EmailConfirmed = true
+            };
+            var result = await userManager.CreateAsync(adminUser, "admin123");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+        }
+
+        var coordUser = await userManager.FindByEmailAsync("coordenador@inovasaude.com.br");
+        if (coordUser == null)
+        {
+            coordUser = new Usuario
+            {
+                UserName = "coordenador@inovasaude.com.br",
+                Email = "coordenador@inovasaude.com.br",
+                Nome = "Coordenador Teste",
+                Cpf = "11111111111",
+                EmailConfirmed = true
+            };
+            var result = await userManager.CreateAsync(coordUser, "senha123");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(coordUser, "Coordenador");
+            }
+        }
         
         Log.Information("Database initialized successfully");
     }

@@ -20,7 +20,8 @@ Plataforma web para gestão financeira de Unidades Básicas de Saúde, permitind
 - Clean Architecture
 
 **Frontend:**
-- React 18+ com TypeScript
+- **Blazor WebAssembly (em migração)**
+- React 18+ com TypeScript (legado)
 - Vite
 - React Router
 - React Query
@@ -44,7 +45,8 @@ InovaSaude/
 │   │   └── InovaSaude.Infrastructure/ # Data & Repositories
 │   └── tests/
 │       └── InovaSaude.Tests/         # Unit tests
-├── frontend/               # Frontend React
+├── frontend/               # Frontend React (legado)
+├── frontend-blazor/        # Frontend Blazor (em migração)
 │   ├── src/
 │   │   ├── components/     # React components
 │   │   ├── pages/          # Page components
@@ -109,7 +111,7 @@ npx prisma migrate dev
 npm run dev
 ```
 
-#### Frontend
+#### Frontend (React - legado)
 
 ```bash
 cd frontend
@@ -160,6 +162,10 @@ cp .env.example .env
 npm run dev
 
 # O frontend estará disponível em http://localhost:5173
+
+#### Frontend (Blazor - em migração)
+
+Consulte as orientações em [frontend-blazor/README.md](frontend-blazor/README.md).
 ```
 
 ## 📊 Funcionalidades Principais

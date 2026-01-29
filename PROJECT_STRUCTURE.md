@@ -62,7 +62,8 @@ InovaSaude/
 │   ├── .prettierrc                  # Prettier config
 │   └── .gitignore
 │
-├── frontend/                        # Frontend React + TypeScript
+├── frontend/                        # Frontend React + TypeScript (legado)
+├── frontend-blazor/                 # Frontend Blazor (em migração)
 │   ├── src/
 │   │   ├── components/              # Componentes React
 │   │   │   ├── auth/               # Componentes de auth
@@ -126,7 +127,8 @@ InovaSaude/
 - ✅ Jest para testes
 
 ### Frontend
-- ✅ React 18 com TypeScript
+- ✅ Blazor WebAssembly (em migração)
+- ✅ React 18 com TypeScript (legado)
 - ✅ Vite como bundler
 - ✅ TailwindCSS para estilos
 - ✅ React Query para cache
