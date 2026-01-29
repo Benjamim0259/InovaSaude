@@ -76,6 +76,7 @@ model Usuario {
   despesasCriadas      Despesa[]         @relation("UsuarioCriador")
   despesasAprovadas    Despesa[]         @relation("UsuarioAprovador")
   logsAuditoria        LogAuditoria[]
+  tokensRecuperacao    TokenRecuperacaoSenha[]
 
   @@map("usuarios")
 }
@@ -237,6 +238,8 @@ model TokenRecuperacaoSenha {
   expiradoEm DateTime @map("expirado_em")
   utilizadoEm DateTime? @map("utilizado_em")
   createdAt DateTime @default(now()) @map("created_at")
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
 
   @@index([usuarioId])
   @@index([token])
