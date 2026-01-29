@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Loading from '../components/Loading/index';
-import { Despesa } from '../types';
+import { Loading } from '../components/Loading/Loading';
+import type { Despesa } from '../types';
 
 const Despesas: React.FC = () => {
   const [despesas, setDespesas] = useState<Despesa[]>([]);
@@ -13,6 +13,9 @@ const Despesas: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingDespesa, setEditingDespesa] = useState<Despesa | null>(null);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importLoading, setImportLoading] = useState(false);
   const [formData, setFormData] = useState({
     descricao: '',
     valor: '',
@@ -39,7 +42,7 @@ const Despesas: React.FC = () => {
       });
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/despesas?${params}`,
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/despesas?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -62,13 +65,13 @@ const Despesas: React.FC = () => {
       
       if (editingDespesa) {
         await axios.put(
-          `${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/despesas/${editingDespesa.id}`,
+          `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/despesas/${editingDespesa.id}`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
         await axios.post(
-          `${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/despesas`,
+          `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/despesas`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -98,7 +101,7 @@ const Despesas: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.delete(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/despesas/${id}`,
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/despesas/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       carregarDespesas();
@@ -129,6 +132,91 @@ const Despesas: React.FC = () => {
     }).format(valor);
   };
 
+  const handleImport = async () => {
+    if (!importFile) {
+      alert('Selecione um arquivo para importar');
+      return;
+    }
+
+    try {
+      setImportLoading(true);
+      const token = localStorage.getItem('token');
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', importFile);
+
+      await axios.post(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/importacao/upload`,
+        formDataUpload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      alert('Importação realizada com sucesso!');
+      setShowImportModal(false);
+      setImportFile(null);
+      carregarDespesas();
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Erro ao importar arquivo');
+    } finally {
+      setImportLoading(false);
+    }
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/importacao/template`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: 'blob',
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'template_despesas.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err: any) {
+      alert('Erro ao baixar template');
+    }
+  };
+
+  const handleExportExcel = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const params = new URLSearchParams({
+        ...(statusFilter && { status: statusFilter }),
+        export: 'excel',
+      });
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/despesas?${params}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: 'blob',
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'despesas.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err: any) {
+      alert('Erro ao exportar dados');
+    }
+  };
+
   if (loading) return <Loading />;
 
   return (
@@ -136,25 +224,45 @@ const Despesas: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Gestão de Despesas</h1>
-          <button
-            onClick={() => {
-              setEditingDespesa(null);
-              setFormData({
-                descricao: '',
-                valor: '',
-                dataVencimento: '',
-                categoriaId: '',
-                tipo: 'VARIAVEL',
-                ubsId: '',
-                fornecedorId: '',
-                observacoes: '',
-              });
-              setShowModal(true);
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-          >
-            + Nova Despesa
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowImportModal(true)}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+            >
+              📥 Importar
+            </button>
+            <button
+              onClick={handleDownloadTemplate}
+              className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg"
+            >
+              📋 Template
+            </button>
+            <button
+              onClick={handleExportExcel}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg"
+            >
+              📊 Exportar Excel
+            </button>
+            <button
+              onClick={() => {
+                setEditingDespesa(null);
+                setFormData({
+                  descricao: '',
+                  valor: '',
+                  dataVencimento: '',
+                  categoriaId: '',
+                  tipo: 'VARIAVEL',
+                  ubsId: '',
+                  fornecedorId: '',
+                  observacoes: '',
+                });
+                setShowModal(true);
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+            >
+              + Nova Despesa
+            </button>
+          </div>
         </div>
 
         {error && (
@@ -349,6 +457,50 @@ const Despesas: React.FC = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Importação */}
+        {showImportModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white rounded-lg p-8 max-w-md w-full">
+              <h2 className="text-2xl font-bold mb-4">Importar Despesas</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Selecione o arquivo Excel/CSV
+                  </label>
+                  <input
+                    type="file"
+                    accept=".xlsx,.xls,.csv"
+                    onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                    className="w-full px-3 py-2 border rounded-lg"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Use o template fornecido para garantir compatibilidade
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 space-x-3">
+                <button
+                  onClick={handleImport}
+                  disabled={!importFile || importLoading}
+                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
+                >
+                  {importLoading ? 'Importando...' : 'Importar'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowImportModal(false);
+                    setImportFile(null);
+                  }}
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400"
+                >
+                  Cancelar
+                </button>
+              </div>
             </div>
           </div>
         )}

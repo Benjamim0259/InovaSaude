@@ -41,20 +41,23 @@ export interface CreateUBSDto {
   municipioId: string;
 }
 
-export type DespesaStatus = 'Pendente' | 'Aprovada' | 'Rejeitada';
+export type DespesaStatus = 'PENDENTE' | 'APROVADA' | 'REJEITADA' | 'PAGA' | 'CANCELADA';
 
 export interface Despesa {
   id: string;
   valor: number;
   data: string;
+  dataVencimento?: string;
   descricao: string;
   status: DespesaStatus;
+  tipo: 'FIXA' | 'VARIAVEL' | 'EVENTUAL';
   comprovanteUrl?: string;
   observacoes?: string;
   ubsId: string;
   ubsNome: string;
   categoriaId: string;
   categoriaNome: string;
+  fornecedorId?: string;
   usuarioId: string;
   usuarioNome: string;
   createdAt: string;

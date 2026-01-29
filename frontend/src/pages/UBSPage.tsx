@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Loading from '../components/Loading/index';
-import { UBS } from '../types';
+import { Loading } from '../components/Loading/Loading';
+import type { UBS } from '../types';
 
 const UBSPage: React.FC = () => {
   const [ubsList, setUbsList] = useState<UBS[]>([]);
@@ -34,7 +34,7 @@ const UBSPage: React.FC = () => {
       setLoading(true);
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/ubs?page=${page}&limit=${limit}`,
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/ubs?page=${page}&limit=${limit}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -55,13 +55,13 @@ const UBSPage: React.FC = () => {
 
       if (editingUbs) {
         await axios.put(
-          `${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/ubs/${editingUbs.id}`,
+          `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/ubs/${editingUbs.id}`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
         await axios.post(
-          `${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/ubs`,
+          `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/ubs`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -93,7 +93,7 @@ const UBSPage: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.delete(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/ubs/${id}`,
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/ubs/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       carregarUbs();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Loading from '../components/Loading/index';
+import { Loading } from '../components/Loading/Loading';
 
 interface Dashboard {
   totalDespesas: number;
@@ -29,7 +29,7 @@ const Relatorios: React.FC = () => {
       if (dataFim) params.append('dataFim', dataFim);
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/relatorios/dashboard?${params}`,
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/relatorios/dashboard?${params}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
