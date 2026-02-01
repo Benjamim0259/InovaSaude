@@ -25,7 +25,7 @@ public static class SeedData
             var admin = new Usuario
             {
                 Nome = "Administrador",
-                Email = "admin@inovasaude.local",
+                Email = "admin@inovasaude.com.br",
                 SenhaHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
                 Perfil = PerfilUsuario.ADMIN,
                 Status = "ATIVO",
