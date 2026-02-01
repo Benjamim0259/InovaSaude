@@ -78,7 +78,7 @@ router.get('/stats', async (req: Request, res: Response) => {
         },
         _sum: { valor: true }
       }).then(groups => {
-        const total = groups.reduce((sum, group) => sum + (group._sum?.valor?.toNumber() || 0), 0);
+        const total = groups.reduce((sum, group) => sum + (Number(group._sum?.valor) || 0), 0);
         return groups.length > 0 ? total / groups.length : 0;
       }),
 
@@ -117,9 +117,9 @@ router.get('/stats', async (req: Request, res: Response) => {
 
     const topDespesasPorCategoria = topCategorias.map(cat => ({
       categoria: categoriaMap.get(cat.categoriaId!) || 'Categoria não encontrada',
-      valor: cat._sum.valor?.toNumber() || 0,
+      valor: Number(cat._sum.valor) || 0,
       porcentagem: valorTotalDespesas._sum.valor ?
-        ((cat._sum.valor?.toNumber() || 0) / valorTotalDespesas._sum.valor.toNumber()) * 100 : 0
+        ((Number(cat._sum.valor) || 0) / Number(valorTotalDespesas._sum.valor)) * 100 : 0
     }));
 
     // Despesas por mês (últimos 6 meses)
@@ -153,7 +153,7 @@ router.get('/stats', async (req: Request, res: Response) => {
 
       despesasPorMes.push({
         mes: format(mes, 'MMM', { locale: require('date-fns/locale/pt-BR') }),
-        valor: valor._sum.valor?.toNumber() || 0,
+        valor: Number(valor._sum.valor) || 0,
         quantidade
       });
     }
@@ -163,7 +163,7 @@ router.get('/stats', async (req: Request, res: Response) => {
       totalDespesas,
       despesasPendentes,
       relatoriosGerados: 0, // TODO: implementar contagem de relatórios
-      valorTotalDespesas: valorTotalDespesas._sum.valor?.toNumber() || 0,
+      valorTotalDespesas: Number(valorTotalDespesas._sum.valor) || 0,
       mediaDespesasPorUbs,
       topDespesasPorCategoria,
       despesasPorMes,
@@ -211,7 +211,7 @@ router.get('/despesas-por-categoria', async (req: Request, res: Response) => {
 
     const result = despesasPorCategoria.map(item => ({
       categoria: categoriaMap.get(item.categoriaId!) || 'Categoria não encontrada',
-      valor: item._sum.valor?.toNumber() || 0,
+      valor: Number(item._sum.valor) || 0,
       quantidade: item._count
     }));
 
@@ -276,7 +276,7 @@ router.get('/despesas-por-mes', async (req: Request, res: Response) => {
 
       despesasPorMes.push({
         mes: format(currentDate, 'MMM/yyyy', { locale: require('date-fns/locale/pt-BR') }),
-        valor: valor._sum.valor?.toNumber() || 0,
+        valor: Number(valor._sum.valor) || 0,
         quantidade
       });
 
@@ -327,7 +327,7 @@ router.get('/top-ubs-despesas', async (req: Request, res: Response) => {
 
     const result = topUbs.map(item => ({
       ubs: ubsMap.get(item.ubsId!) || 'UBS não encontrada',
-      valor: item._sum.valor?.toNumber() || 0,
+      valor: Number(item._sum.valor) || 0,
       quantidade: item._count
     }));
 

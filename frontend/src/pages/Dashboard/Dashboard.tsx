@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { dashboardService, DashboardStats, DashboardFilters } from '../../services/dashboardService';
+import { dashboardService, type DashboardStats, type DashboardFilters } from '../../services/dashboardService';
 import { BarChartComponent, PieChartComponent, LineChartComponent, MultiBarChartComponent } from '../../components/Charts';
 import { format, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
