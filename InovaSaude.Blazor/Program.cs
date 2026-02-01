@@ -23,18 +23,25 @@ builder.Services.AddDataProtection()
     .SetApplicationName("InovaSaude");
 
 // Add Entity Framework Core (SQL Server local, PostgreSQL production)
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? Environment.GetEnvironmentVariable("DATABASE_URL");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    if (builder.Environment.IsProduction() && connectionString?.Contains("Host=") == true)
+    // Se está em produção OU se a connection string contém "Host=" (PostgreSQL)
+    if (builder.Environment.IsProduction() || connectionString?.Contains("Host=") == true)
     {
         // PostgreSQL para produção (Render)
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("PostgreSQL connection string not found. Set DATABASE_URL or ConnectionStrings__DefaultConnection");
+        }
         options.UseNpgsql(connectionString);
     }
     else
     {
         // SQL Server para desenvolvimento local
-        options.UseSqlServer(connectionString);
+        options.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string not found"));
     }
 });
 
