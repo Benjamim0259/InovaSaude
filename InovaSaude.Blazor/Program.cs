@@ -11,6 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+// Persist Data Protection keys to avoid antiforgery errors on container restart
+var dataProtectionPath = Path.Combine("/app", "keys");
+if (!Directory.Exists(dataProtectionPath))
+{
+    Directory.CreateDirectory(dataProtectionPath);
+}
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
+    .SetApplicationName("InovaSaude");
+
 // Add Entity Framework Core (SQL Server local, PostgreSQL production)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
