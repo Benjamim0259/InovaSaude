@@ -1,9 +1,59 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>InovaSaúde - Sistema de Gestão Financeira</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">🏥 InovaSaúde</h1>
+        <p class="lead">Sistema de Gestão Financeira para Unidades Básicas de Saúde</p>
+    </div>
 
-Welcome to your new app.
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h3>💰</h3>
+                    <h5 class="card-title">Gestão de Despesas</h5>
+                    <p class="card-text">Controle completo de despesas com workflow de aprovação e auditoria.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h3>📊</h3>
+                    <h5 class="card-title">Relatórios Detalhados</h5>
+                    <p class="card-text">Análises e relatórios gerenciais em tempo real.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h3>🔐</h3>
+                    <h5 class="card-title">Segurança e Auditoria</h5>
+                    <p class="card-text">Sistema completo de logs e rastreamento de operações.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <div class="text-center mt-5">
+        <AuthorizeView>
+            <Authorized>
+                <a href="/dashboard" class="btn btn-primary btn-lg">
+                    <span class="oi oi-dashboard"></span> Acessar Dashboard
+                </a>
+            </Authorized>
+            <NotAuthorized>
+                <a href="/login" class="btn btn-primary btn-lg">
+                    <span class="oi oi-account-login"></span> Fazer Login
+                </a>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+
+    <div class="mt-5 text-center text-muted">
+        <small>Desenvolvido com Blazor Server e .NET 8</small>
+    </div>
+</div>

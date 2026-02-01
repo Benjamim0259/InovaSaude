@@ -75,6 +75,19 @@ public class ApplicationDbContext : DbContext
             .HasIndex(p => new { p.UsuarioId, p.Permissao })
             .IsUnique();
 
+        // Configure decimal precision
+        modelBuilder.Entity<Categoria>()
+            .Property(c => c.OrcamentoMensal)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Despesa>()
+            .Property(d => d.Valor)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<PaymentTransaction>()
+            .Property(p => p.Amount)
+            .HasPrecision(18, 2);
+
         // Configure relationships
         modelBuilder.Entity<Usuario>()
             .HasMany(u => u.UbsCoordenadas)

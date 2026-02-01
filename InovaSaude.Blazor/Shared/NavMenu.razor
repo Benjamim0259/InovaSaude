@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">InovaSaude</a>
+        <a class="navbar-brand" href="">🏥 InovaSaúde</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -14,16 +14,39 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="dashboard">
-                <span class="oi oi-dashboard" aria-hidden="true"></span> Dashboard
-            </NavLink>
-        </div>
 
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
-                    <a class="nav-link" href="#" @onclick="Logout">Logout</a>
+                    <NavLink class="nav-link" href="dashboard">
+                        <span class="oi oi-dashboard" aria-hidden="true"></span> Dashboard
+                    </NavLink>
+                </div>
+                
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="despesas">
+                        <span class="oi oi-dollar" aria-hidden="true"></span> Despesas
+                    </NavLink>
+                </div>
+                
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="ubs">
+                        <span class="oi oi-medical-cross" aria-hidden="true"></span> UBS
+                    </NavLink>
+                </div>
+                
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="relatorios">
+                        <span class="oi oi-bar-chart" aria-hidden="true"></span> Relatórios
+                    </NavLink>
+                </div>
+                
+                <hr />
+                
+                <div class="nav-item px-3">
+                    <a class="nav-link" href="#" @onclick="Logout">
+                        <span class="oi oi-account-logout" aria-hidden="true"></span> Sair
+                    </a>
                 </div>
             </Authorized>
             <NotAuthorized>

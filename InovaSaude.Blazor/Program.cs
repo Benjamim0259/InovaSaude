@@ -25,6 +25,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 
 // Add custom services
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<UBSService>();
@@ -36,8 +37,12 @@ builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<ImportacaoService>();
 builder.Services.AddScoped<WebhookService>();
 
-// Add HttpClient for API calls
-builder.Services.AddHttpClient();
+// Add HttpClient for API calls with BaseAddress
+builder.Services.AddScoped(sp => new HttpClient 
+{ 
+    BaseAddress = new Uri(sp.GetRequiredService<NavigationManager>().BaseUri) 
+});
+
 // Add MVC controllers for login endpoints
 builder.Services.AddControllers();
 

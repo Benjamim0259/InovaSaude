@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<PageTitle>InovaSaude.Blazor</PageTitle>
+<PageTitle>InovaSaúde - Sistema de Gestão Financeira</PageTitle>
 
 <div class="page">
     <div class="sidebar">
@@ -8,8 +8,15 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        <div class="top-row px-4 bg-light border-bottom">
+            <AuthorizeView>
+                <Authorized>
+                    <span class="text-muted">Bem-vindo, <strong>@context.User.Identity?.Name</strong></span>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/login" class="btn btn-sm btn-primary">Fazer Login</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">

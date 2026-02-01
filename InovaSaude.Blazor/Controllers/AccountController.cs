@@ -22,16 +22,29 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest model)
+    [HttpGet("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest? bodyModel, [FromQuery] string? email, [FromQuery] string? password)
     {
+        var model = bodyModel ?? new LoginRequest { Email = email ?? "", Password = password ?? "" };
+        
         if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password))
             return BadRequest(new { message = "Email and password required" });
 
         var user = await _usuarioService.GetUsuarioByEmailAsync(model.Email);
-        if (user == null) return Unauthorized(new { message = "Invalid credentials" });
+        if (user == null) 
+        {
+            if (Request.Method == "GET")
+                return Redirect("/login?error=invalid");
+            return Unauthorized(new { message = "Invalid credentials" });
+        }
 
         var verified = BCrypt.Net.BCrypt.Verify(model.Password, user.SenhaHash);
-        if (!verified) return Unauthorized(new { message = "Invalid credentials" });
+        if (!verified) 
+        {
+            if (Request.Method == "GET")
+                return Redirect("/login?error=invalid");
+            return Unauthorized(new { message = "Invalid credentials" });
+        }
 
         var claims = new List<Claim>
         {
@@ -46,6 +59,9 @@ public class AccountController : ControllerBase
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
+        if (Request.Method == "GET")
+            return Redirect("/dashboard");
+            
         return Ok(new { message = "Logged in" });
     }
 
