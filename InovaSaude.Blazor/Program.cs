@@ -11,9 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-// Add Entity Framework Core
+// Add Entity Framework Core (SQL Server local, PostgreSQL production)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    if (builder.Environment.IsProduction() && connectionString?.Contains("Host=") == true)
+    {
+        // PostgreSQL para produção (Render)
+        options.UseNpgsql(connectionString);
+    }
+    else
+    {
+        // SQL Server para desenvolvimento local
+        options.UseSqlServer(connectionString);
+    }
+});
 
 // Authentication & Authorization (basic cookie-based)
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
