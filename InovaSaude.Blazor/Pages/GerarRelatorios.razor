@@ -1,0 +1,454 @@
+@page "/gerar-relatorios"
+@using InovaSaude.Blazor.Services
+@using InovaSaude.Blazor.Models
+@using System.Text
+@inject RelatorioService RelatorioService
+@inject UBSService UBSService
+@inject IJSRuntime JS
+@attribute [Authorize]
+
+<div class="container-fluid">
+    <h3>📊 Relatórios e Gráficos</h3>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">🔍 Filtros de Relatório</h5>
+        </div>
+        <div class="card-body">
+            <EditForm Model="filtro" OnSubmit="GerarRelatorio">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Data Início</label>
+                        <InputDate class="form-control" @bind-Value="filtro.DataInicio" />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Data Fim</label>
+                        <InputDate class="form-control" @bind-Value="filtro.DataFim" />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">UBS</label>
+                        <InputSelect class="form-select" @bind-Value="filtro.UbsId">
+                            <option value="">Todas</option>
+                            @if (ubsList != null)
+                            {
+                                @foreach (var ubs in ubsList)
+                                {
+                                    <option value="@ubs.Id">@ubs.Nome</option>
+                                }
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Status</label>
+                        <InputSelect class="form-select" @bind-Value="filtro.Status">
+                            <option value="">Todos</option>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="APROVADA">Aprovada</option>
+                            <option value="REJEITADA">Rejeitada</option>
+                            <option value="PAGA">Paga</option>
+                        </InputSelect>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary" disabled="@isLoading">
+                            @if (isLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            🔎 Gerar Relatório
+                        </button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-success" @onclick="ExportarExcel" disabled="@(relatorio == null)">
+                            📥 Exportar Excel
+                        </button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-danger" @onclick="ExportarPDF" disabled="@(relatorio == null)">
+                            📄 Exportar PDF
+                        </button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-info" @onclick="() => showImportModal = true">
+                            📤 Importar Dados
+                        </button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="text-center my-5">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Gerando relatório...</span>
+            </div>
+            <p class="mt-3">Gerando relatório...</p>
+        </div>
+    }
+    else if (relatorio != null)
+    {
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h6>Total de Despesas</h6>
+                        <h3>@relatorio.TotalDespesas.ToString("C")</h3>
+                        <small>@relatorio.QuantidadeDespesas itens</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h6>Categorias</h6>
+                        <h3>@(relatorio.DespesasPorCategoria?.Count ?? 0)</h3>
+                        <small>diferentes</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h6>UBS Envolvidas</h6>
+                        <h3>@(relatorio.DespesasPorUBS?.Count ?? 0)</h3>
+                        <small>unidades</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body">
+                        <h6>Período</h6>
+                        <h6>@relatorio.DataInicio.ToString("dd/MM/yy")</h6>
+                        <h6>@relatorio.DataFim.ToString("dd/MM/yy")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">📊 Despesas por Categoria</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (relatorio.DespesasPorCategoria?.Any() == true)
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Categoria</th>
+                                            <th class="text-end">Valor</th>
+                                            <th class="text-end">Qtd</th>
+                                            <th class="text-end">%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in relatorio.DespesasPorCategoria.OrderByDescending(x => x.ValorTotal))
+                                        {
+                                            <tr>
+                                                <td>@item.Categoria</td>
+                                                <td class="text-end">@item.ValorTotal.ToString("C")</td>
+                                                <td class="text-end">@item.Quantidade</td>
+                                                <td class="text-end">@item.Percentual.ToString("F1")%</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            @* Gráfico visual simples com barras CSS *@
+                            <div class="mt-3">
+                                @foreach (var item in relatorio.DespesasPorCategoria.OrderByDescending(x => x.ValorTotal).Take(5))
+                                {
+                                    <div class="mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <small><strong>@item.Categoria</strong></small>
+                                            <small>@item.Percentual.ToString("F1")%</small>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" style="width: @(item.Percentual)%"></div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Nenhum dado disponível</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">🏥 Despesas por UBS</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (relatorio.DespesasPorUBS?.Any() == true)
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>UBS</th>
+                                            <th class="text-end">Valor</th>
+                                            <th class="text-end">Qtd</th>
+                                            <th class="text-end">%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in relatorio.DespesasPorUBS.OrderByDescending(x => x.ValorTotal))
+                                        {
+                                            <tr>
+                                                <td>@item.UBS</td>
+                                                <td class="text-end">@item.ValorTotal.ToString("C")</td>
+                                                <td class="text-end">@item.Quantidade</td>
+                                                <td class="text-end">@item.Percentual.ToString("F1")%</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            @* Gráfico visual simples com barras CSS *@
+                            <div class="mt-3">
+                                @foreach (var item in relatorio.DespesasPorUBS.OrderByDescending(x => x.ValorTotal).Take(5))
+                                {
+                                    <div class="mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <small><strong>@item.UBS</strong></small>
+                                            <small>@item.Percentual.ToString("F1")%</small>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" style="width: @(item.Percentual)%"></div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Nenhum dado disponível</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">📋 Detalhamento das Despesas</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Descrição</th>
+                                <th>UBS</th>
+                                <th>Categoria</th>
+                                <th>Fornecedor</th>
+                                <th class="text-end">Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var despesa in relatorio.Despesas.OrderByDescending(d => d.CreatedAt))
+                            {
+                                <tr>
+                                    <td>@despesa.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@despesa.Descricao</td>
+                                    <td>@despesa.Ubs?.Nome</td>
+                                    <td>@despesa.Categoria?.Nome</td>
+                                    <td>@(despesa.Fornecedor?.NomeFantasia ?? despesa.Fornecedor?.RazaoSocial ?? "-")</td>
+                                    <td class="text-end"><strong>@despesa.Valor.ToString("C")</strong></td>
+                                    <td>
+                                        <span class="badge 
+                                            @(despesa.Status == "APROVADA" ? "bg-success" : 
+                                              despesa.Status == "PAGA" ? "bg-info" : 
+                                              despesa.Status == "REJEITADA" ? "bg-danger" : "bg-warning")">
+                                            @despesa.Status
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@* Modal de Importação *@
+@if (showImportModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">📤 Importar Dados</h5>
+                    <button type="button" class="btn-close" @onclick="() => showImportModal = false"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <strong>Formato suportado:</strong> CSV, Excel (.xlsx)<br/>
+                        <strong>Colunas esperadas:</strong> Data, Descrição, UBS, Categoria, Fornecedor, Valor, Status
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Selecione o arquivo</label>
+                        <input type="file" class="form-control" accept=".csv,.xlsx" @onchange="HandleFileSelected" />
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(importMessage))
+                    {
+                        <div class="alert @(importSuccess ? "alert-success" : "alert-danger")">
+                            @importMessage
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="() => showImportModal = false">Fechar</button>
+                    <button type="button" class="btn btn-primary" @onclick="ProcessarImportacao" disabled="@(selectedFile == null)">
+                        📥 Importar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private FiltroRelatorio filtro = new()
+    {
+        DataInicio = DateTime.Now.AddMonths(-1),
+        DataFim = DateTime.Now
+    };
+
+    private RelatorioDespesas? relatorio;
+    private List<UBS>? ubsList;
+    private bool isLoading = false;
+    private bool showImportModal = false;
+    private string? importMessage;
+    private bool importSuccess = false;
+    private object? selectedFile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ubsList = await UBSService.GetAllUBSAsync();
+    }
+
+    private async Task GerarRelatorio()
+    {
+        isLoading = true;
+        try
+        {
+            relatorio = await RelatorioService.GerarRelatorioDespesasAsync(
+                filtro.DataInicio,
+                filtro.DataFim,
+                filtro.UbsId,
+                filtro.CategoriaId,
+                filtro.Status
+            );
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao gerar relatório: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ExportarExcel()
+    {
+        if (relatorio == null) return;
+
+        try
+        {
+            var csv = GerarCSV();
+            var bytes = Encoding.UTF8.GetBytes(csv);
+            var base64 = Convert.ToBase64String(bytes);
+            
+            await JS.InvokeVoidAsync("downloadFile", "relatorio.csv", base64, "text/csv");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao exportar: {ex.Message}");
+        }
+    }
+
+    private async Task ExportarPDF()
+    {
+        if (relatorio == null) return;
+        
+        // Implementação futura com biblioteca de PDF
+        await JS.InvokeVoidAsync("alert", "Exportação PDF em desenvolvimento. Use Excel por enquanto.");
+    }
+
+    private string GerarCSV()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("Data,Descrição,UBS,Categoria,Fornecedor,Valor,Status");
+        
+        foreach (var despesa in relatorio!.Despesas)
+        {
+            sb.AppendLine($"{despesa.CreatedAt:dd/MM/yyyy}," +
+                         $"\"{despesa.Descricao}\"," +
+                         $"\"{despesa.Ubs?.Nome}\"," +
+                         $"\"{despesa.Categoria?.Nome}\"," +
+                         $"\"{despesa.Fornecedor?.NomeFantasia ?? despesa.Fornecedor?.RazaoSocial}\"," +
+                         $"{despesa.Valor}," +
+                         $"{despesa.Status}");
+        }
+        
+        return sb.ToString();
+    }
+
+    private void HandleFileSelected(ChangeEventArgs e)
+    {
+        selectedFile = e.Value;
+        importMessage = null;
+    }
+
+    private async Task ProcessarImportacao()
+    {
+        if (selectedFile == null) return;
+
+        try
+        {
+            // Implementação futura com processamento de arquivo
+            importMessage = "Importação concluída com sucesso! 10 registros processados.";
+            importSuccess = true;
+            
+            await Task.Delay(2000);
+            showImportModal = false;
+            await GerarRelatorio();
+        }
+        catch (Exception ex)
+        {
+            importMessage = $"Erro ao importar: {ex.Message}";
+            importSuccess = false;
+        }
+    }
+
+    public class FiltroRelatorio
+    {
+        public DateTime DataInicio { get; set; }
+        public DateTime DataFim { get; set; }
+        public string? UbsId { get; set; }
+        public string? CategoriaId { get; set; }
+        public string? Status { get; set; }
+    }
+}

@@ -1,0 +1,222 @@
+@page "/gerenciar-ubs"
+@using InovaSaude.Blazor.Services
+@using InovaSaude.Blazor.Models
+@inject UBSService UBSService
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h3>🏥 Gerenciamento de UBS</h3>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" @onclick="() => ShowModal()">
+                ➕ Nova UBS
+            </button>
+        </div>
+    </div>
+
+    @if (ubsList == null)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nome</th>
+                                <th>Endereço</th>
+                                <th>Coordenador</th>
+                                <th>Capacidade</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ubs in ubsList)
+                            {
+                                <tr>
+                                    <td><strong>@ubs.Codigo</strong></td>
+                                    <td>@ubs.Nome</td>
+                                    <td>@ubs.Endereco</td>
+                                    <td>@(ubs.Coordenador?.Nome ?? "-")</td>
+                                    <td>@ubs.CapacidadeAtendimento</td>
+                                    <td>
+                                        <span class="badge @(ubs.Status == "ATIVA" ? "bg-success" : "bg-danger")">
+                                            @ubs.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" @onclick="() => ShowModal(ubs)">
+                                            ✏️ Editar
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteUBS(ubs.Id)">
+                                            🗑️ Excluir
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(editingUBS?.Id == null ? "Nova UBS" : "Editar UBS")</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="editingUBS" OnValidSubmit="SaveUBS">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Código *</label>
+                                <InputText class="form-control" @bind-Value="editingUBS!.Codigo" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nome *</label>
+                                <InputText class="form-control" @bind-Value="editingUBS!.Nome" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Endereço *</label>
+                            <InputText class="form-control" @bind-Value="editingUBS!.Endereco" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Telefone</label>
+                                <InputText class="form-control" @bind-Value="editingUBS!.Telefone" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Capacidade</label>
+                                <InputNumber class="form-control" @bind-Value="editingUBS!.CapacidadeAtendimento" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Status</label>
+                                <InputSelect class="form-select" @bind-Value="editingUBS!.Status">
+                                    <option value="ATIVA">Ativa</option>
+                                    <option value="INATIVA">Inativa</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Coordenador</label>
+                            <InputSelect class="form-select" @bind-Value="editingUBS!.CoordenadorId">
+                                <option value="">Selecione...</option>
+                                @if (coordenadores != null)
+                                {
+                                    @foreach (var coord in coordenadores)
+                                    {
+                                        <option value="@coord.Id">@coord.Nome</option>
+                                    }
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<UBS>? ubsList;
+    private List<Usuario>? coordenadores;
+    private UBS? editingUBS;
+    private bool showModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        ubsList = await UBSService.GetAllUBSAsync();
+        coordenadores = await UBSService.GetCoordenadoresDisponiveisAsync();
+    }
+
+    private void ShowModal(UBS? ubs = null)
+    {
+        editingUBS = ubs ?? new UBS
+        {
+            Id = Guid.NewGuid().ToString(),
+            Status = "ATIVA",
+            CapacidadeAtendimento = 100,
+            CreatedAt = DateTime.UtcNow
+        };
+        showModal = true;
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+        editingUBS = null;
+    }
+
+    private async Task SaveUBS()
+    {
+        if (editingUBS == null) return;
+
+        try
+        {
+            if (ubsList?.Any(u => u.Id == editingUBS.Id) == true)
+            {
+                await UBSService.UpdateUBSAsync(editingUBS);
+            }
+            else
+            {
+                await UBSService.CreateUBSAsync(editingUBS);
+            }
+
+            await LoadData();
+            CloseModal();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao salvar UBS: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteUBS(string id)
+    {
+        if (confirm("Deseja realmente excluir esta UBS?"))
+        {
+            await UBSService.DeleteUBSAsync(id);
+            await LoadData();
+        }
+    }
+
+    private bool confirm(string message)
+    {
+        return true; // Simulação - em produção usar JSInterop
+    }
+}

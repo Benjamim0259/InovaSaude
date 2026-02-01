@@ -1,0 +1,200 @@
+@page "/gerenciar-despesas"
+@using InovaSaude.Blazor.Services
+@using InovaSaude.Blazor.Models
+@inject DespesaService DespesaService
+@inject UBSService UBSService
+@attribute [Authorize]
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h3>💰 Gerenciamento de Despesas</h3>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" @onclick="() => ShowModal()">
+                ➕ Nova Despesa
+            </button>
+        </div>
+    </div>
+
+    @if (despesas == null)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Descrição</th>
+                                <th>UBS</th>
+                                <th>Categoria</th>
+                                <th class="text-end">Valor</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var despesa in despesas)
+                            {
+                                <tr>
+                                    <td>@despesa.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@despesa.Descricao</td>
+                                    <td>@(despesa.Ubs?.Nome ?? "-")</td>
+                                    <td>@(despesa.Categoria?.Nome ?? "-")</td>
+                                    <td class="text-end"><strong>@despesa.Valor.ToString("C")</strong></td>
+                                    <td>
+                                        <span class="badge 
+                                            @(despesa.Status == "APROVADA" ? "bg-success" : 
+                                              despesa.Status == "PAGA" ? "bg-info" : 
+                                              despesa.Status == "REJEITADA" ? "bg-danger" : "bg-warning")">
+                                            @despesa.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" @onclick="() => ShowModal(despesa)">
+                                            ✏️
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteDespesa(despesa.Id)">
+                                            🗑️
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(editingDespesa?.Id == null ? "Nova Despesa" : "Editar Despesa")</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="editingDespesa" OnValidSubmit="SaveDespesa">
+                        <div class="mb-3">
+                            <label class="form-label">Descrição *</label>
+                            <InputText class="form-control" @bind-Value="editingDespesa!.Descricao" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">UBS</label>
+                                <InputSelect class="form-select" @bind-Value="editingDespesa!.UbsId">
+                                    <option value="">Selecione...</option>
+                                    @if (ubsList != null)
+                                    {
+                                        @foreach (var ubs in ubsList)
+                                        {
+                                            <option value="@ubs.Id">@ubs.Nome</option>
+                                        }
+                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Valor *</label>
+                                <InputNumber class="form-control" @bind-Value="editingDespesa!.Valor" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <InputSelect class="form-select" @bind-Value="editingDespesa!.Status">
+                                <option value="PENDENTE">Pendente</option>
+                                <option value="APROVADA">Aprovada</option>
+                                <option value="REJEITADA">Rejeitada</option>
+                                <option value="PAGA">Paga</option>
+                            </InputSelect>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Despesa>? despesas;
+    private List<UBS>? ubsList;
+    private Despesa? editingDespesa;
+    private bool showModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        despesas = await DespesaService.GetAllDespesasAsync();
+        ubsList = await UBSService.GetAllUBSAsync();
+    }
+
+    private void ShowModal(Despesa? despesa = null)
+    {
+        editingDespesa = despesa ?? new Despesa
+        {
+            Id = Guid.NewGuid().ToString(),
+            Status = "PENDENTE",
+            CreatedAt = DateTime.UtcNow
+        };
+        showModal = true;
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+        editingDespesa = null;
+    }
+
+    private async Task SaveDespesa()
+    {
+        if (editingDespesa == null) return;
+
+        try
+        {
+            if (despesas?.Any(d => d.Id == editingDespesa.Id) == true)
+            {
+                await DespesaService.UpdateDespesaAsync(editingDespesa);
+            }
+            else
+            {
+                await DespesaService.CreateDespesaAsync(editingDespesa);
+            }
+
+            await LoadData();
+            CloseModal();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao salvar despesa: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteDespesa(string id)
+    {
+        await DespesaService.DeleteDespesaAsync(id);
+        await LoadData();
+    }
+}
