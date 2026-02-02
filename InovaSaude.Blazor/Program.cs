@@ -23,17 +23,17 @@ if (!Directory.Exists(dataProtectionPath))
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
     .SetApplicationName("InovaSaude")
- .SetDefaultKeyLifetime(TimeSpan.FromDays(90)); // Chaves válidas por 90 dias
+    .SetDefaultKeyLifetime(TimeSpan.FromDays(90)); // Chaves válidas por 90 dias
 
-// Em produção, desabilitar validação antiforgery estrita para evitar problemas com reinicializações
-if (builder.Environment.IsProduction())
+// Configuração de Antiforgery para funcionar com proxy reverso (Render)
+builder.Services.AddAntiforgery(options =>
 {
-    builder.Services.AddAntiforgery(options =>
-    {
-     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+  // Em produção com proxy reverso (Render), não forçar HTTPS nos cookies
+    // O proxy lida com SSL externamente
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     options.Cookie.SameSite = SameSiteMode.Lax;
-    });
-}
+    options.Cookie.HttpOnly = true;
+});
 
 // Função para converter DATABASE_URL (formato postgres://) para connection string Npgsql
 static string ConvertPostgresUrlToConnectionString(string databaseUrl)
@@ -133,21 +133,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/login";
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
-        
-        // Configurações de cookie para produção (HTTPS)
-        if (builder.Environment.IsProduction())
-        {
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            options.Cookie.SameSite = SameSiteMode.None;
-        }
-        else
-        {
-            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-            options.Cookie.SameSite = SameSiteMode.Lax;
-        }
-        
-        options.Cookie.HttpOnly = true;
-        options.Cookie.IsEssential = true;
+      
+        // Configurações de cookie compatíveis com proxy reverso (Render)
+        // O proxy lida com SSL externamente, internamente é HTTP
+  options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+   options.Cookie.HttpOnly = true;
+      options.Cookie.IsEssential = true;
     });
 builder.Services.AddAuthorization();
 
