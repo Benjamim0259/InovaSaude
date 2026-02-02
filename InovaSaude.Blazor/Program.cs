@@ -51,6 +51,22 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/login";
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
+        
+        // Configurações de cookie para produção (HTTPS)
+        if (builder.Environment.IsProduction())
+        {
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.SameSite = SameSiteMode.None;
+        }
+        else
+        {
+            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            options.Cookie.SameSite = SameSiteMode.Lax;
+        }
+        
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
     });
 builder.Services.AddAuthorization();
 
@@ -85,7 +101,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Não usar UseHttpsRedirection no Render (causa loop de redirecionamento)
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseStaticFiles();
 
