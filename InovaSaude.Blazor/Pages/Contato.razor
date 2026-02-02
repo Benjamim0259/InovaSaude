@@ -1,0 +1,149 @@
+@page "/contato"
+
+<PageTitle>Contato - InovaSaúde</PageTitle>
+
+<div class="container mt-4">
+ <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="mb-4">?? Entre em Contato</h1>
+       
+  <div class="card shadow-sm mb-4">
+       <div class="card-body">
+               <h5 class="card-title">Suporte Técnico</h5>
+             <p class="card-text">
+   Para questões técnicas, suporte ou reportar problemas com o sistema:
+  </p>
+    <ul class="list-unstyled">
+          <li class="mb-2">
+         <strong>?? Email:</strong> 
+  <a href="mailto:suporte@inovasaude.com.br">suporte@inovasaude.com.br</a>
+            </li>
+    <li class="mb-2">
+ <strong>?? Telefone:</strong> (11) 1234-5678
+           </li>
+       <li class="mb-2">
+          <strong>?? Horário de Atendimento:</strong> Segunda a Sexta, 8h às 18h
+               </li>
+           </ul>
+</div>
+      </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+           <h5 class="card-title">Informações Comerciais</h5>
+         <p class="card-text">
+           Para informações sobre implementação, treinamento ou parcerias:
+</p>
+        <ul class="list-unstyled">
+     <li class="mb-2">
+                 <strong>?? Email:</strong> 
+      <a href="mailto:comercial@inovasaude.com.br">comercial@inovasaude.com.br</a>
+     </li>
+           <li class="mb-2">
+       <strong>?? Telefone:</strong> (11) 1234-5679
+       </li>
+     </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+      <div class="card-body">
+            <h5 class="card-title">Endereço</h5>
+  <address class="mb-0">
+       <strong>InovaSaúde - Sistema de Gestão de UBS</strong><br/>
+           Rua da Saúde, 123<br/>
+               São Paulo - SP<br/>
+           CEP: 01234-567
+ </address>
+      </div>
+        </div>
+
+            <div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">Formulário de Contato</h5>
+   <EditForm Model="contatoModel" OnValidSubmit="EnviarContato">
+            <div class="mb-3">
+            <label class="form-label">Nome</label>
+       <InputText class="form-control" @bind-Value="contatoModel.Nome" placeholder="Seu nome" />
+              </div>
+
+      <div class="mb-3">
+              <label class="form-label">Email</label>
+            <InputText type="email" class="form-control" @bind-Value="contatoModel.Email" placeholder="seu@email.com" />
+            </div>
+
+            <div class="mb-3">
+       <label class="form-label">Assunto</label>
+    <InputText class="form-control" @bind-Value="contatoModel.Assunto" placeholder="Assunto da mensagem" />
+   </div>
+
+             <div class="mb-3">
+          <label class="form-label">Mensagem</label>
+             <InputTextArea class="form-control" rows="5" @bind-Value="contatoModel.Mensagem" placeholder="Descreva sua solicitação ou dúvida" />
+             </div>
+
+         @if (!string.IsNullOrEmpty(mensagemSucesso))
+            {
+        <div class="alert alert-success">
+            @mensagemSucesso
+  </div>
+    }
+
+  <button class="btn btn-primary" type="submit" disabled="@enviando">
+        @if (enviando)
+        {
+ <span class="spinner-border spinner-border-sm me-2"></span>
+             }
+    Enviar Mensagem
+  </button>
+ </EditForm>
+   </div>
+        </div>
+
+    <div class="text-center mt-4">
+        <a href="/login" class="btn btn-outline-primary">
+   <span class="oi oi-account-login me-2"></span>
+              Acessar Sistema
+                </a>
+   </div>
+    </div>
+    </div>
+</div>
+
+@code {
+    private ContatoModel contatoModel = new();
+    private string? mensagemSucesso;
+  private bool enviando = false;
+
+    private async Task EnviarContato()
+    {
+        enviando = true;
+        mensagemSucesso = null;
+
+        try
+        {
+         // Aqui você pode adicionar a lógica para enviar o email
+            // Por enquanto, apenas simulamos o envio
+       await Task.Delay(1000);
+  
+            mensagemSucesso = "Mensagem enviada com sucesso! Entraremos em contato em breve.";
+       contatoModel = new(); // Limpar formulário
+ }
+        catch
+        {
+            mensagemSucesso = null;
+ }
+        finally
+     {
+       enviando = false;
+        }
+    }
+
+    public class ContatoModel
+    {
+        public string Nome { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Assunto { get; set; } = string.Empty;
+        public string Mensagem { get; set; } = string.Empty;
+    }
+}

@@ -80,7 +80,7 @@
             // Login bem-sucedido - redirecionar com reload para atualizar autenticação
             Navigation.NavigateTo($"/account/login?email={Uri.EscapeDataString(loginModel.Email)}&password={Uri.EscapeDataString(loginModel.Password)}", true);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             error = "Erro ao fazer login. Tente novamente.";
         }

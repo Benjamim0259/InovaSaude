@@ -9,6 +9,7 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
+        <!-- Opções públicas (sempre visíveis) -->
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
@@ -17,42 +18,77 @@
 
         <AuthorizeView>
             <Authorized>
+                <!-- Menu administrativo (apenas para usuários autenticados) -->
+                <hr class="my-2" />
+                <div class="px-3 mb-2">
+                    <small class="text-muted">ÁREA ADMINISTRATIVA</small>
+                </div>
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="dashboard">
                         <span class="oi oi-dashboard" aria-hidden="true"></span> Dashboard
                     </NavLink>
                 </div>
-                
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="gerenciar-despesas">
                         <span class="oi oi-dollar" aria-hidden="true"></span> Despesas
                     </NavLink>
                 </div>
-                
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="gerenciar-ubs">
                         <span class="oi oi-medical-cross" aria-hidden="true"></span> UBS
                     </NavLink>
                 </div>
-                
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="gerar-relatorios">
                         <span class="oi oi-bar-chart" aria-hidden="true"></span> Relatórios
                     </NavLink>
                 </div>
-                
-                <hr />
-                
+
                 <div class="nav-item px-3">
-                    <a class="nav-link" href="#" @onclick="Logout">
+                    <NavLink class="nav-link" href="workflows">
+                        <span class="oi oi-fork" aria-hidden="true"></span> Workflows
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="integracoes">
+                        <span class="oi oi-cloud-upload" aria-hidden="true"></span> Integrações
+                    </NavLink>
+                </div>
+
+                <hr class="my-2" />
+
+                <div class="nav-item px-3">
+                    <a class="nav-link text-danger" href="#" @onclick="Logout" @onclick:preventDefault>
                         <span class="oi oi-account-logout" aria-hidden="true"></span> Sair
                     </a>
                 </div>
             </Authorized>
             <NotAuthorized>
+                <!-- Opções para visitantes não autenticados -->
+                <hr class="my-2" />
+
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="login">
-                        <span class="oi oi-account-login" aria-hidden="true"></span> Login
+                    <NavLink class="nav-link" href="sobre">
+                        <span class="oi oi-info" aria-hidden="true"></span> Sobre
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="contato">
+                        <span class="oi oi-envelope-closed" aria-hidden="true"></span> Contato
+                    </NavLink>
+                </div>
+
+                <hr class="my-2" />
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link btn-primary text-white" href="login">
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Entrar
                     </NavLink>
                 </div>
             </NotAuthorized>
@@ -72,7 +108,7 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
-    
+
     private async Task Logout()
     {
         try

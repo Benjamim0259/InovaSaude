@@ -50,6 +50,36 @@
     color: white;
 }
 
+/* Estilo especial para o botão de login */
+.nav-item ::deep a.btn-primary {
+    background-color: #0d6efd;
+    color: white;
+    font-weight: 500;
+}
+
+.nav-item ::deep a.btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: scale(1.02);
+    transition: all 0.2s;
+}
+
+/* Estilo para o botão de logout */
+.nav-item ::deep a.text-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Separador de seções */
+hr {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Cabeçalho de seção */
+small.text-muted {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
 @media (min-width: 641px) {
     .navbar-toggler {
         display: none;
