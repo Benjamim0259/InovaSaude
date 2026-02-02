@@ -148,6 +148,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<UBSService>();
+builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<DespesaService>();
 builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<WorkflowService>();

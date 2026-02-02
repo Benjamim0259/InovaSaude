@@ -42,9 +42,94 @@ public static class SeedData
         {
             var categorias = new List<Categoria>
             {
-                new Categoria { Nome = "Medicamentos", Tipo = "DESPESA", Descricao = "Gastos com medicamentos", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-                new Categoria { Nome = "Serviços", Tipo = "DESPESA", Descricao = "Serviços terceirizados", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-                new Categoria { Nome = "Infraestrutura", Tipo = "DESPESA", Descricao = "Melhorias e manutenção", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+                new Categoria
+                {
+                    Nome = "Medicamentos",
+                    Tipo = "DESPESA",
+                    Descricao = "Medicamentos, vacinas e insumos farmacêuticos",
+                    OrcamentoMensal = 35000,
+                    Cor = "#dc3545",
+                    Icone = "💊",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Categoria
+                {
+                    Nome = "Material Médico",
+                    Tipo = "DESPESA",
+                    Descricao = "Equipamentos médicos, luvas, seringas, etc",
+                    OrcamentoMensal = 20000,
+                    Cor = "#0d6efd",
+                    Icone = "🩺",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Categoria
+                {
+                    Nome = "Contas Fixas",
+                    Tipo = "DESPESA",
+                    Descricao = "Água, luz, telefone, internet",
+                    OrcamentoMensal = 8000,
+                    Cor = "#ffc107",
+                    Icone = "💡",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Categoria
+                {
+                    Nome = "Pessoal",
+                    Tipo = "DESPESA",
+                    Descricao = "Salários, encargos e benefícios",
+                    OrcamentoMensal = 120000,
+                    Cor = "#198754",
+                    Icone = "👥",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Categoria
+                {
+                    Nome = "Infraestrutura",
+                    Tipo = "DESPESA",
+                    Descricao = "Manutenção predial, reformas e melhorias",
+                    OrcamentoMensal = 25000,
+                    Cor = "#6c757d",
+                    Icone = "🏗️",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Categoria
+                {
+                    Nome = "Serviços Terceirizados",
+                    Tipo = "DESPESA",
+                    Descricao = "Limpeza, segurança, jardinagem, ambulância",
+                    OrcamentoMensal = 18000,
+                    Cor = "#0dcaf0",
+                    Icone = "🚑",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Categoria
+                {
+                    Nome = "Material de Expediente",
+                    Tipo = "DESPESA",
+                    Descricao = "Papelaria, impressão, materiais de escritório",
+                    OrcamentoMensal = 3000,
+                    Cor = "#212529",
+                    Icone = "📚",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Categoria
+                {
+                    Nome = "Alimentação",
+                    Tipo = "DESPESA",
+                    Descricao = "Cozinha, refeitório e alimentação de pacientes",
+                    OrcamentoMensal = 12000,
+                    Cor = "#fd7e14",
+                    Icone = "🍽️",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                }
             };
 
             context.Categorias.AddRange(categorias);

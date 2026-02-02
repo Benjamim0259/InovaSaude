@@ -1,200 +1,630 @@
 @page "/gerenciar-despesas"
+@using System.ComponentModel.DataAnnotations
 @using InovaSaude.Blazor.Services
 @using InovaSaude.Blazor.Models
 @inject DespesaService DespesaService
 @inject UBSService UBSService
+@inject CategoriaService CategoriaService
+@inject NavigationManager Navigation
 @attribute [Authorize]
 
-<div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col">
-            <h3>💰 Gerenciamento de Despesas</h3>
-        </div>
-        <div class="col-auto">
-            <button class="btn btn-primary" @onclick="() => ShowModal()">
-                ➕ Nova Despesa
-            </button>
-        </div>
+<PageTitle>Gerenciar Despesas - InovaSaúde</PageTitle>
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>💰 Gerenciar Despesas</h2>
+    <button class="btn btn-primary btn-lg" @onclick="AbrirModalNovaDespesa">
+       <span class="oi oi-plus me-2"></span>Nova Despesa
+        </button>
     </div>
 
-    @if (despesas == null)
+    @if (carregando)
     {
-        <div class="text-center">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Carregando...</span>
+     <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-2 text-muted">Carregando despesas...</p>
+  </div>
+    }
+else
+    {
+    <!-- Cards de Resumo -->
+        <div class="row mb-4">
+ <div class="col-md-3">
+ <div class="card border-primary text-center">
+         <div class="card-body">
+         <h6 class="text-muted">Total Gasto</h6>
+            <h3 class="text-primary">@despesas.Sum(d => d.Valor).ToString("C")</h3>
+          </div>
+     </div>
+  </div>
+        <div class="col-md-3">
+     <div class="card border-warning text-center">
+            <div class="card-body">
+    <h6 class="text-muted">Pendentes</h6>
+     <h3 class="text-warning">@despesas.Count(d => d.Status == "PENDENTE")</h3>
+   </div>
+         </div>
+    </div>
+  <div class="col-md-3">
+ <div class="card border-success text-center">
+ <div class="card-body">
+         <h6 class="text-muted">Aprovadas</h6>
+     <h3 class="text-success">@despesas.Count(d => d.Status == "APROVADA" || d.Status == "PAGA")</h3>
+               </div>
+      </div>
+       </div>
+         <div class="col-md-3">
+        <div class="card border-danger text-center">
+          <div class="card-body">
+              <h6 class="text-muted">Rejeitadas</h6>
+         <h3 class="text-danger">@despesas.Count(d => d.Status == "REJEITADA")</h3>
+      </div>
+    </div>
             </div>
         </div>
-    }
-    else
-    {
+
+        <!-- Filtros -->
+     <div class="card mb-4">
+            <div class="card-body">
+     <div class="row g-3">
+         <div class="col-md-3">
+       <label class="form-label">Pesquisar</label>
+    <input type="text" class="form-control" @bind="filtroDescricao" @bind:event="oninput" placeholder="Descrição..." />
+         </div>
+       <div class="col-md-2">
+  <label class="form-label">Categoria</label>
+       <select class="form-select" @bind="filtroCategoria">
+     <option value="">Todas</option>
+       @foreach (var cat in categorias)
+               {
+       <option value="@cat.Id">@cat.Nome</option>
+      }
+    </select>
+                 </div>
+        <div class="col-md-2">
+      <label class="form-label">Status</label>
+              <select class="form-select" @bind="filtroStatus">
+                <option value="">Todos</option>
+   <option value="PENDENTE">Pendente</option>
+           <option value="APROVADA">Aprovada</option>
+   <option value="PAGA">Paga</option>
+     <option value="REJEITADA">Rejeitada</option>
+            </select>
+   </div>
+    <div class="col-md-2">
+      <label class="form-label">UBS</label>
+<select class="form-select" @bind="filtroUBS">
+        <option value="">Todas</option>
+      @foreach (var ubs in ubsList)
+                {
+         <option value="@ubs.Id">@ubs.Nome</option>
+        }
+   </select>
+    </div>
+         <div class="col-md-3 d-flex align-items-end">
+ <button class="btn btn-secondary w-100" @onclick="LimparFiltros">
+               <span class="oi oi-x me-2"></span>Limpar Filtros
+       </button>
+    </div>
+ </div>
+       </div>
+        </div>
+
+        <!-- Tabela de Despesas -->
         <div class="card">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Descrição</th>
-                                <th>UBS</th>
-                                <th>Categoria</th>
-                                <th class="text-end">Valor</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var despesa in despesas)
-                            {
-                                <tr>
-                                    <td>@despesa.CreatedAt.ToString("dd/MM/yyyy")</td>
-                                    <td>@despesa.Descricao</td>
-                                    <td>@(despesa.Ubs?.Nome ?? "-")</td>
-                                    <td>@(despesa.Categoria?.Nome ?? "-")</td>
-                                    <td class="text-end"><strong>@despesa.Valor.ToString("C")</strong></td>
-                                    <td>
-                                        <span class="badge 
-                                            @(despesa.Status == "APROVADA" ? "bg-success" : 
-                                              despesa.Status == "PAGA" ? "bg-info" : 
-                                              despesa.Status == "REJEITADA" ? "bg-danger" : "bg-warning")">
-                                            @despesa.Status
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-info" @onclick="() => ShowModal(despesa)">
-                                            ✏️
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteDespesa(despesa.Id)">
-                                            🗑️
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+     <div class="table-responsive">
+   <table class="table table-hover">
+                <thead>
+       <tr>
+     <th>Data</th>
+   <th>Descrição</th>
+  <th>Categoria</th>
+        <th>Tipo</th>
+  <th>UBS</th>
+       <th class="text-end">Valor</th>
+<th>Status</th>
+          <th>Vencimento</th>
+        <th class="text-center">Ações</th>
+         </tr>
+         </thead>
+          <tbody>
+          @foreach (var despesa in DespesasFiltradas)
+              {
+       <tr>
+     <td>
+       <small>@despesa.CreatedAt.ToString("dd/MM/yyyy")</small>
+     </td>
+            <td>
+             <strong>@despesa.Descricao</strong>
+    @if (!string.IsNullOrEmpty(despesa.NumeroNota))
+     {
+     <br/><small class="text-muted">NF: @despesa.NumeroNota</small>
+        }
+         </td>
+            <td>
+                 <span class="badge @GetCategoriaBadgeClass(despesa.Categoria?.Nome)">
+      @GetCategoriaIcon(despesa.Categoria?.Nome) @(despesa.Categoria?.Nome ?? "-")
+             </span>
+       </td>
+   <td>
+                    <small class="text-muted">@despesa.Tipo</small>
+    </td>
+        <td>
+       <small>@(despesa.Ubs?.Nome ?? "-")</small>
+         </td>
+           <td class="text-end">
+   <strong class="@(despesa.Valor > 5000 ? "text-danger" : "text-success")">
+          @despesa.Valor.ToString("C")
+           </strong>
+             </td>
+                <td>
+         <span class="badge @GetStatusBadgeClass(despesa.Status)">
+       @despesa.Status
+           </span>
+        </td>
+    <td>
+        @if (despesa.DataVencimento.HasValue)
+    {
+    var diasRestantes = (despesa.DataVencimento.Value - DateTime.UtcNow).Days;
+             <small class="@(diasRestantes < 5 ? "text-danger fw-bold" : "text-muted")">
+                  @despesa.DataVencimento.Value.ToString("dd/MM/yyyy")
+       @if (diasRestantes < 5 && diasRestantes >= 0)
+   {
+      <br/><span class="badge bg-danger">@diasRestantes dias</span>
+           }
+         </small>
+     }
+   else
+      {
+   <span class="text-muted">-</span>
+        }
+   </td>
+         <td class="text-center">
+   <div class="btn-group btn-group-sm">
+      <button class="btn btn-outline-info" @onclick="() => AbrirModalEditarDespesa(despesa)" title="Editar">
+    <span class="oi oi-pencil"></span>
+   </button>
+              @if (despesa.Status == "PENDENTE")
+      {
+      <button class="btn btn-outline-success" @onclick="@(() => AprovarDespesa(despesa))" title="Aprovar">
+     <span class="oi oi-check"></span>
+         </button>
+       <button class="btn btn-outline-danger" @onclick="@(() => RejeitarDespesa(despesa))" title="Rejeitar">
+      <span class="oi oi-x"></span>
+    </button>
+     }
+             <button class="btn btn-outline-danger" @onclick="() => ExcluirDespesa(despesa)" title="Excluir">
+       <span class="oi oi-trash"></span>
+             </button>
+            </div>
+             </td>
+           </tr>
+      }
+      </tbody>
+       </table>
+  </div>
+
+                @if (!DespesasFiltradas.Any())
+     {
+          <div class="alert alert-info text-center">
+         <span class="oi oi-info me-2"></span>
+              Nenhuma despesa encontrada com os filtros aplicados.
+   </div>
+   }
             </div>
         </div>
     }
 </div>
 
-@if (showModal)
+<!-- Modal Criar/Editar Despesa -->
+@if (mostrarModal)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+ <div class="modal-dialog modal-xl">
+      <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">@(editingDespesa?.Id == null ? "Nova Despesa" : "Editar Despesa")</h5>
-                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+        <h5 class="modal-title">
+      @(despesaEditando == null ? "➕ Nova Despesa" : "✏️ Editar Despesa")
+        </h5>
+         <button type="button" class="btn-close" @onclick="FecharModal"></button>
+        </div>
+                <EditForm Model="despesaForm" OnValidSubmit="SalvarDespesa">
+             <DataAnnotationsValidator />
+               <div class="modal-body">
+<div class="row g-3">
+                    <!-- Linha 1 -->
+     <div class="col-md-8">
+         <label class="form-label">Descrição *</label>
+     <InputText class="form-control" @bind-Value="despesaForm.Descricao" placeholder="Ex: Compra de medicamentos para pressão alta" />
+          <ValidationMessage For="@(() => despesaForm.Descricao)" />
+         </div>
+    <div class="col-md-4">
+              <label class="form-label">Valor *</label>
+          <InputNumber class="form-control" @bind-Value="despesaForm.Valor" placeholder="0,00" />
+    <ValidationMessage For="@(() => despesaForm.Valor)" />
+         </div>
+
+                <!-- Linha 2 -->
+              <div class="col-md-4">
+        <label class="form-label">Categoria *</label>
+            <select class="form-select" @bind="despesaForm.CategoriaId">
+         <option value="">Selecione...</option>
+      @foreach (var categoria in categorias)
+       {
+         <option value="@categoria.Id">@GetCategoriaIcon(categoria.Nome) @categoria.Nome</option>
+       }
+           </select>
+    <ValidationMessage For="@(() => despesaForm.CategoriaId)" />
+     </div>
+     <div class="col-md-4">
+         <label class="form-label">Tipo *</label>
+       <select class="form-select" @bind="despesaForm.Tipo">
+      <option value="">Selecione...</option>
+    <option value="FIXA">💼 Fixa (Recorrente)</option>
+    <option value="VARIAVEL">📊 Variável</option>
+       <option value="EXTRAORDINARIA">⚠️ Extraordinária</option>
+          <option value="INVESTIMENTO">📈 Investimento</option>
+          </select>
+           <ValidationMessage For="@(() => despesaForm.Tipo)" />
                 </div>
-                <div class="modal-body">
-                    <EditForm Model="editingDespesa" OnValidSubmit="SaveDespesa">
-                        <div class="mb-3">
-                            <label class="form-label">Descrição *</label>
-                            <InputText class="form-control" @bind-Value="editingDespesa!.Descricao" />
-                        </div>
+   <div class="col-md-4">
+      <label class="form-label">UBS *</label>
+         <select class="form-select" @bind="despesaForm.UbsId">
+        <option value="">Selecione...</option>
+    @foreach (var ubs in ubsList)
+     {
+        <option value="@ubs.Id">@ubs.Nome</option>
+   }
+               </select>
+   <ValidationMessage For="@(() => despesaForm.UbsId)" />
+ </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">UBS</label>
-                                <InputSelect class="form-select" @bind-Value="editingDespesa!.UbsId">
-                                    <option value="">Selecione...</option>
-                                    @if (ubsList != null)
-                                    {
-                                        @foreach (var ubs in ubsList)
-                                        {
-                                            <option value="@ubs.Id">@ubs.Nome</option>
-                                        }
-                                    }
-                                </InputSelect>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Valor *</label>
-                                <InputNumber class="form-control" @bind-Value="editingDespesa!.Valor" />
-                            </div>
-                        </div>
+               <!-- Linha 3 -->
+            <div class="col-md-4">
+        <label class="form-label">Data Vencimento</label>
+         <InputDate class="form-control" @bind-Value="despesaForm.DataVencimento" />
+   </div>
+     <div class="col-md-4">
+          <label class="form-label">Data Pagamento</label>
+ <InputDate class="form-control" @bind-Value="despesaForm.DataPagamento" />
+     </div>
+      <div class="col-md-4">
+  <label class="form-label">Status</label>
+ <select class="form-select" @bind="despesaForm.Status">
+              <option value="PENDENTE">⏳ Pendente</option>
+           <option value="APROVADA">✅ Aprovada</option>
+           <option value="REJEITADA">❌ Rejeitada</option>
+            <option value="PAGA">💵 Paga</option>
+    </select>
+     </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Status</label>
-                            <InputSelect class="form-select" @bind-Value="editingDespesa!.Status">
-                                <option value="PENDENTE">Pendente</option>
-                                <option value="APROVADA">Aprovada</option>
-                                <option value="REJEITADA">Rejeitada</option>
-                                <option value="PAGA">Paga</option>
-                            </InputSelect>
-                        </div>
+              <!-- Linha 4 - Documentos -->
+        <div class="col-md-6">
+           <label class="form-label">Número da Nota Fiscal</label>
+         <InputText class="form-control" @bind-Value="despesaForm.NumeroNota" placeholder="000123" />
+                    </div>
+             <div class="col-md-6">
+     <label class="form-label">Número do Empenho</label>
+      <InputText class="form-control" @bind-Value="despesaForm.NumeroEmpenho" placeholder="2024/0001" />
+          </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">💾 Salvar</button>
-                        </div>
-                    </EditForm>
-                </div>
+       <!-- Observações -->
+     <div class="col-12">
+         <label class="form-label">Observações</label>
+       <InputTextArea class="form-control" rows="3" @bind-Value="despesaForm.Observacoes" placeholder="Observações adicionais..." />
+        </div>
+         </div>
+
+         @if (!string.IsNullOrEmpty(mensagemErro))
+         {
+  <div class="alert alert-danger mt-3">
+          <span class="oi oi-warning me-2"></span>
+   @mensagemErro
+    </div>
+       }
+     </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" disabled="@salvando">
+                    @if (salvando)
+          {
+             <span class="spinner-border spinner-border-sm me-2"></span>
+   }
+      @(despesaEditando == null ? "Criar Despesa" : "Salvar Alterações")
+  </button>
+          </div>
+          </EditForm>
             </div>
         </div>
     </div>
 }
 
 @code {
-    private List<Despesa>? despesas;
-    private List<UBS>? ubsList;
-    private Despesa? editingDespesa;
-    private bool showModal = false;
+    private List<Despesa> despesas = new();
+    private List<UBS> ubsList = new();
+    private List<Categoria> categorias = new();
+    private bool carregando = true;
+    private bool mostrarModal = false;
+    private bool salvando = false;
+    private Despesa? despesaEditando = null;
+    private DespesaFormModel despesaForm = new();
+    private string? mensagemErro;
+
+    // Filtros
+    private string filtroDescricao = "";
+    private string filtroCategoria = "";
+    private string filtroStatus = "";
+    private string filtroUBS = "";
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadData();
+        await CarregarDados();
     }
 
-    private async Task LoadData()
+    private async Task CarregarDados()
     {
-        despesas = await DespesaService.GetAllDespesasAsync();
-        ubsList = await UBSService.GetAllUBSAsync();
-    }
-
-    private void ShowModal(Despesa? despesa = null)
-    {
-        editingDespesa = despesa ?? new Despesa
+        carregando = true;
+      try
         {
-            Id = Guid.NewGuid().ToString(),
-            Status = "PENDENTE",
-            CreatedAt = DateTime.UtcNow
-        };
-        showModal = true;
+     despesas = await DespesaService.GetAllDespesasAsync();
+            ubsList = await UBSService.GetAllUBSAsync();
+            categorias = await CategoriaService.GetAllCategoriasAsync();
+        }
+        catch (Exception ex)
+   {
+       mensagemErro = $"Erro ao carregar dados: {ex.Message}";
+        }
+   finally
+    {
+         carregando = false;
+    }
     }
 
-    private void CloseModal()
+    private IEnumerable<Despesa> DespesasFiltradas
     {
-        showModal = false;
-        editingDespesa = null;
+        get
+        {
+            var query = despesas.AsEnumerable();
+
+if (!string.IsNullOrWhiteSpace(filtroDescricao))
+       {
+    query = query.Where(d => d.Descricao.Contains(filtroDescricao, StringComparison.OrdinalIgnoreCase));
+   }
+
+ if (!string.IsNullOrWhiteSpace(filtroCategoria))
+     {
+    query = query.Where(d => d.CategoriaId == filtroCategoria);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filtroStatus))
+         {
+                query = query.Where(d => d.Status == filtroStatus);
+            }
+
+     if (!string.IsNullOrWhiteSpace(filtroUBS))
+         {
+        query = query.Where(d => d.UbsId == filtroUBS);
+       }
+
+    return query.OrderByDescending(d => d.CreatedAt);
+      }
+  }
+
+    private void LimparFiltros()
+    {
+        filtroDescricao = "";
+        filtroCategoria = "";
+        filtroStatus = "";
+        filtroUBS = "";
     }
 
-    private async Task SaveDespesa()
+    private void AbrirModalNovaDespesa()
     {
-        if (editingDespesa == null) return;
+    despesaEditando = null;
+    despesaForm = new DespesaFormModel();
+        mensagemErro = null;
+ mostrarModal = true;
+    }
+
+    private void AbrirModalEditarDespesa(Despesa despesa)
+  {
+    despesaEditando = despesa;
+  despesaForm = new DespesaFormModel
+        {
+     Descricao = despesa.Descricao,
+     Valor = despesa.Valor,
+  CategoriaId = despesa.CategoriaId,
+    Tipo = despesa.Tipo,
+            UbsId = despesa.UbsId,
+            DataVencimento = despesa.DataVencimento,
+            DataPagamento = despesa.DataPagamento,
+            Status = despesa.Status,
+            NumeroNota = despesa.NumeroNota,
+         NumeroEmpenho = despesa.NumeroEmpenho,
+ Observacoes = despesa.Observacoes
+ };
+        mensagemErro = null;
+ mostrarModal = true;
+    }
+
+    private void FecharModal()
+    {
+  mostrarModal = false;
+        despesaEditando = null;
+        mensagemErro = null;
+    }
+
+    private async Task SalvarDespesa()
+    {
+        salvando = true;
+        mensagemErro = null;
 
         try
         {
-            if (despesas?.Any(d => d.Id == editingDespesa.Id) == true)
+            if (despesaEditando == null)
             {
-                await DespesaService.UpdateDespesaAsync(editingDespesa);
-            }
-            else
-            {
-                await DespesaService.CreateDespesaAsync(editingDespesa);
+         // Criar nova despesa
+          var novaDespesa = new Despesa
+        {
+    Descricao = despesaForm.Descricao,
+Valor = despesaForm.Valor,
+           CategoriaId = despesaForm.CategoriaId!,
+       Tipo = despesaForm.Tipo!,
+        UbsId = despesaForm.UbsId!,
+        DataVencimento = despesaForm.DataVencimento,
+         DataPagamento = despesaForm.DataPagamento,
+        Status = despesaForm.Status,
+     NumeroNota = despesaForm.NumeroNota,
+          NumeroEmpenho = despesaForm.NumeroEmpenho,
+     Observacoes = despesaForm.Observacoes,
+   UsuarioCriacaoId = "admin-id" // TODO: Pegar do contexto de autenticação
+   };
+
+     await DespesaService.CreateDespesaAsync(novaDespesa);
+   }
+       else
+    {
+        // Editar despesa existente
+ despesaEditando.Descricao = despesaForm.Descricao;
+       despesaEditando.Valor = despesaForm.Valor;
+      despesaEditando.CategoriaId = despesaForm.CategoriaId!;
+  despesaEditando.Tipo = despesaForm.Tipo!;
+             despesaEditando.UbsId = despesaForm.UbsId!;
+       despesaEditando.DataVencimento = despesaForm.DataVencimento;
+     despesaEditando.DataPagamento = despesaForm.DataPagamento;
+        despesaEditando.Status = despesaForm.Status;
+       despesaEditando.NumeroNota = despesaForm.NumeroNota;
+              despesaEditando.NumeroEmpenho = despesaForm.NumeroEmpenho;
+      despesaEditando.Observacoes = despesaForm.Observacoes;
+     despesaEditando.UpdatedAt = DateTime.UtcNow;
+
+    await DespesaService.UpdateDespesaAsync(despesaEditando);
             }
 
-            await LoadData();
-            CloseModal();
+       await CarregarDados();
+            FecharModal();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao salvar despesa: {ex.Message}");
+            mensagemErro = $"Erro ao salvar despesa: {ex.Message}";
+    }
+        finally
+   {
+            salvando = false;
+    }
+  }
+
+    private async Task AprovarDespesa(Despesa despesa)
+    {
+        try
+        {
+      despesa.Status = "APROVADA";
+         despesa.DataAprovacao = DateTime.UtcNow;
+     despesa.UpdatedAt = DateTime.UtcNow;
+  await DespesaService.UpdateDespesaAsync(despesa);
+       await CarregarDados();
+     }
+        catch (Exception ex)
+        {
+ mensagemErro = $"Erro ao aprovar despesa: {ex.Message}";
+  }
+    }
+
+    private async Task RejeitarDespesa(Despesa despesa)
+    {
+        try
+ {
+          despesa.Status = "REJEITADA";
+         despesa.UpdatedAt = DateTime.UtcNow;
+         await DespesaService.UpdateDespesaAsync(despesa);
+            await CarregarDados();
+      }
+        catch (Exception ex)
+        {
+            mensagemErro = $"Erro ao rejeitar despesa: {ex.Message}";
         }
     }
 
-    private async Task DeleteDespesa(string id)
+    private async Task ExcluirDespesa(Despesa despesa)
+  {
+        if (confirm($"Tem certeza que deseja excluir a despesa '{despesa.Descricao}'?"))
+        {
+      try
+  {
+                await DespesaService.DeleteDespesaAsync(despesa.Id);
+ await CarregarDados();
+     }
+        catch (Exception ex)
+            {
+     mensagemErro = $"Erro ao excluir despesa: {ex.Message}";
+            }
+        }
+    }
+
+    private bool confirm(string message) => true; // Implementar JSInterop
+
+  private string GetStatusBadgeClass(string status) => status switch
     {
-        await DespesaService.DeleteDespesaAsync(id);
-        await LoadData();
+        "PENDENTE" => "bg-warning",
+    "APROVADA" => "bg-success",
+   "REJEITADA" => "bg-danger",
+        "PAGA" => "bg-info",
+        _ => "bg-secondary"
+    };
+
+    private string GetCategoriaBadgeClass(string? categoria) => categoria switch
+    {
+        "Medicamentos" => "bg-danger",
+"Material Médico" => "bg-primary",
+     "Contas Fixas" => "bg-warning",
+        "Pessoal" => "bg-success",
+        "Infraestrutura" => "bg-secondary",
+        "Serviços Terceirizados" => "bg-info",
+ "Material de Expediente" => "bg-dark",
+        "Alimentação" => "bg-orange",
+    _ => "bg-secondary"
+    };
+
+    private string GetCategoriaIcon(string? categoria) => categoria switch
+    {
+        "Medicamentos" => "💊",
+    "Material Médico" => "🩺",
+        "Contas Fixas" => "💡",
+        "Pessoal" => "👥",
+        "Infraestrutura" => "🏗️",
+        "Serviços Terceirizados" => "🚑",
+        "Material de Expediente" => "📚",
+        "Alimentação" => "🍽️",
+  _ => "📋"
+    };
+
+    public class DespesaFormModel
+    {
+        [Required(ErrorMessage = "Descrição é obrigatória")]
+[StringLength(1000, ErrorMessage = "Descrição deve ter no máximo 1000 caracteres")]
+      public string Descricao { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Valor é obrigatório")]
+        [Range(0.01, 999999999, ErrorMessage = "Valor deve ser maior que zero")]
+public decimal Valor { get; set; }
+
+        [Required(ErrorMessage = "Categoria é obrigatória")]
+   public string? CategoriaId { get; set; }
+
+        [Required(ErrorMessage = "Tipo é obrigatório")]
+        public string? Tipo { get; set; }
+
+        [Required(ErrorMessage = "UBS é obrigatória")]
+        public string? UbsId { get; set; }
+
+        public DateTime? DataVencimento { get; set; }
+        public DateTime? DataPagamento { get; set; }
+    public string Status { get; set; } = "PENDENTE";
+        public string? NumeroNota { get; set; }
+ public string? NumeroEmpenho { get; set; }
+        public string? Observacoes { get; set; }
     }
 }

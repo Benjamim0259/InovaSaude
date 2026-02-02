@@ -1,0 +1,558 @@
+@page "/gerenciar-usuarios"
+@using System.ComponentModel.DataAnnotations
+@using InovaSaude.Blazor.Models
+@using InovaSaude.Blazor.Services
+@inject UsuarioService UsuarioService
+@inject UBSService UBSService
+@inject NavigationManager Navigation
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+<PageTitle>Gerenciar Usuários - InovaSaúde</PageTitle>
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>?? Gerenciar Usuários</h2>
+  <button class="btn btn-primary" @onclick="AbrirModalNovoUsuario">
+    <span class="oi oi-plus me-2"></span>Novo Usuário
+   </button>
+    </div>
+
+    @if (carregando)
+    {
+        <div class="text-center py-5">
+         <div class="spinner-border text-primary" role="status">
+<span class="visually-hidden">Carregando...</span>
+      </div>
+     <p class="mt-2 text-muted">Carregando usuários...</p>
+    </div>
+    }
+    else
+    {
+        <!-- Filtros -->
+        <div class="card mb-4">
+      <div class="card-body">
+     <div class="row g-3">
+                    <div class="col-md-4">
+      <label class="form-label">Pesquisar</label>
+       <input type="text" class="form-control" @bind="filtroNome" @bind:event="oninput" placeholder="Nome ou email..." />
+          </div>
+  <div class="col-md-3">
+          <label class="form-label">Perfil</label>
+<select class="form-select" @bind="filtroPerfil">
+                <option value="">Todos</option>
+    @foreach (var perfil in Enum.GetValues<PerfilUsuario>())
+{
+     <option value="@perfil">@GetPerfilNome(perfil)</option>
+ }
+              </select>
+  </div>
+          <div class="col-md-3">
+             <label class="form-label">Status</label>
+        <select class="form-select" @bind="filtroStatus">
+      <option value="">Todos</option>
+ <option value="ATIVO">Ativo</option>
+       <option value="INATIVO">Inativo</option>
+             <option value="BLOQUEADO">Bloqueado</option>
+ </select>
+        </div>
+  <div class="col-md-2 d-flex align-items-end">
+        <button class="btn btn-secondary w-100" @onclick="LimparFiltros">
+ <span class="oi oi-x me-2"></span>Limpar
+   </button>
+   </div>
+   </div>
+ </div>
+ </div>
+
+        <!-- Tabela de Usuários -->
+        <div class="card">
+        <div class="card-body">
+              <div class="table-responsive">
+   <table class="table table-hover">
+            <thead>
+           <tr>
+         <th>Nome</th>
+      <th>Email</th>
+         <th>Perfil</th>
+    <th>UBS</th>
+       <th>Status</th>
+                <th>Último Acesso</th>
+      <th class="text-center">Ações</th>
+     </tr>
+    </thead>
+      <tbody>
+  @foreach (var usuario in UsuariosFiltrados)
+     {
+          <tr>
+         <td>
+                 <strong>@usuario.Nome</strong>
+   @if (usuario.Telefone != null)
+       {
+          <br /><small class="text-muted">?? @usuario.Telefone</small>
+     }
+         </td>
+      <td>@usuario.Email</td>
+          <td>
+         <span class="badge @GetPerfilBadgeClass(usuario.Perfil)">
+       @GetPerfilNome(usuario.Perfil)
+            </span>
+             </td>
+            <td>
+        @if (usuario.Ubs != null)
+       {
+    <small>@usuario.Ubs.Nome</small>
+      }
+           else
+   {
+           <span class="text-muted">-</span>
+          }
+       </td>
+        <td>
+ <span class="badge @GetStatusBadgeClass(usuario.Status)">
+@usuario.Status
+             </span>
+   </td>
+          <td>
+     @if (usuario.UltimoAcesso.HasValue)
+     {
+           <small>@usuario.UltimoAcesso.Value.ToString("dd/MM/yyyy HH:mm")</small>
+       }
+          else
+     {
+         <span class="text-muted">Nunca</span>
+            }
+        </td>
+       <td class="text-center">
+     <div class="btn-group btn-group-sm">
+  <button class="btn btn-outline-primary" @onclick="() => AbrirModalEditarUsuario(usuario)" title="Editar">
+          <span class="oi oi-pencil"></span>
+        </button>
+           <button class="btn btn-outline-warning" @onclick="() => ResetarSenha(usuario)" title="Resetar Senha">
+        <span class="oi oi-key"></span>
+               </button>
+       @if (usuario.Status == "ATIVO")
+ {
+  <button class="btn btn-outline-secondary" @onclick="@(() => AlterarStatus(usuario, "INATIVO"))" title="Desativar">
+     <span class="oi oi-ban"></span>
+           </button>
+             }
+     else
+       {
+       <button class="btn btn-outline-success" @onclick="@(() => AlterarStatus(usuario, "ATIVO"))" title="Ativar">
+         <span class="oi oi-check"></span>
+    </button>
+    }
+ <button class="btn btn-outline-danger" @onclick="() => ExcluirUsuario(usuario)" title="Excluir">
+  <span class="oi oi-trash"></span>
+ </button>
+</div>
+        </td>
+           </tr>
+   }
+   </tbody>
+    </table>
+        </div>
+
+                @if (!UsuariosFiltrados.Any())
+       {
+     <div class="alert alert-info text-center">
+            <span class="oi oi-info me-2"></span>
+               Nenhum usuário encontrado com os filtros aplicados.
+             </div>
+            }
+       </div>
+        </div>
+
+        <!-- Estatísticas -->
+ <div class="row mt-4">
+        <div class="col-md-3">
+    <div class="card text-center">
+        <div class="card-body">
+          <h3 class="text-primary">@usuarios.Count</h3>
+            <small class="text-muted">Total de Usuários</small>
+        </div>
+ </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+              <div class="card-body">
+            <h3 class="text-success">@usuarios.Count(u => u.Status == "ATIVO")</h3>
+    <small class="text-muted">Ativos</small>
+          </div>
+            </div>
+  </div>
+      <div class="col-md-3">
+   <div class="card text-center">
+         <div class="card-body">
+      <h3 class="text-warning">@usuarios.Count(u => u.Perfil == PerfilUsuario.COORDENADOR)</h3>
+      <small class="text-muted">Coordenadores</small>
+         </div>
+</div>
+   </div>
+     <div class="col-md-3">
+       <div class="card text-center">
+       <div class="card-body">
+   <h3 class="text-info">@usuarios.Count(u => u.Perfil == PerfilUsuario.GESTOR)</h3>
+            <small class="text-muted">Gestores</small>
+         </div>
+  </div>
+  </div>
+        </div>
+    }
+</div>
+
+<!-- Modal Criar/Editar Usuário -->
+@if (mostrarModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+      <div class="modal-dialog modal-lg">
+  <div class="modal-content">
+     <div class="modal-header">
+         <h5 class="modal-title">
+         @(usuarioEditando == null ? "? Novo Usuário" : "?? Editar Usuário")
+        </h5>
+          <button type="button" class="btn-close" @onclick="FecharModal"></button>
+                </div>
+          <EditForm Model="usuarioForm" OnValidSubmit="SalvarUsuario">
+            <DataAnnotationsValidator />
+  <div class="modal-body">
+<div class="row g-3">
+       <div class="col-md-6">
+     <label class="form-label">Nome Completo *</label>
+         <InputText class="form-control" @bind-Value="usuarioForm.Nome" placeholder="João da Silva" />
+      <ValidationMessage For="@(() => usuarioForm.Nome)" />
+         </div>
+     <div class="col-md-6">
+<label class="form-label">Email *</label>
+                    <InputText type="email" class="form-control" @bind-Value="usuarioForm.Email" placeholder="joao@inovasaude.com.br" />
+      <ValidationMessage For="@(() => usuarioForm.Email)" />
+        </div>
+           <div class="col-md-6">
+        <label class="form-label">Telefone</label>
+      <InputText class="form-control" @bind-Value="usuarioForm.Telefone" placeholder="(11) 98765-4321" />
+             </div>
+           <div class="col-md-6">
+    <label class="form-label">Perfil *</label>
+         <InputSelect class="form-select" @bind-Value="usuarioForm.Perfil">
+   <option value="">Selecione...</option>
+     @foreach (var perfil in Enum.GetValues<PerfilUsuario>())
+    {
+       <option value="@perfil">@GetPerfilNome(perfil)</option>
+              }
+     </InputSelect>
+          <ValidationMessage For="@(() => usuarioForm.Perfil)" />
+      </div>
+           
+     @if (usuarioForm.Perfil == PerfilUsuario.COORDENADOR)
+     {
+   <div class="col-12">
+     <label class="form-label">UBS Vinculada *</label>
+           <select class="form-select" @bind="usuarioForm.UbsId">
+      <option value="">Selecione uma UBS...</option>
+    @foreach (var ubs in ubsList)
+                {
+     <option value="@ubs.Id">@ubs.Nome - @ubs.Codigo</option>
+     }
+       </select>
+          <small class="text-muted">Coordenadores devem estar vinculados a uma UBS</small>
+           </div>
+            }
+
+             <div class="col-md-6">
+          <label class="form-label">Status</label>
+                <select class="form-select" @bind="usuarioForm.Status">
+          <option value="ATIVO">Ativo</option>
+            <option value="INATIVO">Inativo</option>
+           <option value="BLOQUEADO">Bloqueado</option>
+            </select>
+   </div>
+
+ @if (usuarioEditando == null)
+    {
+        <div class="col-12">
+       <div class="alert alert-info">
+         <span class="oi oi-info me-2"></span>
+  <strong>Senha Padrão:</strong> A senha inicial será <code>Senha@123</code>. 
+  O usuário poderá alterá-la após o primeiro login.
+   </div>
+        </div>
+             }
+  </div>
+
+         @if (!string.IsNullOrEmpty(mensagemErro))
+           {
+       <div class="alert alert-danger mt-3">
+    <span class="oi oi-warning me-2"></span>
+    @mensagemErro
+         </div>
+          }
+       </div>
+   <div class="modal-footer">
+   <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+      <button type="submit" class="btn btn-primary" disabled="@salvando">
+  @if (salvando)
+            {
+      <span class="spinner-border spinner-border-sm me-2"></span>
+    }
+      @(usuarioEditando == null ? "Criar Usuário" : "Salvar Alterações")
+        </button>
+         </div>
+          </EditForm>
+   </div>
+      </div>
+    </div>
+}
+
+@code {
+    private List<Usuario> usuarios = new();
+    private List<UBS> ubsList = new();
+    private bool carregando = true;
+    private bool mostrarModal = false;
+    private bool salvando = false;
+    private Usuario? usuarioEditando = null;
+    private UsuarioFormModel usuarioForm = new();
+    private string? mensagemErro;
+
+    // Filtros
+    private string filtroNome = "";
+    private string filtroPerfil = "";
+    private string filtroStatus = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarDados();
+    }
+
+    private async Task CarregarDados()
+    {
+   carregando = true;
+ try
+      {
+     usuarios = await UsuarioService.GetAllUsuariosAsync();
+            ubsList = await UBSService.GetAllUBSAsync();
+        }
+    catch (Exception ex)
+        {
+   mensagemErro = $"Erro ao carregar dados: {ex.Message}";
+ }
+        finally
+        {
+   carregando = false;
+        }
+    }
+
+    private IEnumerable<Usuario> UsuariosFiltrados
+    {
+      get
+        {
+         var query = usuarios.AsEnumerable();
+
+   if (!string.IsNullOrWhiteSpace(filtroNome))
+      {
+   query = query.Where(u => 
+           u.Nome.Contains(filtroNome, StringComparison.OrdinalIgnoreCase) ||
+         u.Email.Contains(filtroNome, StringComparison.OrdinalIgnoreCase));
+   }
+
+        if (!string.IsNullOrWhiteSpace(filtroPerfil) && Enum.TryParse<PerfilUsuario>(filtroPerfil, out var perfil))
+  {
+       query = query.Where(u => u.Perfil == perfil);
+        }
+
+            if (!string.IsNullOrWhiteSpace(filtroStatus))
+    {
+     query = query.Where(u => u.Status == filtroStatus);
+   }
+
+            return query.OrderBy(u => u.Nome);
+        }
+    }
+
+    private void LimparFiltros()
+    {
+        filtroNome = "";
+        filtroPerfil = "";
+        filtroStatus = "";
+    }
+
+    private void AbrirModalNovoUsuario()
+    {
+ usuarioEditando = null;
+        usuarioForm = new UsuarioFormModel();
+        mensagemErro = null;
+        mostrarModal = true;
+    }
+
+    private void AbrirModalEditarUsuario(Usuario usuario)
+    {
+        usuarioEditando = usuario;
+        usuarioForm = new UsuarioFormModel
+        {
+   Nome = usuario.Nome,
+            Email = usuario.Email,
+          Telefone = usuario.Telefone,
+            Perfil = usuario.Perfil,
+            UbsId = usuario.UbsId,
+      Status = usuario.Status
+        };
+        mensagemErro = null;
+        mostrarModal = true;
+    }
+
+    private void FecharModal()
+    {
+     mostrarModal = false;
+        usuarioEditando = null;
+        mensagemErro = null;
+    }
+
+    private async Task SalvarUsuario()
+  {
+        salvando = true;
+   mensagemErro = null;
+
+        try
+        {
+   if (usuarioEditando == null)
+  {
+        // Criar novo usuário
+     var novoUsuario = new Usuario
+      {
+             Nome = usuarioForm.Nome,
+           Email = usuarioForm.Email,
+         Telefone = usuarioForm.Telefone,
+     Perfil = usuarioForm.Perfil ?? PerfilUsuario.OPERADOR,
+          UbsId = usuarioForm.UbsId,
+              Status = usuarioForm.Status,
+       SenhaHash = BCrypt.Net.BCrypt.HashPassword("Senha@123")
+ };
+
+   await UsuarioService.CreateUsuarioAsync(novoUsuario, new List<Permissao>());
+       }
+ else
+          {
+           // Editar usuário existente
+                usuarioEditando.Nome = usuarioForm.Nome;
+   usuarioEditando.Email = usuarioForm.Email;
+            usuarioEditando.Telefone = usuarioForm.Telefone;
+            usuarioEditando.Perfil = usuarioForm.Perfil ?? PerfilUsuario.OPERADOR;
+                usuarioEditando.UbsId = usuarioForm.UbsId;
+       usuarioEditando.Status = usuarioForm.Status;
+           usuarioEditando.UpdatedAt = DateTime.UtcNow;
+
+         await UsuarioService.UpdateUsuarioAsync(usuarioEditando, new List<Permissao>());
+         }
+
+            await CarregarDados();
+     FecharModal();
+        }
+        catch (Exception ex)
+        {
+    mensagemErro = $"Erro ao salvar usuário: {ex.Message}";
+        }
+     finally
+     {
+            salvando = false;
+        }
+    }
+
+ private async Task ResetarSenha(Usuario usuario)
+    {
+        if (confirm($"Resetar a senha de {usuario.Nome} para 'Senha@123'?"))
+        {
+            try
+            {
+    usuario.SenhaHash = BCrypt.Net.BCrypt.HashPassword("Senha@123");
+    await UsuarioService.UpdateUsuarioAsync(usuario, new List<Permissao>());
+ // Mostrar mensagem de sucesso (implementar toast)
+   }
+     catch (Exception ex)
+            {
+         mensagemErro = $"Erro ao resetar senha: {ex.Message}";
+    }
+    }
+    }
+
+    private async Task AlterarStatus(Usuario usuario, string novoStatus)
+    {
+        try
+      {
+   usuario.Status = novoStatus;
+            usuario.UpdatedAt = DateTime.UtcNow;
+            await UsuarioService.UpdateUsuarioAsync(usuario, new List<Permissao>());
+          await CarregarDados();
+    }
+   catch (Exception ex)
+    {
+            mensagemErro = $"Erro ao alterar status: {ex.Message}";
+        }
+    }
+
+    private async Task ExcluirUsuario(Usuario usuario)
+  {
+        if (confirm($"Tem certeza que deseja excluir {usuario.Nome}? Esta ação não pode ser desfeita."))
+     {
+    try
+            {
+             await UsuarioService.DeleteUsuarioAsync(usuario.Id);
+          await CarregarDados();
+        }
+  catch (Exception ex)
+          {
+    mensagemErro = $"Erro ao excluir usuário: {ex.Message}";
+            }
+        }
+ }
+
+    private bool confirm(string message) => true; // Implementar JSInterop para confirm real
+
+    private string GetPerfilNome(PerfilUsuario perfil) => perfil switch
+    {
+        PerfilUsuario.ADMIN => "Administrador",
+        PerfilUsuario.COORDENADOR => "Coordenador UBS",
+   PerfilUsuario.GESTOR => "Gestor",
+     PerfilUsuario.AUDITOR => "Auditor",
+ PerfilUsuario.OPERADOR => "Operador",
+        PerfilUsuario.VISUALIZADOR => "Visualizador",
+        _ => perfil.ToString()
+    };
+
+    private string GetPerfilBadgeClass(PerfilUsuario perfil) => perfil switch
+  {
+        PerfilUsuario.ADMIN => "bg-danger",
+        PerfilUsuario.COORDENADOR => "bg-primary",
+        PerfilUsuario.GESTOR => "bg-success",
+    PerfilUsuario.AUDITOR => "bg-info",
+   PerfilUsuario.OPERADOR => "bg-secondary",
+        PerfilUsuario.VISUALIZADOR => "bg-dark",
+        _ => "bg-secondary"
+    };
+
+    private string GetStatusBadgeClass(string status) => status switch
+    {
+        "ATIVO" => "bg-success",
+        "INATIVO" => "bg-secondary",
+        "BLOQUEADO" => "bg-danger",
+        _ => "bg-secondary"
+    };
+
+    public class UsuarioFormModel
+    {
+        [Required(ErrorMessage = "Nome é obrigatório")]
+        [StringLength(255, ErrorMessage = "Nome deve ter no máximo 255 caracteres")]
+        public string Nome { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Email é obrigatório")]
+      [EmailAddress(ErrorMessage = "Email inválido")]
+        public string Email { get; set; } = string.Empty;
+
+      public string? Telefone { get; set; }
+
+      [Required(ErrorMessage = "Perfil é obrigatório")]
+        public PerfilUsuario? Perfil { get; set; }
+
+    public string? UbsId { get; set; }
+
+      public string Status { get; set; } = "ATIVO";
+    }
+}
