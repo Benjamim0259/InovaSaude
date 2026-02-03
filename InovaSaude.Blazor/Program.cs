@@ -15,34 +15,14 @@ builder.Services.AddServerSideBlazor();
 // Configurar Data Protection baseado no ambiente
 if (builder.Environment.IsProduction())
 {
-    // Em produção (Render), configurar Data Protection
-    var tempConnString = Environment.GetEnvironmentVariable("DATABASE_URL");
-    if (!string.IsNullOrEmpty(tempConnString))
-    {
-        try
-        {
-            // TEMPORÁRIO: Usar provider efêmero até migrations serem aplicadas
-            // Após primeiro deploy bem-sucedido e migrations aplicadas,
-            // descomentar linha abaixo para usar persistência no banco:
-            // .PersistKeysToDbContext<ApplicationDbContext>()
-
-            builder.Services.AddDataProtection()
-                .SetApplicationName("InovaSaude")
-                .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
-
-            Console.WriteLine("[DataProtection] Using ephemeral provider (temporary - waiting for migrations)");
-            Console.WriteLine("[DataProtection] Will switch to DB persistence after first successful boot");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[DataProtection] Error: {ex.Message}");
-            Console.WriteLine("[DataProtection] Using default ephemeral provider");
-
-            builder.Services.AddDataProtection()
-                .SetApplicationName("InovaSaude")
-                .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
-        }
-    }
+    // TEMPORÁRIO: Em produção, usar provider que NÃO depende do banco
+    // até as migrations serem aplicadas com sucesso
+    Console.WriteLine("[DataProtection] TEMPORARY FIX: Using in-memory ephemeral provider");
+    Console.WriteLine("[DataProtection] This prevents DB access before migrations are applied");
+    
+    builder.Services.AddDataProtection()
+    .SetApplicationName("InovaSaude")
+        .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
 }
 else
 {
@@ -50,11 +30,11 @@ else
     var dataProtectionPath = Path.Combine(Directory.GetCurrentDirectory(), "keys");
     if (!Directory.Exists(dataProtectionPath))
     {
-        Directory.CreateDirectory(dataProtectionPath);
+  Directory.CreateDirectory(dataProtectionPath);
     }
 
     builder.Services.AddDataProtection()
-        .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
         .SetApplicationName("InovaSaude")
         .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
 

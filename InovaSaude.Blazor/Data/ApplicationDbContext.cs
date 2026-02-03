@@ -1,19 +1,22 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+// using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;  // TEMPORARIAMENTE COMENTADO
 using InovaSaude.Blazor.Models;
 using InovaSaude.Blazor.Models.Integrations;
 
 namespace InovaSaude.Blazor.Data;
 
-public class ApplicationDbContext : DbContext, IDataProtectionKeyContext
+// TEMPORARIAMENTE removida interface IDataProtectionKeyContext
+// Adicionar de volta após migrations aplicadas: , IDataProtectionKeyContext
+public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
 
-    // Data Protection keys
-    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
+    // Data Protection keys - TEMPORARIAMENTE COMENTADO
+  // Descomentar após migrations aplicadas e reverter interface acima
+    // public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
 
     // Core entities
     public DbSet<Usuario> Usuarios { get; set; }
