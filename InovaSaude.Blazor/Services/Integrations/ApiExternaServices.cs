@@ -279,6 +279,14 @@ public class HorusIntegrationService : ApiExternaServiceBase
     }
 
     /// <summary>
+    /// Sincronizar medicamentos do HORUS (alias)
+    /// </summary>
+    public Task<bool> SincronizarMedicamentosAsync(string? ubsId = null, string? usuarioId = null)
+    {
+     return SincronizarEstoqueMedicamentosAsync(ubsId, usuarioId);
+    }
+
+    /// <summary>
     /// Sincronizar estoque de medicamentos do HORUS
     /// </summary>
     public async Task<bool> SincronizarEstoqueMedicamentosAsync(string? ubsId = null, string? usuarioId = null)

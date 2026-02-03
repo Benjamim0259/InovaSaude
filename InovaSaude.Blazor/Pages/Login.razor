@@ -11,64 +11,64 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-  <div class="col-md-6 col-lg-4">
+      <div class="col-md-6 col-lg-4">
     <div class="card shadow-lg">
-       <div class="card-body p-5">
-     <div class="text-center mb-4">
-       <h2 class="fw-bold">🏥 InovaSaúde</h2>
-  <p class="text-muted">Sistema de Gestão de UBS</p>
-      </div>
-        
-  <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-   <DataAnnotationsValidator />
+    <div class="card-body p-5">
+           <div class="text-center mb-4">
+         <h2 class="fw-bold">🏥 InovaSaúde</h2>
+       <p class="text-muted">Sistema de Gestão de UBS</p>
+   </div>
+  
+       <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+  <DataAnnotationsValidator />
 
-    <div class="mb-3">
-       <label class="form-label fw-semibold">Email</label>
+             <div class="mb-3">
+          <label class="form-label fw-semibold">Email</label>
        <InputText class="form-control form-control-lg" @bind-Value="loginModel.Email" placeholder="seu@email.com" />
-    <ValidationMessage For="@(() => loginModel.Email)" class="text-danger small" />
-          </div>
-
-     <div class="mb-3">
-      <label class="form-label fw-semibold">Senha</label>
-              <InputText type="password" class="form-control form-control-lg" @bind-Value="loginModel.Password" placeholder="••••••••" />
-                  <ValidationMessage For="@(() => loginModel.Password)" class="text-danger small" />
-         </div>
-
-         @if (!string.IsNullOrEmpty(error))
-            {
-           <div class="alert alert-danger d-flex align-items-center" role="alert">
-          <span class="oi oi-warning me-2"></span>
-        <span>@error</span>
+     <ValidationMessage For="@(() => loginModel.Email)" class="text-danger small" />
      </div>
-        }
 
-   <button class="btn btn-primary btn-lg w-100 mb-3" type="submit" disabled="@isLoading">
-                 @if (isLoading)
-        {
-                <span class="spinner-border spinner-border-sm me-2"></span>
-Entrando...
+         <div class="mb-3">
+      <label class="form-label fw-semibold">Senha</label>
+       <InputText type="password" class="form-control form-control-lg" @bind-Value="loginModel.Password" placeholder="••••••••" />
+         <ValidationMessage For="@(() => loginModel.Password)" class="text-danger small" />
+      </div>
+
+        @if (!string.IsNullOrEmpty(error))
+      {
+                 <div class="alert alert-danger d-flex align-items-center" role="alert">
+     <span class="oi oi-warning me-2"></span>
+      <span>@error</span>
+        </div>
             }
-         else
-                {
+
+       <button class="btn btn-primary btn-lg w-100 mb-3" type="submit" disabled="@isLoading">
+      @if (isLoading)
+                 {
+<span class="spinner-border spinner-border-sm me-2"></span>
+     <span>Entrando...</span>
+  }
+  else
+          {
       <span class="oi oi-account-login me-2"></span>
- Entrar
-      }
-      </button>
-     </EditForm>
+        <span>Entrar</span>
+   }
+                  </button>
+      </EditForm>
 
            <div class="mt-4 p-3 bg-light rounded">
-       <p class="text-center small text-muted mb-2"><strong>Credenciais de Teste:</strong></p>
-        <p class="small mb-1"><strong>Admin:</strong> admin@inovasaude.com.br</p>
-          <p class="small mb-0"><strong>Senha:</strong> Admin@123</p>
-</div>
-              </div>
-     </div>
+          <p class="text-center small text-muted mb-2"><strong>Credenciais de Teste:</strong></p>
+  <p class="small mb-1"><strong>Admin:</strong> admin@inovasaude.com.br</p>
+     <p class="small mb-0"><strong>Senha:</strong> Admin@123</p>
+           </div>
+    </div>
+  </div>
         </div>
     </div>
 </div>
 
 @code {
- private LoginModel loginModel = new();
+    private LoginModel loginModel = new();
     private string? error;
     private bool isLoading = false;
 
@@ -84,91 +84,91 @@ if (httpContext?.User?.Identity?.IsAuthenticated == true)
 
     private async Task HandleLogin()
     {
-    error = null;
-        isLoading = true;
+        error = null;
+     isLoading = true;
 
-      try
-        {
-     // Validar campos
-          if (string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
-     {
-      error = "Por favor, preencha todos os campos.";
-       return;
-            }
-
-     // Buscar usuário
-      var user = await UsuarioService.GetUsuarioByEmailAsync(loginModel.Email);
-            
-            if (user == null)
+   try
+   {
+            // Validar campos
+            if (string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
             {
-  error = "Email ou senha inválidos.";
-   return;
-       }
-
-            // Verificar senha
-       var verified = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.SenhaHash);
-     
-      if (!verified)
- {
-     error = "Email ou senha inválidos.";
-    return;
-            }
-
-      // Verificar status do usuário
-    if (user.Status != "ATIVO")
-            {
-      error = "Usuário inativo. Entre em contato com o administrador.";
-      return;
-        }
-
-    // Criar claims
-  var claims = new List<Claim>
-  {
-      new Claim(ClaimTypes.NameIdentifier, user.Id),
-  new Claim(ClaimTypes.Name, user.Nome),
-    new Claim(ClaimTypes.Email, user.Email),
-    new Claim("perfil", user.Perfil.ToString())
-         };
-
-          if (!string.IsNullOrEmpty(user.UbsId))
-            {
-   claims.Add(new Claim("ubsId", user.UbsId));
+       error = "Por favor, preencha todos os campos.";
+        return;
   }
 
-         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-   var principal = new ClaimsPrincipal(identity);
+  // Buscar usuário
+     var user = await UsuarioService.GetUsuarioByEmailAsync(loginModel.Email);
+  
+if (user == null)
+            {
+                error = "Email ou senha inválidos.";
+      return;
+            }
 
-            var authProperties = new AuthenticationProperties
-  {
-                IsPersistent = true,
-        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8),
-          AllowRefresh = true
-   };
+            // Verificar senha
+   var verified = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.SenhaHash);
+            
+            if (!verified)
+            {
+     error = "Email ou senha inválidos.";
+                return;
+            }
 
-     var httpContext = HttpContextAccessor.HttpContext;
-            if (httpContext != null)
-{
-        await httpContext.SignInAsync(
-       CookieAuthenticationDefaults.AuthenticationScheme,
-  principal,
-         authProperties
- );
-
-       // Atualizar último acesso
-     user.UltimoAcesso = DateTime.UtcNow;
-    await UsuarioService.UpdateUsuarioAsync(user);
-
-         // Redirecionar para dashboard com reload completo
-        Navigation.NavigateTo("/dashboard", true);
-      }
-   }
-        catch (Exception ex)
-   {
-      error = $"Erro ao fazer login: {ex.Message}";
+        // Verificar status do usuário
+            if (user.Status != "ATIVO")
+      {
+           error = "Usuário inativo. Entre em contato com o administrador.";
+    return;
         }
- finally
+
+            // Criar claims
+            var claims = new List<Claim>
+            {
+   new Claim(ClaimTypes.NameIdentifier, user.Id),
+new Claim(ClaimTypes.Name, user.Nome),
+        new Claim(ClaimTypes.Email, user.Email),
+    new Claim("perfil", user.Perfil.ToString())
+            };
+
+     if (!string.IsNullOrEmpty(user.UbsId))
+  {
+      claims.Add(new Claim("ubsId", user.UbsId));
+      }
+
+     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+   var authProperties = new AuthenticationProperties
+      {
+                IsPersistent = true,
+       ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8),
+           AllowRefresh = true
+            };
+
+        var httpContext = HttpContextAccessor.HttpContext;
+  if (httpContext != null)
+            {
+         await httpContext.SignInAsync(
+        CookieAuthenticationDefaults.AuthenticationScheme,
+    principal,
+                    authProperties
+                );
+
+   // Atualizar último acesso
+     user.UltimoAcesso = DateTime.UtcNow;
+            await UsuarioService.UpdateUsuarioAsync(user, new List<Models.Permissao>());
+
+                // Redirecionar para dashboard com reload completo
+ Navigation.NavigateTo("/dashboard", true);
+       }
+        }
+  catch (Exception ex)
         {
-         isLoading = false;
+            error = $"Erro ao fazer login: {ex.Message}";
+        }
+        finally
+        {
+      isLoading = false;
         }
     }
 

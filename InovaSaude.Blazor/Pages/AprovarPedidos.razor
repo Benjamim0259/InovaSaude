@@ -12,7 +12,7 @@
 
 <div class="container-fluid mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-<h2>? Aprovar Pedidos de Medicamentos</h2>
+<h2>Aprovar Pedidos de Medicamentos</h2>
   <div>
     <span class="badge bg-warning fs-6">@pedidosPendentes.Count pendentes</span>
         </div>
@@ -174,15 +174,15 @@ else
 
   <div class="mt-4">
    <div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="decisao" id="aprovar" value="aprovar" @onchange="() => decisaoFinal = 'aprovar'" checked="@(decisaoFinal == "aprovar")">
+  <input class="form-check-input" type="radio" name="decisao" id="aprovar" value="aprovar" checked="@(decisaoFinal == "aprovar")" @onchange="@((e) => decisaoFinal = e.Value.ToString())">
        <label class="form-check-label" for="aprovar">
-    ? Aprovar Pedido
+  Aprovar Pedido
       </label>
         </div>
   <div class="form-check form-check-inline">
- <input class="form-check-input" type="radio" name="decisao" id="rejeitar" value="rejeitar" @onchange="() => decisaoFinal = "rejeitar"">
+ <input class="form-check-input" type="radio" name="decisao" id="rejeitar" value="rejeitar" @onchange="@((e) => decisaoFinal = e.Value.ToString())">
       <label class="form-check-label" for="rejeitar">
- ? Rejeitar Pedido
+ Rejeitar Pedido
    </label>
     </div>
 </div>
@@ -282,40 +282,47 @@ pedidosPendentes = await PedidoService.GetPedidosByStatusAsync("PENDENTE");
 
     private async Task ProcessarAprovacao()
     {
- if (pedidoSelecionado == null) return;
+        if (pedidoSelecionado == null) return;
 
-  if (decisaoFinal == "rejeitar" && string.IsNullOrWhiteSpace(motivoRejeicao))
-     {
-      ToastService.ShowWarning("Informe o motivo da rejeição");
-            return;
+        if (decisaoFinal == "rejeitar" && string.IsNullOrWhiteSpace(motivoRejeicao))
+      {
+   ToastService.ShowWarning("Informe o motivo da rejeição");
+   return;
         }
 
-        processando = true;
-   try
-   {
-     if (decisaoFinal == "aprovar")
-       {
-     await PedidoService.AprovarPedidoAsync(pedidoSelecionado.Id);
-   ToastService.ShowSuccess($"Pedido {pedidoSelecionado.NumeroPedido} aprovado com sucesso!");
-   }
-   else
-    {
-     await PedidoService.RejeitarPedidoAsync(pedidoSelecionado.Id, motivoRejeicao!);
-   ToastService.ShowSuccess($"Pedido {pedidoSelecionado.NumeroPedido} rejeitado.");
-            }
-
-         await CarregarPedidosPendentes();
-      FecharModal();
-        }
-        catch (Exception ex)
+  processando = true;
+        try
         {
-      ToastService.ShowError($"Erro ao processar pedido: {ex.Message}");
-   }
-        finally
-   {
-processando = false;
-  }
- }
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+var userId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+
+          if (decisaoFinal == "aprovar")
+        {
+       var quantidadesAprovadas = pedidoSelecionado.Itens.ToDictionary(
+         i => i.NomeMedicamento,
+          i => i.QuantidadeAprovada ?? 0
+         );
+    await PedidoService.AprovarPedidoAsync(pedidoSelecionado.Id, userId, quantidadesAprovadas);
+      ToastService.ShowSuccess($"Pedido {pedidoSelecionado.NumeroPedido} aprovado com sucesso!");
+     }
+            else
+    {
+                await PedidoService.RejeitarPedidoAsync(pedidoSelecionado.Id, userId, motivoRejeicao!);
+    ToastService.ShowSuccess($"Pedido {pedidoSelecionado.NumeroPedido} rejeitado.");
+       }
+
+          await CarregarPedidosPendentes();
+            FecharModal();
+      }
+        catch (Exception ex)
+      {
+         ToastService.ShowError($"Erro ao processar pedido: {ex.Message}");
+        }
+      finally
+        {
+ processando = false;
+        }
+    }
 
     private string GetPrioridadeClass(string prioridade) => prioridade switch
     {

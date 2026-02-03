@@ -1,6 +1,7 @@
 @page "/dashboard"
 @using InovaSaude.Blazor.Services
 @inject DashboardService DashboardService
+@inject ToastService ToastService
 @inject NavigationManager Navigation
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
@@ -228,16 +229,16 @@
 </style>
 
 @code {
-    private DashboardData? dados;
-    private bool carregando = true;
+    private InovaSaude.Blazor.Services.DashboardData? dados;
+ private bool carregando = true;
 
     protected override async Task OnInitializedAsync()
-    {
+  {
   await CarregarDados();
     }
 
     private async Task CarregarDados()
-    {
+ {
 carregando = true;
   try
    {
@@ -248,7 +249,7 @@ carregando = true;
       ToastService.ShowError($"Erro ao carregar dashboard: {ex.Message}");
    }
  finally
-        {
+      {
   carregando = false;
   }
     }
@@ -267,32 +268,4 @@ carregando = true;
   "CANCELADA" => "bg-secondary",
         _ => "bg-primary"
     };
-
-    private class DashboardData
-    {
-   public decimal TotalGeral { get; set; }
-   public int TotalDespesas { get; set; }
-        public decimal TotalPendente { get; set; }
- public int TotalPendentes { get; set; }
-   public decimal TotalAprovado { get; set; }
-        public int TotalAprovadas { get; set; }
-    public decimal TotalPago { get; set; }
-        public int TotalPagas { get; set; }
-        public List<StatusData> DespesasPorStatus { get; set; } = new();
-        public List<CategoriaData> DespesasPorCategoria { get; set; } = new();
-    }
-
-    private class StatusData
-    {
-   public string Status { get; set; } = string.Empty;
-        public decimal Total { get; set; }
-    public int Quantidade { get; set; }
-    }
-
-    private class CategoriaData
-    {
-        public string Categoria { get; set; } = string.Empty;
-      public decimal Total { get; set; }
- public int Quantidade { get; set; }
-    }
 }
