@@ -11,165 +11,165 @@
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>?? Pedidos de Medicamentos</h2>
-        <button class="btn btn-primary btn-lg" @onclick="AbrirModalNovoPedido">
-    <span class="oi oi-plus me-2"></span>Novo Pedido
+  <button class="btn btn-primary btn-lg" @onclick="AbrirModalNovoPedido">
+  <span class="oi oi-plus me-2"></span>Novo Pedido
         </button>
     </div>
 
     @if (carregando)
     {
         <div class="text-center py-5">
-     <div class="spinner-border text-primary"></div>
-            <p class="mt-2 text-muted">Carregando pedidos...</p>
-        </div>
+      <div class="spinner-border text-primary"></div>
+     <p class="mt-2 text-muted">Carregando pedidos...</p>
+    </div>
     }
     else
     {
         <!-- Cards de Resumo -->
         <div class="row mb-4">
-    <div class="col-md-3">
-          <div class="card border-warning text-center">
-    <div class="card-body">
-     <h6 class="text-muted">Pendentes</h6>
-            <h3 class="text-warning">@pedidos.Count(p => p.Status == "PENDENTE")</h3>
-                    </div>
-                </div>
-         </div>
-            <div class="col-md-3">
-           <div class="card border-success text-center">
+        <div class="col-md-3">
+            <div class="card border-warning text-center">
       <div class="card-body">
-          <h6 class="text-muted">Aprovados</h6>
-    <h3 class="text-success">@pedidos.Count(p => p.Status == "APROVADO")</h3>
-              </div>
-     </div>
-</div>
- <div class="col-md-3">
-    <div class="card border-info text-center">
-     <div class="card-body">
-     <h6 class="text-muted">Entregues</h6>
-          <h3 class="text-info">@pedidos.Count(p => p.Status == "ENTREGUE")</h3>
-       </div>
-          </div>
+                 <h6 class="text-muted">Pendentes</h6>
+<h3 class="text-warning">@pedidos.Count(p => p.Status == "PENDENTE")</h3>
             </div>
-       <div class="col-md-3">
-           <div class="card border-danger text-center">
-   <div class="card-body">
-  <h6 class="text-muted">Rejeitados</h6>
-     <h3 class="text-danger">@pedidos.Count(p => p.Status == "REJEITADO")</h3>
+                </div>
+   </div>
+     <div class="col-md-3">
+<div class="card border-success text-center">
+            <div class="card-body">
+            <h6 class="text-muted">Aprovados</h6>
+       <h3 class="text-success">@pedidos.Count(p => p.Status == "APROVADO")</h3>
+         </div>
+       </div>
+         </div>
+        <div class="col-md-3">
+        <div class="card border-info text-center">
+         <div class="card-body">
+     <h6 class="text-muted">Entregues</h6>
+   <h3 class="text-info">@pedidos.Count(p => p.Status == "ENTREGUE")</h3>
+   </div>
+     </div>
+            </div>
+   <div class="col-md-3">
+         <div class="card border-danger text-center">
+              <div class="card-body">
+   <h6 class="text-muted">Rejeitados</h6>
+      <h3 class="text-danger">@pedidos.Count(p => p.Status == "REJEITADO")</h3>
+       </div>
+         </div>
+            </div>
+  </div>
+
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+        <div class="row g-3">
+         <div class="col-md-3">
+          <label class="form-label">Status</label>
+            <select class="form-select" @bind="filtroStatus">
+      <option value="">Todos</option>
+         <option value="PENDENTE">Pendente</option>
+        <option value="APROVADO">Aprovado</option>
+     <option value="ENTREGUE">Entregue</option>
+   <option value="REJEITADO">Rejeitado</option>
+           </select>
+          </div>
+          <div class="col-md-3">
+     <label class="form-label">Prioridade</label>
+       <select class="form-select" @bind="filtroPrioridade">
+ <option value="">Todas</option>
+     <option value="NORMAL">Normal</option>
+    <option value="URGENTE">Urgente</option>
+  <option value="CRITICA">Crítica</option>
+     </select>
+      </div>
+     <div class="col-md-6 d-flex align-items-end">
+             <button class="btn btn-secondary w-100" @onclick="LimparFiltros">
+    <span class="oi oi-x me-2"></span>Limpar Filtros
+          </button>
     </div>
                 </div>
-     </div>
-        </div>
-
-      <!-- Filtros -->
-        <div class="card mb-4">
- <div class="card-body">
-     <div class="row g-3">
- <div class="col-md-3">
-          <label class="form-label">Status</label>
-          <select class="form-select" @bind="filtroStatus">
-              <option value="">Todos</option>
- <option value="PENDENTE">Pendente</option>
-       <option value="APROVADO">Aprovado</option>
-       <option value="ENTREGUE">Entregue</option>
-           <option value="REJEITADO">Rejeitado</option>
-  </select>
-       </div>
-   <div class="col-md-3">
- <label class="form-label">Prioridade</label>
-    <select class="form-select" @bind="filtroPrioridade">
-              <option value="">Todas</option>
-   <option value="NORMAL">Normal</option>
- <option value="URGENTE">Urgente</option>
-           <option value="CRITICA">Crítica</option>
- </select>
-     </div>
-         <div class="col-md-6 d-flex align-items-end">
-     <button class="btn btn-secondary w-100" @onclick="LimparFiltros">
-           <span class="oi oi-x me-2"></span>Limpar Filtros
-                </button>
-      </div>
-        </div>
             </div>
-      </div>
-
-   <!-- Lista de Pedidos -->
-        <div class="row">
-       @foreach (var pedido in PedidosFiltrados)
-         {
-                <div class="col-md-6 col-lg-4 mb-3">
-      <div class="card h-100 @GetCardBorderClass(pedido.Status)">
-                <div class="card-header d-flex justify-content-between align-items-center">
-   <strong>@pedido.NumeroPedido</strong>
-      <span class="badge @GetStatusBadgeClass(pedido.Status)">
-     @pedido.Status
-   </span>
    </div>
-        <div class="card-body">
-  <div class="mb-2">
-     <small class="text-muted">UBS:</small><br/>
-    <strong>@pedido.UbsSolicitante.Nome</strong>
+
+        <!-- Lista de Pedidos -->
+        <div class="row">
+            @foreach (var pedido in PedidosFiltrados)
+   {
+       <div class="col-md-6 col-lg-4 mb-3">
+         <div class="card h-100 @GetCardBorderClass(pedido.Status)">
+            <div class="card-header d-flex justify-content-between align-items-center">
+ <strong>@pedido.NumeroPedido</strong>
+            <span class="badge @GetStatusBadgeClass(pedido.Status)">
+            @pedido.Status
+     </span>
        </div>
-     
-           <div class="mb-2">
-       <small class="text-muted">Data do Pedido:</small><br/>
-   <span>@pedido.DataPedido.ToString("dd/MM/yyyy HH:mm")</span>
-     </div>
-
-        @if (pedido.DataNecessidade.HasValue)
- {
-     <div class="mb-2">
-        <small class="text-muted">Data Necessidade:</small><br/>
-      <span class="@(pedido.DataNecessidade.Value < DateTime.UtcNow.AddDays(3) ? "text-danger fw-bold" : "")">
-    @pedido.DataNecessidade.Value.ToString("dd/MM/yyyy")
-   </span>
-     </div>
-       }
-
- <div class="mb-2">
-      <small class="text-muted">Prioridade:</small>
-          <span class="badge @GetPrioridadeBadgeClass(pedido.Prioridade)">
-         @GetPrioridadeIcon(pedido.Prioridade) @pedido.Prioridade
-          </span>
-      </div>
-
-            <div class="mb-2">
-           <small class="text-muted">Itens:</small>
- <strong>@pedido.Itens.Count medicamento(s)</strong>
-     </div>
-
-        @if (!string.IsNullOrEmpty(pedido.Observacoes))
-       {
-  <div class="mb-2">
-  <small class="text-muted">Obs:</small><br/>
-          <small>@pedido.Observacoes</small>
-         </div>
- }
-
-    @if (pedido.Status == "REJEITADO" && !string.IsNullOrEmpty(pedido.MotivoRejeicao))
-                  {
-     <div class="alert alert-danger alert-sm p-2">
-         <small><strong>Motivo:</strong> @pedido.MotivoRejeicao</small>
-            </div>
-       }
-  </div>
-            <div class="card-footer">
-        <button class="btn btn-sm btn-info w-100" @onclick="() => VerDetalhesPedido(pedido)">
-        <span class="oi oi-eye me-1"></span>Ver Detalhes
-       </button>
+    <div class="card-body">
+         <div class="mb-2">
+            <small class="text-muted">UBS:</small><br/>
+   <strong>@pedido.UbsSolicitante.Nome</strong>
         </div>
-       </div>
+    
+       <div class="mb-2">
+               <small class="text-muted">Data do Pedido:</small><br/>
+              <span>@pedido.DataPedido.ToString("dd/MM/yyyy HH:mm")</span>
+   </div>
+
+  @if (pedido.DataNecessidade.HasValue)
+  {
+            <div class="mb-2">
+    <small class="text-muted">Data Necessidade:</small><br/>
+        <span class="@(pedido.DataNecessidade.Value < DateTime.UtcNow.AddDays(3) ? "text-danger fw-bold" : "")">
+      @pedido.DataNecessidade.Value.ToString("dd/MM/yyyy")
+          </span>
+   </div>
+         }
+
+          <div class="mb-2">
+     <small class="text-muted">Prioridade:</small>
+       <span class="badge @GetPrioridadeBadgeClass(pedido.Prioridade)">
+       @GetPrioridadeIcon(pedido.Prioridade) @pedido.Prioridade
+    </span>
+            </div>
+
+         <div class="mb-2">
+     <small class="text-muted">Itens:</small>
+  <strong>@pedido.Itens.Count medicamento(s)</strong>
+    </div>
+
+            @if (!string.IsNullOrEmpty(pedido.Observacoes))
+                 {
+ <div class="mb-2">
+   <small class="text-muted">Obs:</small><br/>
+             <small>@pedido.Observacoes</small>
                 </div>
-            }
+   }
+
+       @if (pedido.Status == "REJEITADO" && !string.IsNullOrEmpty(pedido.MotivoRejeicao))
+         {
+    <div class="alert alert-danger alert-sm p-2">
+          <small><strong>Motivo:</strong> @pedido.MotivoRejeicao</small>
+        </div>
+        }
+       </div>
+       <div class="card-footer">
+              <button class="btn btn-sm btn-info w-100" @onclick="() => VerDetalhesPedido(pedido)">
+    <span class="oi oi-eye me-1"></span>Ver Detalhes
+           </button>
+</div>
+        </div>
+     </div>
+  }
         </div>
 
         @if (!PedidosFiltrados.Any())
-   {
+        {
             <div class="alert alert-info text-center">
-                <span class="oi oi-info me-2"></span>
+          <span class="oi oi-info me-2"></span>
                 Nenhum pedido encontrado com os filtros aplicados.
-      </div>
-        }
+     </div>
+      }
     }
 </div>
 
@@ -178,129 +178,139 @@
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
         <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-              <div class="modal-header">
-        <h5 class="modal-title">? Novo Pedido de Medicamentos</h5>
-    <button type="button" class="btn-close" @onclick="FecharModalNovo"></button>
-                </div>
-    <div class="modal-body">
-     <div class="row g-3 mb-4">
-   <div class="col-md-6">
-          <label class="form-label">Data de Necessidade</label>
-           <input type="date" class="form-control" @bind="novoPedido.DataNecessidade" />
-          </div>
-      <div class="col-md-6">
-    <label class="form-label">Prioridade</label>
-<select class="form-select" @bind="novoPedido.Prioridade">
-    <option value="NORMAL">?? Normal</option>
-          <option value="URGENTE">?? Urgente</option>
-   <option value="CRITICA">?? Crítica</option>
-      </select>
-       </div>
-       <div class="col-12">
-    <label class="form-label">Observações</label>
-     <textarea class="form-control" rows="2" @bind="novoPedido.Observacoes" placeholder="Observações sobre o pedido..."></textarea>
-       </div>
+  <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">Novo Pedido de Medicamentos</h5>
+        <button type="button" class="btn-close" @onclick="FecharModalNovo"></button>
+    </div>
+<div class="modal-body">
+        <div class="row g-3 mb-4">
+       <div class="col-md-4">
+          <label class="form-label">UBS Destino *</label>
+               <select class="form-select" @bind="novoPedido.UbsId" required>
+            <option value="">Selecione a UBS...</option>
+   @foreach (var ubs in ubsList ?? new())
+           {
+   <option value="@ubs.Id">@ubs.Nome</option>
+     }
+     </select>
          </div>
-
-     <hr/>
-
-   <h6>Medicamentos</h6>
-      
-         <!-- Formulário para adicionar item -->
-  <div class="card mb-3">
-        <div class="card-body">
-       <div class="row g-3">
-          <div class="col-md-4">
-           <label class="form-label">Nome do Medicamento *</label>
-        <input type="text" class="form-control" @bind="novoItem.NomeMedicamento" placeholder="Ex: Dipirona 500mg" />
+    <div class="col-md-4">
+ <label class="form-label">Data de Necessidade</label>
+                <input type="date" class="form-control" @bind="novoPedido.DataNecessidade" />
+           </div>
+              <div class="col-md-4">
+         <label class="form-label">Prioridade</label>
+           <select class="form-select" @bind="novoPedido.Prioridade">
+  <option value="NORMAL">Normal</option>
+     <option value="URGENTE">Urgente</option>
+      <option value="CRITICA">Crítica</option>
+       </select>
       </div>
-      <div class="col-md-3">
-               <label class="form-label">Princípio Ativo</label>
-      <input type="text" class="form-control" @bind="novoItem.PrincipioAtivo" placeholder="Ex: Dipirona Sódica" />
-              </div>
-         <div class="col-md-2">
-       <label class="form-label">Quantidade *</label>
-              <input type="number" class="form-control" @bind="novoItem.QuantidadeSolicitada" min="1" />
-     </div>
-      <div class="col-md-3 d-flex align-items-end">
-        <button class="btn btn-success w-100" @onclick="AdicionarItem">
-         <span class="oi oi-plus me-1"></span>Adicionar
-      </button>
-               </div>
-   </div>
-   </div>
-         </div>
+     <div class="col-12">
+            <label class="form-label">Observações</label>
+    <textarea class="form-control" rows="2" @bind="novoPedido.Observacoes" placeholder="Observações sobre o pedido..."></textarea>
+           </div>
+    </div>
 
-   <!-- Lista de itens adicionados -->
-     @if (novoPedido.Itens.Any())
-   {
-             <div class="table-responsive">
-            <table class="table table-sm">
-                  <thead>
-             <tr>
-     <th>Medicamento</th>
-     <th>Princípio Ativo</th>
-        <th class="text-end">Quantidade</th>
-           <th class="text-center">Ações</th>
-        </tr>
-                 </thead>
- <tbody>
-             @foreach (var item in novoPedido.Itens)
-    {
-        <tr>
-           <td>@item.NomeMedicamento</td>
-     <td>@item.PrincipioAtivo</td>
-          <td class="text-end">@item.QuantidadeSolicitada</td>
-   <td class="text-center">
-       <button class="btn btn-sm btn-danger" @onclick="() => RemoverItem(item)">
-         <span class="oi oi-trash"></span>
+      <hr/>
+
+         <h6>Medicamentos</h6>
+   
+          <!-- Formulário para adicionar item -->
+           <div class="card mb-3">
+           <div class="card-body">
+       <div class="row g-3">
+    <div class="col-md-4">
+        <label class="form-label">Nome do Medicamento *</label>
+        <input type="text" class="form-control" @bind="novoItem.NomeMedicamento" placeholder="Ex: Dipirona 500mg" />
+  </div>
+        <div class="col-md-3">
+             <label class="form-label">Princípio Ativo</label>
+       <input type="text" class="form-control" @bind="novoItem.PrincipioAtivo" placeholder="Ex: Dipirona Sódica" />
+   </div>
+             <div class="col-md-2">
+ <label class="form-label">Quantidade *</label>
+           <input type="number" class="form-control" @bind="novoItem.QuantidadeSolicitada" min="1" />
+        </div>
+      <div class="col-md-3 d-flex align-items-end">
+     <button class="btn btn-success w-100" @onclick="AdicionarItem">
+          <span class="oi oi-plus me-1"></span>Adicionar
  </button>
-   </td>
-    </tr>
-       }
-                 </tbody>
-  </table>
-          </div>
-          }
-        else
-  {
-            <div class="alert alert-warning">
-   <span class="oi oi-warning me-2"></span>
-         Adicione pelo menos um medicamento ao pedido.
+     </div>
+         </div>
+  </div>
        </div>
-                 }
+
+              <!-- Lista de itens adicionados -->
+           @if (novoPedido.Itens.Any())
+     {
+             <div class="table-responsive">
+                 <table class="table table-sm">
+     <thead>
+<tr>
+                 <th>Medicamento</th>
+       <th>Princípio Ativo</th>
+       <th class="text-end">Quantidade</th>
+<th class="text-center">Ações</th>
+     </tr>
+        </thead>
+           <tbody>
+         @foreach (var item in novoPedido.Itens)
+           {
+             <tr>
+   <td>@item.NomeMedicamento</td>
+       <td>@item.PrincipioAtivo</td>
+      <td class="text-end">@item.QuantidadeSolicitada</td>
+         <td class="text-center">
+  <button class="btn btn-sm btn-danger" @onclick="() => RemoverItem(item)">
+  <span class="oi oi-trash"></span>
+    </button>
+         </td>
+    </tr>
+ }
+          </tbody>
+          </table>
+    </div>
+         }
+   else
+   {
+         <div class="alert alert-warning">
+     <span class="oi oi-warning me-2"></span>
+   Adicione pelo menos um medicamento ao pedido.
+             </div>
+         }
 
        @if (!string.IsNullOrEmpty(mensagemErro))
-      {
-       <div class="alert alert-danger mt-3">
-     <span class="oi oi-warning me-2"></span>
-   @mensagemErro
-     </div>
-       }
-      </div>
-       <div class="modal-footer">
-<button type="button" class="btn btn-secondary" @onclick="FecharModalNovo">Cancelar</button>
-        <button type="button" class="btn btn-primary" @onclick="SalvarPedido" disabled="@(salvando || !novoPedido.Itens.Any())">
-    @if (salvando)
-   {
-   <span class="spinner-border spinner-border-sm me-2"></span>
-      }
-            Enviar Pedido
-       </button>
-     </div>
+          {
+          <div class="alert alert-danger mt-3">
+   <span class="oi oi-warning me-2"></span>
+         @mensagemErro
+            </div>
+              }
  </div>
+     <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @onclick="FecharModalNovo">Cancelar</button>
+         <button type="button" class="btn btn-primary" @onclick="SalvarPedido" disabled="@(salvando || !novoPedido.Itens.Any() || string.IsNullOrEmpty(novoPedido.UbsId))">
+               @if (salvando)
+     {
+           <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+   Enviar Pedido
+        </button>
+     </div>
+          </div>
         </div>
-    </div>
+  </div>
 }
 
 @code {
     private List<PedidoMedicamento> pedidos = new();
+    private List<UBS>? ubsList;
     private bool carregando = true;
     private bool mostrarModalNovo = false;
     private bool salvando = false;
     private string? mensagemErro;
- private string? ubsUsuarioId;
 
     // Filtros
     private string filtroStatus = "";
@@ -312,51 +322,45 @@
 
     protected override async Task OnInitializedAsync()
     {
-  await CarregarDados();
+    await CarregarDados();
     }
 
     private async Task CarregarDados()
     {
-   carregando = true;
+        carregando = true;
         try
-    {
-          // Obter UBS do usuário logado
-     var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-       
-  // TODO: Buscar UBS do usuário no banco
-  // ubsUsuarioId = await ObterUbsDoUsuario(user.Identity?.Name);
-
-       pedidos = await PedidoService.ObterTodosPedidosAsync(ubsUsuarioId);
+{
+         ubsList = await UBSService.GetAllUBSAsync();
+    pedidos = await PedidoService.ObterTodosPedidosAsync();
         }
-    catch (Exception ex)
+      catch (Exception ex)
         {
-            mensagemErro = $"Erro ao carregar pedidos: {ex.Message}";
+      mensagemErro = $"Erro ao carregar dados: {ex.Message}";
         }
- finally
+     finally
         {
-            carregando = false;
+      carregando = false;
         }
     }
 
     private IEnumerable<PedidoMedicamento> PedidosFiltrados
     {
         get
-        {
-       var query = pedidos.AsEnumerable();
+     {
+            var query = pedidos.AsEnumerable();
 
-          if (!string.IsNullOrWhiteSpace(filtroStatus))
-         query = query.Where(p => p.Status == filtroStatus);
+ if (!string.IsNullOrWhiteSpace(filtroStatus))
+    query = query.Where(p => p.Status == filtroStatus);
 
-       if (!string.IsNullOrWhiteSpace(filtroPrioridade))
-   query = query.Where(p => p.Prioridade == filtroPrioridade);
+         if (!string.IsNullOrWhiteSpace(filtroPrioridade))
+      query = query.Where(p => p.Prioridade == filtroPrioridade);
 
-            return query.OrderByDescending(p => p.DataPedido);
+         return query.OrderByDescending(p => p.DataPedido);
         }
     }
 
- private void LimparFiltros()
-{
+    private void LimparFiltros()
+    {
         filtroStatus = "";
         filtroPrioridade = "";
     }
@@ -364,111 +368,116 @@
     private void AbrirModalNovoPedido()
     {
         novoPedido = new NovoPedidoModel { Prioridade = "NORMAL" };
-    novoItem = new NovoItemModel();
+        novoItem = new NovoItemModel();
         mensagemErro = null;
         mostrarModalNovo = true;
     }
 
-    private void FecharModalNovo()
+private void FecharModalNovo()
     {
         mostrarModalNovo = false;
-        novoPedido = new();
+    novoPedido = new();
         novoItem = new();
         mensagemErro = null;
     }
 
     private void AdicionarItem()
     {
-   if (string.IsNullOrWhiteSpace(novoItem.NomeMedicamento) || novoItem.QuantidadeSolicitada <= 0)
+        if (string.IsNullOrWhiteSpace(novoItem.NomeMedicamento) || novoItem.QuantidadeSolicitada <= 0)
         {
-            mensagemErro = "Preencha o nome e quantidade do medicamento.";
-            return;
+     mensagemErro = "Preencha o nome e quantidade do medicamento.";
+      return;
         }
 
         novoPedido.Itens.Add(new ItemPedidoMedicamento
         {
-            NomeMedicamento = novoItem.NomeMedicamento,
+         NomeMedicamento = novoItem.NomeMedicamento,
             PrincipioAtivo = novoItem.PrincipioAtivo,
-            QuantidadeSolicitada = novoItem.QuantidadeSolicitada
-        });
+QuantidadeSolicitada = novoItem.QuantidadeSolicitada
+     });
 
-  novoItem = new NovoItemModel();
+        novoItem = new NovoItemModel();
         mensagemErro = null;
     }
 
     private void RemoverItem(ItemPedidoMedicamento item)
     {
- novoPedido.Itens.Remove(item);
-}
+    novoPedido.Itens.Remove(item);
+    }
 
     private async Task SalvarPedido()
     {
-      if (!novoPedido.Itens.Any())
-    {
+        if (!novoPedido.Itens.Any())
+        {
             mensagemErro = "Adicione pelo menos um medicamento ao pedido.";
    return;
         }
 
-        salvando = true;
-     mensagemErro = null;
+        if (string.IsNullOrEmpty(novoPedido.UbsId))
+        {
+      mensagemErro = "Selecione a UBS destino do pedido.";
+        return;
+ }
+
+  salvando = true;
+    mensagemErro = null;
 
         try
         {
-      // TODO: Obter usuário e UBS do contexto de autenticação
-    var usuarioId = "temp-user-id";
-            var ubsId = ubsUsuarioId ?? "temp-ubs-id";
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+     var usuarioId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "system";
 
-            await PedidoService.CriarPedidoAsync(
-        ubsId,
-         usuarioId,
-    novoPedido.Itens.ToList(),
-      novoPedido.Observacoes,
-     novoPedido.DataNecessidade,
- novoPedido.Prioridade
-   );
+         await PedidoService.CriarPedidoAsync(
+              novoPedido.UbsId,
+                usuarioId,
+           novoPedido.Itens.ToList(),
+        novoPedido.Observacoes,
+         novoPedido.DataNecessidade,
+       novoPedido.Prioridade
+            );
 
             await CarregarDados();
-            FecharModalNovo();
-        }
+          FecharModalNovo();
+      }
         catch (Exception ex)
-        {
-  mensagemErro = $"Erro ao criar pedido: {ex.Message}";
+   {
+            mensagemErro = $"Erro ao criar pedido: {ex.Message}";
         }
-      finally
+ finally
         {
- salvando = false;
-        }
+            salvando = false;
+      }
     }
 
     private void VerDetalhesPedido(PedidoMedicamento pedido)
     {
-  // TODO: Navegar para página de detalhes ou abrir modal
+// TODO: Implementar modal de detalhes
     }
 
     private string GetCardBorderClass(string status) => status switch
     {
         "PENDENTE" => "border-warning",
-      "APROVADO" => "border-success",
-      "ENTREGUE" => "border-info",
-   "REJEITADO" => "border-danger",
+        "APROVADO" => "border-success",
+        "ENTREGUE" => "border-info",
+        "REJEITADO" => "border-danger",
         _ => ""
-    };
+ };
 
     private string GetStatusBadgeClass(string status) => status switch
     {
         "PENDENTE" => "bg-warning",
-    "APROVADO" => "bg-success",
-      "ENTREGUE" => "bg-info",
+        "APROVADO" => "bg-success",
+        "ENTREGUE" => "bg-info",
         "REJEITADO" => "bg-danger",
-     _ => "bg-secondary"
+        _ => "bg-secondary"
     };
 
     private string GetPrioridadeBadgeClass(string prioridade) => prioridade switch
     {
-     "NORMAL" => "bg-secondary",
+      "NORMAL" => "bg-secondary",
         "URGENTE" => "bg-warning",
-      "CRITICA" => "bg-danger",
-      _ => "bg-secondary"
+        "CRITICA" => "bg-danger",
+_ => "bg-secondary"
     };
 
     private string GetPrioridadeIcon(string prioridade) => prioridade switch
@@ -476,20 +485,21 @@
         "NORMAL" => "??",
         "URGENTE" => "??",
         "CRITICA" => "??",
- _ => "??"
+        _ => "??"
     };
 
     private class NovoPedidoModel
     {
-     public DateTime? DataNecessidade { get; set; }
+    public string UbsId { get; set; } = string.Empty;
+        public DateTime? DataNecessidade { get; set; }
         public string Prioridade { get; set; } = "NORMAL";
         public string? Observacoes { get; set; }
-    public List<ItemPedidoMedicamento> Itens { get; set; } = new();
+        public List<ItemPedidoMedicamento> Itens { get; set; } = new();
     }
 
     private class NovoItemModel
-    {
-      public string NomeMedicamento { get; set; } = string.Empty;
+ {
+        public string NomeMedicamento { get; set; } = string.Empty;
         public string? PrincipioAtivo { get; set; }
         public int QuantidadeSolicitada { get; set; } = 1;
     }
