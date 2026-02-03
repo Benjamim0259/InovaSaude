@@ -1,14 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using InovaSaude.Blazor.Models;
+using InovaSaude.Blazor.Models.Integrations;
 
 namespace InovaSaude.Blazor.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : DbContext, IDataProtectionKeyContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
+
+    // Data Protection keys
+    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
 
     // Core entities
     public DbSet<Usuario> Usuarios { get; set; }
@@ -49,6 +54,19 @@ public class ApplicationDbContext : DbContext
     public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
     public DbSet<ExternalSync> ExternalSyncs { get; set; }
     public DbSet<ApiEndpoint> ApiEndpoints { get; set; }
+
+    // APIs Externas (HORUS, e-SUS PEC, NEMESIS)
+    public DbSet<ApiExterna> ApisExternas { get; set; }
+    public DbSet<LogIntegracaoApi> LogsIntegracaoApi { get; set; }
+    public DbSet<HorusMedicamento> HorusMedicamentos { get; set; }
+    public DbSet<EsusPecAtendimento> EsusPecAtendimentos { get; set; }
+    public DbSet<NemesisIndicador> NemesisIndicadores { get; set; }
+
+    // Farmácia Central
+    public DbSet<PedidoMedicamento> PedidosMedicamentos { get; set; }
+    public DbSet<ItemPedidoMedicamento> ItensPedidoMedicamento { get; set; }
+    public DbSet<EstoqueFarmacia> EstoqueFarmacia { get; set; }
+    public DbSet<MovimentacaoEstoque> MovimentacoesEstoque { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -154,6 +172,15 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<PaymentTransaction>().ToTable("payment_transactions");
         modelBuilder.Entity<ExternalSync>().ToTable("external_syncs");
         modelBuilder.Entity<ApiEndpoint>().ToTable("api_endpoints");
+        modelBuilder.Entity<ApiExterna>().ToTable("apis_externas");
+        modelBuilder.Entity<LogIntegracaoApi>().ToTable("logs_integracao_api");
+        modelBuilder.Entity<HorusMedicamento>().ToTable("horus_medicamentos");
+        modelBuilder.Entity<EsusPecAtendimento>().ToTable("esus_pec_atendimentos");
+        modelBuilder.Entity<NemesisIndicador>().ToTable("nemesis_indicadores");
+        modelBuilder.Entity<PedidoMedicamento>().ToTable("pedidos_medicamentos");
+        modelBuilder.Entity<ItemPedidoMedicamento>().ToTable("itens_pedido_medicamento");
+        modelBuilder.Entity<EstoqueFarmacia>().ToTable("estoque_farmacia");
+        modelBuilder.Entity<MovimentacaoEstoque>().ToTable("movimentacoes_estoque");
 
         // Configure indexes for performance
         modelBuilder.Entity<Despesa>()

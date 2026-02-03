@@ -12,27 +12,53 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-// Persist Data Protection keys to avoid antiforgery errors on container restart
-var dataProtectionPath = Path.Combine("/app", "keys");
-if (!Directory.Exists(dataProtectionPath))
+// Configurar Data Protection baseado no ambiente
+if (builder.Environment.IsProduction())
 {
-    Directory.CreateDirectory(dataProtectionPath);
-}
+    // Em produção (Render), usar o banco de dados para persistir chaves
+    // Isso garante que as chaves sobrevivam a restarts e funcionem entre múltiplas instâncias
+    var tempConnString = Environment.GetEnvironmentVariable("DATABASE_URL");
+    if (!string.IsNullOrEmpty(tempConnString))
+    {
+        // Converter DATABASE_URL para formato Npgsql
+        var url = tempConnString.Replace("postgres://", "http://").Replace("postgresql://", "http://");
+        var uri = new Uri(url);
+        var userInfo = uri.UserInfo.Split(':');
+        var dpConnString = $"Host={uri.Host};Port={(uri.Port > 0 && uri.Port != 80 ? uri.Port : 5432)};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
 
-// Configuração de Data Protection com chave persistente
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
-    .SetApplicationName("InovaSaude")
-    .SetDefaultKeyLifetime(TimeSpan.FromDays(90)); // Chaves válidas por 90 dias
+        builder.Services.AddDataProtection()
+            .PersistKeysToDbContext<ApplicationDbContext>()
+            .SetApplicationName("InovaSaude")
+            .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+
+        Console.WriteLine("[DataProtection] Configured to use PostgreSQL database for key storage");
+    }
+}
+else
+{
+    // Em desenvolvimento, usar filesystem local
+    var dataProtectionPath = Path.Combine(Directory.GetCurrentDirectory(), "keys");
+    if (!Directory.Exists(dataProtectionPath))
+    {
+        Directory.CreateDirectory(dataProtectionPath);
+    }
+
+    builder.Services.AddDataProtection()
+     .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
+  .SetApplicationName("InovaSaude")
+        .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+
+    Console.WriteLine($"[DataProtection] Configured to use filesystem at {dataProtectionPath}");
+}
 
 // Configuração de Antiforgery para funcionar com proxy reverso (Render)
 builder.Services.AddAntiforgery(options =>
 {
-  // Em produção com proxy reverso (Render), não forçar HTTPS nos cookies
-    // O proxy lida com SSL externamente
+// O proxy do Render lida com SSL externamente, internamente é HTTP
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.HttpOnly = true;
+    options.Cookie.Name = ".InovaSaude.Antiforgery";
 });
 
 // Função para converter DATABASE_URL (formato postgres://) para connection string Npgsql
@@ -156,6 +182,16 @@ builder.Services.AddScoped<IntegrationService>();
 builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<ImportacaoService>();
 builder.Services.AddScoped<WebhookService>();
+
+// APIs Externas (HORUS, e-SUS PEC, NEMESIS)
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<InovaSaude.Blazor.Services.Integrations.HorusIntegrationService>();
+builder.Services.AddScoped<InovaSaude.Blazor.Services.Integrations.EsusPecIntegrationService>();
+builder.Services.AddScoped<InovaSaude.Blazor.Services.Integrations.NemesisIntegrationService>();
+
+// Farmácia Central
+builder.Services.AddScoped<PedidoMedicamentoService>();
+builder.Services.AddScoped<EstoqueFarmaciaService>();
 
 // Add HttpClient for API calls with BaseAddress
 builder.Services.AddScoped(sp => new HttpClient 

@@ -4,6 +4,7 @@ using InovaSaude.Blazor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InovaSaude.Blazor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260202190015_AddDataProtectionKeys")]
+    partial class AddDataProtectionKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -443,71 +446,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("entity_versions", (string)null);
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.EstoqueFarmacia", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CodigoHorus")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Concentracao")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataValidade")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FormaFarmaceutica")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Localizacao")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Lote")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NomeMedicamento")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("PrincipioAtivo")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("QuantidadeAtual")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("QuantidadeMaxima")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantidadeMinima")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime?>("UltimaMovimentacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("estoque_farmacia", (string)null);
                 });
 
             modelBuilder.Entity("InovaSaude.Blazor.Models.ExternalSync", b =>
@@ -944,350 +882,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.ToTable("integration_logs", (string)null);
                 });
 
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.ApiExterna", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("BaseUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("ClientId")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("ClientSecret")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ConfiguracoesJson")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MaxRetries")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("TimeoutSegundos")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TipoAutenticacao")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Token")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("TotalErros")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalSincronizacoes")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UbsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("UltimaSincronizacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("UltimaTentativa")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UltimoErro")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UbsId");
-
-                    b.ToTable("apis_externas", (string)null);
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.EsusPecAtendimento", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Cid10")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("CnsPaciente")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("CnsProfissional")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataAtendimento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("IdEsus")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("NomePaciente")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("ProcedimentosJson")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<string>("TipoAtendimento")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("UbsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UbsId");
-
-                    b.ToTable("esus_pec_atendimentos", (string)null);
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.HorusMedicamento", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CodigoHorus")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Concentracao")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FormaFarmaceutica")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("PrincipioAtivo")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("QuantidadeEstoque")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantidadeMinima")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UbsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("UltimaAtualizacaoHorus")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UbsId");
-
-                    b.ToTable("horus_medicamentos", (string)null);
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.LogIntegracaoApi", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ApiExternaId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Endpoint")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("MensagemErro")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("MetodoHttp")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<int>("NumeroTentativa")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RequestPayload")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("ResponsePayload")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int?>("StatusCode")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Sucesso")
-                        .HasColumnType("bit");
-
-                    b.Property<long?>("TempoRespostaMs")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UsuarioId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApiExternaId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("logs_integracao_api", (string)null);
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.NemesisIndicador", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CodigoIndicador")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("Meta")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<decimal?>("PercentualAlcance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("PeriodoReferencia")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("UbsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("ValorNumerico")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ValorTexto")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UbsId");
-
-                    b.ToTable("nemesis_indicadores", (string)null);
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.ItemPedidoMedicamento", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CodigoHorus")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Concentracao")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FormaFarmaceutica")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Justificativa")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("NomeMedicamento")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("PedidoMedicamentoId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PrincipioAtivo")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int?>("QuantidadeAprovada")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("QuantidadeEntregue")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantidadeSolicitada")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PedidoMedicamentoId");
-
-                    b.ToTable("itens_pedido_medicamento", (string)null);
-                });
-
             modelBuilder.Entity("InovaSaude.Blazor.Models.LogAuditoria", b =>
                 {
                     b.Property<string>("Id")
@@ -1338,58 +932,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("logs_auditoria", (string)null);
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.MovimentacaoEstoque", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EstoqueFarmaciaId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Motivo")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("NumeroDocumento")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PedidoMedicamentoId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Quantidade")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantidadeAnterior")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantidadeApos")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Tipo")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("UsuarioId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EstoqueFarmaciaId");
-
-                    b.HasIndex("PedidoMedicamentoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("movimentacoes_estoque", (string)null);
                 });
 
             modelBuilder.Entity("InovaSaude.Blazor.Models.PaymentTransaction", b =>
@@ -1460,79 +1002,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.HasIndex("TransactionId");
 
                     b.ToTable("payment_transactions", (string)null);
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.PedidoMedicamento", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataAprovacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataEntrega")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataNecessidade")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataPedido")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("MotivoRejeicao")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("NumeroPedido")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Observacoes")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("Prioridade")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("UbsSolicitanteId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UsuarioAprovacaoId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UsuarioCriacaoId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UsuarioEntregaId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UbsSolicitanteId");
-
-                    b.HasIndex("UsuarioAprovacaoId");
-
-                    b.HasIndex("UsuarioCriacaoId");
-
-                    b.HasIndex("UsuarioEntregaId");
-
-                    b.ToTable("pedidos_medicamentos", (string)null);
                 });
 
             modelBuilder.Entity("InovaSaude.Blazor.Models.PermissaoUsuario", b =>
@@ -2236,101 +1705,12 @@ namespace InovaSaude.Blazor.Migrations
                     b.Navigation("Integration");
                 });
 
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.ApiExterna", b =>
-                {
-                    b.HasOne("InovaSaude.Blazor.Models.UBS", "Ubs")
-                        .WithMany()
-                        .HasForeignKey("UbsId");
-
-                    b.Navigation("Ubs");
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.EsusPecAtendimento", b =>
-                {
-                    b.HasOne("InovaSaude.Blazor.Models.UBS", "Ubs")
-                        .WithMany()
-                        .HasForeignKey("UbsId");
-
-                    b.Navigation("Ubs");
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.HorusMedicamento", b =>
-                {
-                    b.HasOne("InovaSaude.Blazor.Models.UBS", "Ubs")
-                        .WithMany()
-                        .HasForeignKey("UbsId");
-
-                    b.Navigation("Ubs");
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.LogIntegracaoApi", b =>
-                {
-                    b.HasOne("InovaSaude.Blazor.Models.Integrations.ApiExterna", "ApiExterna")
-                        .WithMany("Logs")
-                        .HasForeignKey("ApiExternaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InovaSaude.Blazor.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId");
-
-                    b.Navigation("ApiExterna");
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.NemesisIndicador", b =>
-                {
-                    b.HasOne("InovaSaude.Blazor.Models.UBS", "Ubs")
-                        .WithMany()
-                        .HasForeignKey("UbsId");
-
-                    b.Navigation("Ubs");
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.ItemPedidoMedicamento", b =>
-                {
-                    b.HasOne("InovaSaude.Blazor.Models.PedidoMedicamento", "PedidoMedicamento")
-                        .WithMany("Itens")
-                        .HasForeignKey("PedidoMedicamentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PedidoMedicamento");
-                });
-
             modelBuilder.Entity("InovaSaude.Blazor.Models.LogAuditoria", b =>
                 {
                     b.HasOne("InovaSaude.Blazor.Models.Usuario", "Usuario")
                         .WithMany("LogsAuditoria")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.MovimentacaoEstoque", b =>
-                {
-                    b.HasOne("InovaSaude.Blazor.Models.EstoqueFarmacia", "EstoqueFarmacia")
-                        .WithMany("Movimentacoes")
-                        .HasForeignKey("EstoqueFarmaciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InovaSaude.Blazor.Models.PedidoMedicamento", "PedidoMedicamento")
-                        .WithMany()
-                        .HasForeignKey("PedidoMedicamentoId");
-
-                    b.HasOne("InovaSaude.Blazor.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("EstoqueFarmacia");
-
-                    b.Navigation("PedidoMedicamento");
 
                     b.Navigation("Usuario");
                 });
@@ -2342,37 +1722,6 @@ namespace InovaSaude.Blazor.Migrations
                         .HasForeignKey("IntegrationId");
 
                     b.Navigation("Integration");
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.PedidoMedicamento", b =>
-                {
-                    b.HasOne("InovaSaude.Blazor.Models.UBS", "UbsSolicitante")
-                        .WithMany()
-                        .HasForeignKey("UbsSolicitanteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InovaSaude.Blazor.Models.Usuario", "UsuarioAprovacao")
-                        .WithMany()
-                        .HasForeignKey("UsuarioAprovacaoId");
-
-                    b.HasOne("InovaSaude.Blazor.Models.Usuario", "UsuarioCriacao")
-                        .WithMany()
-                        .HasForeignKey("UsuarioCriacaoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InovaSaude.Blazor.Models.Usuario", "UsuarioEntrega")
-                        .WithMany()
-                        .HasForeignKey("UsuarioEntregaId");
-
-                    b.Navigation("UbsSolicitante");
-
-                    b.Navigation("UsuarioAprovacao");
-
-                    b.Navigation("UsuarioCriacao");
-
-                    b.Navigation("UsuarioEntrega");
                 });
 
             modelBuilder.Entity("InovaSaude.Blazor.Models.PermissaoUsuario", b =>
@@ -2472,11 +1821,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.Navigation("HistoricoStatus");
                 });
 
-            modelBuilder.Entity("InovaSaude.Blazor.Models.EstoqueFarmacia", b =>
-                {
-                    b.Navigation("Movimentacoes");
-                });
-
             modelBuilder.Entity("InovaSaude.Blazor.Models.Fornecedor", b =>
                 {
                     b.Navigation("Despesas");
@@ -2496,16 +1840,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("Syncs");
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.Integrations.ApiExterna", b =>
-                {
-                    b.Navigation("Logs");
-                });
-
-            modelBuilder.Entity("InovaSaude.Blazor.Models.PedidoMedicamento", b =>
-                {
-                    b.Navigation("Itens");
                 });
 
             modelBuilder.Entity("InovaSaude.Blazor.Models.UBS", b =>

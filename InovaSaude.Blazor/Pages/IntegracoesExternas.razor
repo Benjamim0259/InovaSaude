@@ -1,0 +1,497 @@
+@page "/integracoes-externas"
+@using System.ComponentModel.DataAnnotations
+@using InovaSaude.Blazor.Models.Integrations
+@using InovaSaude.Blazor.Services.Integrations
+@using InovaSaude.Blazor.Data
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext Context
+@inject HorusIntegrationService HorusService
+@inject EsusPecIntegrationService EsusPecService
+@inject NemesisIntegrationService NemesisService
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+<PageTitle>Integrações Externas - InovaSaúde</PageTitle>
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>?? Integrações com APIs Externas</h2>
+        <button class="btn btn-primary" @onclick="AbrirModalNovaApi">
+            <span class="oi oi-plus me-2"></span>Nova Integração
+        </button>
+    </div>
+
+    @if (carregando)
+    {
+        <div class="text-center py-5">
+ <div class="spinner-border text-primary"></div>
+   <p class="mt-2 text-muted">Carregando...</p>
+        </div>
+    }
+    else
+    {
+  <!-- Cards das APIs -->
+<div class="row mb-4">
+            @foreach (var api in apis)
+         {
+          <div class="col-md-4 mb-3">
+   <div class="card h-100 @GetCardClass(api.Status)">
+ <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+   <h5 class="card-title">@GetApiIcon(api.Nome) @GetApiNomeAmigavel(api.Nome)</h5>
+      <span class="badge @GetStatusBadgeClass(api.Status)">@api.Status</span>
+         </div>
+
+  <p class="text-muted small">@GetApiDescricao(api.Nome)</p>
+
+            <div class="mb-3">
+  <small class="text-muted">URL:</small><br/>
+       <code class="small">@api.BaseUrl</code>
+          </div>
+
+   @if (api.UltimaSincronizacao.HasValue)
+         {
+     <div class="mb-2">
+              <small class="text-success">
+          ? Última sync: @api.UltimaSincronizacao.Value.ToString("dd/MM/yyyy HH:mm")
+        </small>
+          </div>
+          }
+
+                @if (!string.IsNullOrEmpty(api.UltimoErro))
+        {
+          <div class="alert alert-danger alert-sm p-2 mb-2">
+       <small>?? @api.UltimoErro.Substring(0, Math.Min(100, api.UltimoErro.Length))...</small>
+   </div>
+  }
+
+            <div class="row text-center mb-3">
+           <div class="col-6">
+         <strong class="text-success">@api.TotalSincronizacoes</strong><br/>
+        <small class="text-muted">Sucessos</small>
+      </div>
+      <div class="col-6">
+            <strong class="text-danger">@api.TotalErros</strong><br/>
+ <small class="text-muted">Erros</small>
+</div>
+     </div>
+
+       <div class="btn-group w-100">
+          <button class="btn btn-sm btn-primary" @onclick="() => TestarConexao(api)" disabled="@sincronizando">
+    @if (sincronizando && apiSincronizandoId == api.Id)
+      {
+      <span class="spinner-border spinner-border-sm"></span>
+    }
+         else
+         {
+      <span>?? Sincronizar</span>
+       }
+   </button>
+     <button class="btn btn-sm btn-outline-secondary" @onclick="() => AbrirModalEditarApi(api)">
+   <span class="oi oi-pencil"></span>
+         </button>
+          <button class="btn btn-sm btn-outline-info" @onclick="() => VerLogs(api)">
+        <span class="oi oi-list"></span>
+    </button>
+           </div>
+                  </div>
+            </div>
+      </div>
+  }
+        </div>
+
+        @if (!apis.Any())
+        {
+     <div class="alert alert-info text-center">
+    <h4>?? Nenhuma integração configurada</h4>
+            <p>Configure as integrações com HORUS, e-SUS PEC e NEMESIS para começar.</p>
+    <button class="btn btn-primary" @onclick="AbrirModalNovaApi">
+         Configurar Agora
+             </button>
+            </div>
+        }
+
+    <!-- Guia de Integração -->
+        <div class="card">
+          <div class="card-header">
+       <h5>?? Guia de Integração</h5>
+      </div>
+   <div class="card-body">
+                <div class="row">
+          <div class="col-md-4">
+ <h6>?? HORUS</h6>
+     <p class="small">Sistema Nacional de Gestão da Assistência Farmacêutica</p>
+     <ul class="small">
+      <li>Controle de estoque de medicamentos</li>
+          <li>Dispensação e prescrições</li>
+          <li>Relatórios de consumo</li>
+    </ul>
+           </div>
+        <div class="col-md-4">
+            <h6>?? e-SUS PEC</h6>
+             <p class="small">Prontuário Eletrônico do Cidadão</p>
+        <ul class="small">
+       <li>Dados de atendimentos</li>
+      <li>Histórico de pacientes</li>
+       <li>Procedimentos e CID-10</li>
+      </ul>
+      </div>
+         <div class="col-md-4">
+   <h6>?? NEMESIS</h6>
+         <p class="small">Sistema de Gerenciamento</p>
+             <ul class="small">
+          <li>Indicadores de saúde</li>
+     <li>Metas e monitoramento</li>
+       <li>Dados agregados</li>
+           </ul>
+   </div>
+    </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Modal Configurar API -->
+@if (mostrarModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+<div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title">
+        @(apiEditando == null ? "? Nova Integração" : "?? Editar Integração")
+           </h5>
+   <button type="button" class="btn-close" @onclick="FecharModal"></button>
+       </div>
+    <EditForm Model="apiForm" OnValidSubmit="SalvarApi">
+       <DataAnnotationsValidator />
+   <div class="modal-body">
+   <div class="row g-3">
+             <div class="col-md-6">
+     <label class="form-label">Sistema *</label>
+  <select class="form-select" @bind="apiForm.Nome" disabled="@(apiEditando != null)">
+             <option value="">Selecione...</option>
+      <option value="HORUS">?? HORUS (Farmácia)</option>
+           <option value="ESUS_PEC">?? e-SUS PEC (Prontuário)</option>
+                <option value="NEMESIS">?? NEMESIS (Indicadores)</option>
+    </select>
+  <ValidationMessage For="@(() => apiForm.Nome)" />
+          </div>
+
+        <div class="col-md-6">
+    <label class="form-label">Status</label>
+         <select class="form-select" @bind="apiForm.Status">
+              <option value="ATIVA">? Ativa</option>
+       <option value="INATIVA">?? Inativa</option>
+ </select>
+       </div>
+
+            <div class="col-12">
+          <label class="form-label">URL Base *</label>
+        <InputText class="form-control" @bind-Value="apiForm.BaseUrl" placeholder="https://api.exemplo.com.br" />
+               <ValidationMessage For="@(() => apiForm.BaseUrl)" />
+     </div>
+
+     <div class="col-md-6">
+      <label class="form-label">Tipo de Autenticação *</label>
+       <select class="form-select" @bind="apiForm.TipoAutenticacao">
+            <option value="Bearer">Bearer Token</option>
+   <option value="ApiKey">API Key</option>
+  <option value="OAuth2">OAuth 2.0</option>
+  <option value="Basic">Basic Auth</option>
+         </select>
+               </div>
+
+          <div class="col-md-6">
+  <label class="form-label">Timeout (segundos)</label>
+        <InputNumber class="form-control" @bind-Value="apiForm.TimeoutSegundos" />
+       </div>
+
+       @if (apiForm.TipoAutenticacao == "Bearer" || apiForm.TipoAutenticacao == "ApiKey")
+   {
+     <div class="col-12">
+ <label class="form-label">Token/API Key *</label>
+     <InputText type="password" class="form-control" @bind-Value="apiForm.Token" />
+             <small class="text-muted">Será armazenado de forma criptografada</small>
+                </div>
+            }
+
+@if (apiForm.TipoAutenticacao == "OAuth2" || apiForm.TipoAutenticacao == "Basic")
+           {
+             <div class="col-md-6">
+   <label class="form-label">Client ID *</label>
+   <InputText class="form-control" @bind-Value="apiForm.ClientId" />
+    </div>
+         <div class="col-md-6">
+                 <label class="form-label">Client Secret *</label>
+        <InputText type="password" class="form-control" @bind-Value="apiForm.ClientSecret" />
+ </div>
+                }
+
+          <div class="col-md-6">
+     <label class="form-label">Máximo de Tentativas</label>
+            <InputNumber class="form-control" @bind-Value="apiForm.MaxRetries" min="1" max="5" />
+       </div>
+  </div>
+
+    @if (!string.IsNullOrEmpty(mensagemErro))
+      {
+             <div class="alert alert-danger mt-3">
+           <span class="oi oi-warning me-2"></span>
+   @mensagemErro
+     </div>
+        }
+            </div>
+      <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+        <button type="submit" class="btn btn-primary" disabled="@salvando">
+  @if (salvando)
+     {
+   <span class="spinner-border spinner-border-sm me-2"></span>
+      }
+           Salvar
+            </button>
+       </div>
+  </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<ApiExterna> apis = new();
+    private bool carregando = true;
+    private bool mostrarModal = false;
+    private bool salvando = false;
+    private bool sincronizando = false;
+    private string? apiSincronizandoId;
+    private ApiExterna? apiEditando = null;
+    private ApiExternaFormModel apiForm = new();
+    private string? mensagemErro;
+
+    protected override async Task OnInitializedAsync()
+  {
+        await CarregarDados();
+    }
+
+    private async Task CarregarDados()
+    {
+ carregando = true;
+        try
+   {
+    apis = await Context.Set<ApiExterna>()
+       .Include(a => a.Ubs)
+     .OrderBy(a => a.Nome)
+    .ToListAsync();
+        }
+ catch (Exception ex)
+{
+            mensagemErro = $"Erro ao carregar APIs: {ex.Message}";
+   }
+    finally
+  {
+   carregando = false;
+        }
+    }
+
+    private string GetCardClass(string status) => status switch
+    {
+  "ATIVA" => "border-success",
+        "INATIVA" => "border-secondary",
+        "ERRO" => "border-danger",
+        _ => ""
+    };
+
+    private string GetStatusBadgeClass(string status) => status switch
+  {
+        "ATIVA" => "bg-success",
+        "INATIVA" => "bg-secondary",
+  "ERRO" => "bg-danger",
+        _ => "bg-secondary"
+    };
+
+    private string GetApiIcon(string nome) => nome switch
+    {
+  "HORUS" => "??",
+        "ESUS_PEC" => "??",
+        "NEMESIS" => "??",
+        _ => "??"
+    };
+
+  private string GetApiNomeAmigavel(string nome) => nome switch
+    {
+        "HORUS" => "HORUS",
+     "ESUS_PEC" => "e-SUS PEC",
+ "NEMESIS" => "NEMESIS",
+  _ => nome
+    };
+
+  private string GetApiDescricao(string nome) => nome switch
+  {
+        "HORUS" => "Sistema Nacional de Gestão da Assistência Farmacêutica",
+"ESUS_PEC" => "Prontuário Eletrônico do Cidadão",
+  "NEMESIS" => "Sistema de Gerenciamento e Indicadores",
+        _ => "API Externa"
+  };
+
+    private void AbrirModalNovaApi()
+ {
+  apiEditando = null;
+  apiForm = new ApiExternaFormModel { Status = "ATIVA", TimeoutSegundos = 30, MaxRetries = 3 };
+   mensagemErro = null;
+        mostrarModal = true;
+    }
+
+    private void AbrirModalEditarApi(ApiExterna api)
+    {
+        apiEditando = api;
+        apiForm = new ApiExternaFormModel
+        {
+      Nome = api.Nome,
+   BaseUrl = api.BaseUrl,
+    TipoAutenticacao = api.TipoAutenticacao,
+ Token = api.Token,
+  ClientId = api.ClientId,
+       ClientSecret = api.ClientSecret,
+     TimeoutSegundos = api.TimeoutSegundos,
+  MaxRetries = api.MaxRetries,
+            Status = api.Status
+     };
+mensagemErro = null;
+   mostrarModal = true;
+    }
+
+    private void FecharModal()
+ {
+        mostrarModal = false;
+   apiEditando = null;
+   mensagemErro = null;
+    }
+
+    private async Task SalvarApi()
+    {
+     salvando = true;
+        mensagemErro = null;
+
+  try
+{
+     if (apiEditando == null)
+    {
+      var novaApi = new ApiExterna
+         {
+         Nome = apiForm.Nome!,
+           BaseUrl = apiForm.BaseUrl,
+      TipoAutenticacao = apiForm.TipoAutenticacao,
+       Token = apiForm.Token,
+          ClientId = apiForm.ClientId,
+         ClientSecret = apiForm.ClientSecret,
+      TimeoutSegundos = apiForm.TimeoutSegundos,
+          MaxRetries = apiForm.MaxRetries,
+  Status = apiForm.Status
+      };
+     Context.Set<ApiExterna>().Add(novaApi);
+   }
+       else
+    {
+        apiEditando.BaseUrl = apiForm.BaseUrl;
+  apiEditando.TipoAutenticacao = apiForm.TipoAutenticacao;
+       apiEditando.Token = apiForm.Token;
+apiEditando.ClientId = apiForm.ClientId;
+ apiEditando.ClientSecret = apiForm.ClientSecret;
+          apiEditando.TimeoutSegundos = apiForm.TimeoutSegundos;
+          apiEditando.MaxRetries = apiForm.MaxRetries;
+        apiEditando.Status = apiForm.Status;
+  apiEditando.UpdatedAt = DateTime.UtcNow;
+            }
+
+   await Context.SaveChangesAsync();
+            await CarregarDados();
+            FecharModal();
+ }
+        catch (Exception ex)
+        {
+     mensagemErro = $"Erro ao salvar API: {ex.Message}";
+        }
+        finally
+        {
+     salvando = false;
+     }
+    }
+
+    private async Task TestarConexao(ApiExterna api)
+    {
+        sincronizando = true;
+   apiSincronizandoId = api.Id;
+ StateHasChanged();
+
+try
+        {
+   bool sucesso = false;
+
+  switch (api.Nome)
+      {
+           case "HORUS":
+   sucesso = await HorusService.SincronizarEstoqueMedicamentosAsync(api.UbsId);
+       break;
+       case "ESUS_PEC":
+    sucesso = await EsusPecService.SincronizarAtendimentosAsync(
+       DateTime.UtcNow.AddDays(-30), DateTime.UtcNow, api.UbsId);
+     break;
+    case "NEMESIS":
+      var periodo = DateTime.UtcNow.ToString("yyyy-MM");
+     sucesso = await NemesisService.SincronizarIndicadoresAsync(periodo, api.UbsId);
+        break;
+  }
+
+   if (sucesso)
+      {
+  // Mensagem de sucesso (implementar toast)
+     }
+  else
+      {
+        mensagemErro = "Falha na sincronização. Verifique os logs.";
+       }
+
+   await CarregarDados();
+     }
+catch (Exception ex)
+{
+   mensagemErro = $"Erro: {ex.Message}";
+        }
+        finally
+   {
+            sincronizando = false;
+   apiSincronizandoId = null;
+}
+    }
+
+    private void VerLogs(ApiExterna api)
+  {
+        // TODO: Implementar tela de logs detalhados
+        // Navigation.NavigateTo($"/integracoes-externas/logs/{api.Id}");
+    }
+
+    public class ApiExternaFormModel
+  {
+     [Required(ErrorMessage = "Sistema é obrigatório")]
+  public string? Nome { get; set; }
+
+        [Required(ErrorMessage = "URL é obrigatória")]
+        [Url(ErrorMessage = "URL inválida")]
+      public string BaseUrl { get; set; } = string.Empty;
+
+[Required(ErrorMessage = "Tipo de autenticação é obrigatório")]
+        public string TipoAutenticacao { get; set; } = "Bearer";
+
+    public string? Token { get; set; }
+     public string? ClientId { get; set; }
+     public string? ClientSecret { get; set; }
+
+   [Range(5, 300, ErrorMessage = "Timeout deve estar entre 5 e 300 segundos")]
+  public int TimeoutSegundos { get; set; } = 30;
+
+        [Range(1, 5, ErrorMessage = "Máximo de 5 tentativas")]
+   public int MaxRetries { get; set; } = 3;
+
+   public string Status { get; set; } = "ATIVA";
+    }
+}
