@@ -1,0 +1,121 @@
+@if (IsLoading)
+{
+    <div class="skeleton-container">
+        @if (Type == SkeletonType.Card)
+        {
+      <div class="card">
+   <div class="card-body">
+ <div class="skeleton skeleton-title mb-3"></div>
+        <div class="skeleton skeleton-text mb-2"></div>
+                <div class="skeleton skeleton-text mb-2"></div>
+    <div class="skeleton skeleton-text" style="width: 60%;"></div>
+       </div>
+   </div>
+        }
+        else if (Type == SkeletonType.Table)
+        {
+         <table class="table">
+         <thead>
+             <tr>
+        @for (int i = 0; i < Columns; i++)
+{
+       <th><div class="skeleton skeleton-text"></div></th>
+     }
+      </tr>
+      </thead>
+  <tbody>
+                @for (int row = 0; row < Rows; row++)
+    {
+  <tr>
+     @for (int col = 0; col < Columns; col++)
+  {
+     <td><div class="skeleton skeleton-text"></div></td>
+          }
+        </tr>
+       }
+     </tbody>
+        </table>
+        }
+     else if (Type == SkeletonType.List)
+        {
+            @for (int i = 0; i < Rows; i++)
+   {
+     <div class="skeleton skeleton-list-item mb-2"></div>
+ }
+     }
+  else
+     {
+<div class="skeleton skeleton-custom" style="@CustomStyle"></div>
+   }
+    </div>
+}
+else
+{
+ @ChildContent
+}
+
+<style>
+    .skeleton {
+   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+    }
+
+    @@keyframes shimmer {
+        0% {
+       background-position: 200% 0;
+        }
+        100% {
+background-position: -200% 0;
+    }
+    }
+
+    .skeleton-title {
+        height: 24px;
+     width: 70%;
+    }
+
+    .skeleton-text {
+        height: 16px;
+    width: 100%;
+ }
+
+    .skeleton-list-item {
+        height: 60px;
+ width: 100%;
+    }
+
+    .skeleton-custom {
+      width: 100%;
+        height: 100px;
+    }
+</style>
+
+@code {
+    [Parameter]
+  public bool IsLoading { get; set; }
+
+    [Parameter]
+    public SkeletonType Type { get; set; } = SkeletonType.Card;
+
+    [Parameter]
+    public int Rows { get; set; } = 3;
+
+    [Parameter]
+    public int Columns { get; set; } = 4;
+
+  [Parameter]
+    public string? CustomStyle { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    public enum SkeletonType
+    {
+    Card,
+        Table,
+        List,
+ Custom
+    }
+}

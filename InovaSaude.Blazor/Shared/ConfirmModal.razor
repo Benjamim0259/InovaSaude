@@ -1,0 +1,108 @@
+@if (IsVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered @(Size == ModalSize.Large ? "modal-lg" : Size == ModalSize.Small ? "modal-sm" : "")">
+      <div class="modal-content">
+   <div class="modal-header @GetHeaderClass()">
+          <h5 class="modal-title">
+       @GetIcon() @Title
+   </h5>
+        @if (ShowCloseButton)
+  {
+     <button type="button" class="btn-close" @onclick="Cancel"></button>
+      }
+     </div>
+   <div class="modal-body">
+        @if (!string.IsNullOrEmpty(Message))
+            {
+  <p>@Message</p>
+ }
+   @ChildContent
+      </div>
+      <div class="modal-footer">
+  @if (ShowCancelButton)
+       {
+         <button type="button" class="btn btn-secondary" @onclick="Cancel" disabled="@IsProcessing">
+       @CancelText
+    </button>
+ }
+ <button type="button" class="btn @GetConfirmButtonClass()" @onclick="Confirm" disabled="@IsProcessing">
+       @if (IsProcessing)
+ {
+        <span class="spinner-border spinner-border-sm me-2"></span>
+      }
+    @ConfirmText
+  </button>
+          </div>
+  </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public string Title { get; set; } = "Confirmação";
+    [Parameter] public string? Message { get; set; }
+    [Parameter] public ModalType Type { get; set; } = ModalType.Info;
+    [Parameter] public ModalSize Size { get; set; } = ModalSize.Medium;
+    [Parameter] public string ConfirmText { get; set; } = "Confirmar";
+    [Parameter] public string CancelText { get; set; } = "Cancelar";
+    [Parameter] public bool ShowCancelButton { get; set; } = true;
+    [Parameter] public bool ShowCloseButton { get; set; } = true;
+    [Parameter] public bool IsProcessing { get; set; }
+    [Parameter] public EventCallback OnConfirm { get; set; }
+  [Parameter] public EventCallback OnCancel { get; set; }
+[Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private async Task Confirm()
+    {
+        await OnConfirm.InvokeAsync();
+    }
+
+    private async Task Cancel()
+    {
+  await OnCancel.InvokeAsync();
+    }
+
+    private string GetIcon() => Type switch
+    {
+        ModalType.Success => "?",
+        ModalType.Warning => "??",
+        ModalType.Danger => "?",
+        ModalType.Info => "??",
+      _ => ""
+    };
+
+    private string GetHeaderClass() => Type switch
+    {
+        ModalType.Success => "bg-success text-white",
+        ModalType.Warning => "bg-warning",
+  ModalType.Danger => "bg-danger text-white",
+        ModalType.Info => "bg-info text-white",
+      _ => ""
+    };
+
+    private string GetConfirmButtonClass() => Type switch
+    {
+        ModalType.Success => "btn-success",
+        ModalType.Warning => "btn-warning",
+     ModalType.Danger => "btn-danger",
+        ModalType.Info => "btn-primary",
+        _ => "btn-primary"
+    };
+
+    public enum ModalType
+    {
+        Info,
+     Success,
+        Warning,
+        Danger
+    }
+
+    public enum ModalSize
+    {
+        Small,
+        Medium,
+        Large
+    }
+}

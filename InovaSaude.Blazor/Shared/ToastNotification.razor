@@ -1,0 +1,153 @@
+@inject IJSRuntime JS
+
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+  @foreach (var toast in toasts)
+    {
+        <div class="toast show @GetToastClass(toast.Type)" role="alert">
+            <div class="toast-header">
+         <span class="me-2">@GetToastIcon(toast.Type)</span>
+       <strong class="me-auto">@GetToastTitle(toast.Type)</strong>
+    <small>agora</small>
+    <button type="button" class="btn-close" @onclick="() => RemoverToast(toast.Id)"></button>
+</div>
+   <div class="toast-body">
+              @toast.Message
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .toast-container .toast {
+ min-width: 300px;
+        margin-bottom: 0.5rem;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+  transform: translateX(100%);
+ opacity: 0;
+     }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .toast.bg-success-custom {
+   background-color: #d1e7dd;
+        border-left: 4px solid #198754;
+    }
+
+  .toast.bg-danger-custom {
+        background-color: #f8d7da;
+        border-left: 4px solid #dc3545;
+    }
+
+    .toast.bg-warning-custom {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+    }
+
+    .toast.bg-info-custom {
+        background-color: #cff4fc;
+        border-left: 4px solid #0dcaf0;
+    }
+</style>
+
+@code {
+    private List<ToastModel> toasts = new();
+    private int nextId = 1;
+
+    public void ShowSuccess(string message)
+    {
+        AddToast(ToastType.Success, message);
+    }
+
+    public void ShowError(string message)
+    {
+        AddToast(ToastType.Error, message);
+    }
+
+    public void ShowWarning(string message)
+    {
+        AddToast(ToastType.Warning, message);
+    }
+
+    public void ShowInfo(string message)
+    {
+        AddToast(ToastType.Info, message);
+    }
+
+    private void AddToast(ToastType type, string message)
+    {
+        var toast = new ToastModel
+        {
+            Id = nextId++,
+            Type = type,
+            Message = message
+  };
+
+        toasts.Add(toast);
+        StateHasChanged();
+
+        // Auto-remover após 5 segundos
+        _ = Task.Delay(5000).ContinueWith(_ =>
+        {
+        RemoverToast(toast.Id);
+        });
+    }
+
+    private void RemoverToast(int id)
+    {
+        var toast = toasts.FirstOrDefault(t => t.Id == id);
+  if (toast != null)
+        {
+            toasts.Remove(toast);
+InvokeAsync(StateHasChanged);
+        }
+    }
+
+ private string GetToastClass(ToastType type) => type switch
+    {
+        ToastType.Success => "bg-success-custom",
+        ToastType.Error => "bg-danger-custom",
+        ToastType.Warning => "bg-warning-custom",
+        ToastType.Info => "bg-info-custom",
+        _ => ""
+    };
+
+    private string GetToastIcon(ToastType type) => type switch
+    {
+        ToastType.Success => "?",
+        ToastType.Error => "?",
+        ToastType.Warning => "??",
+        ToastType.Info => "??",
+        _ => ""
+    };
+
+    private string GetToastTitle(ToastType type) => type switch
+    {
+        ToastType.Success => "Sucesso",
+        ToastType.Error => "Erro",
+        ToastType.Warning => "Aviso",
+        ToastType.Info => "Informação",
+  _ => "Notificação"
+    };
+
+    private class ToastModel
+    {
+        public int Id { get; set; }
+        public ToastType Type { get; set; }
+  public string Message { get; set; } = string.Empty;
+    }
+
+    private enum ToastType
+    {
+   Success,
+        Error,
+        Warning,
+        Info
+    }
+}

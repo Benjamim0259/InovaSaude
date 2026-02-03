@@ -24,3 +24,14 @@
         </article>
     </main>
 </div>
+
+<ToastNotification @ref="toastNotification" />
+
+@code {
+    private ToastNotification? toastNotification;
+
+    protected override void OnInitialized()
+    {
+        ToastService.Initialize(toastNotification!);
+    }
+}

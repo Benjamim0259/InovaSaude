@@ -1,0 +1,85 @@
+@if (IsLoading)
+{
+    <div class="loading-overlay" @onclick:stopPropagation="true">
+        <div class="loading-spinner-container">
+            @if (ShowSpinner)
+            {
+      <div class="spinner-border text-primary loading-spinner" role="status">
+          <span class="visually-hidden">Carregando...</span>
+            </div>
+            }
+      @if (!string.IsNullOrEmpty(Message))
+ {
+<div class="loading-message mt-3">
+   <strong>@Message</strong>
+     </div>
+            }
+   @if (ShowProgress && Progress.HasValue)
+   {
+                <div class="progress mt-3" style="width: 300px;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+               role="progressbar" 
+      style="width: @(Progress)%"
+      aria-valuenow="@Progress" 
+       aria-valuemin="0" 
+           aria-valuemax="100">
+ @Progress%
+            </div>
+      </div>
+            }
+        </div>
+    </div>
+}
+
+<style>
+.loading-overlay {
+        position: fixed;
+        top: 0;
+ left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9998;
+     backdrop-filter: blur(3px);
+    }
+
+    .loading-spinner-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+ box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+        text-align: center;
+        min-width: 200px;
+    }
+
+    .loading-spinner {
+        width: 3rem;
+        height: 3rem;
+        border-width: 0.3rem;
+    }
+
+    .loading-message {
+        color: #333;
+        font-size: 1.1rem;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public string? Message { get; set; }
+
+    [Parameter]
+  public bool ShowSpinner { get; set; } = true;
+
+    [Parameter]
+    public bool ShowProgress { get; set; }
+
+  [Parameter]
+    public int? Progress { get; set; }
+}
