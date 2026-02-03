@@ -1,17 +1,17 @@
 @page "/login"
 @using InovaSaude.Blazor.Services
-@using System.Security.Claims
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.JSInterop
 @inject UsuarioService UsuarioService
 @inject NavigationManager Navigation
-@inject IHttpContextAccessor HttpContextAccessor
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
 
 <PageTitle>Login - InovaSaúde</PageTitle>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-      <div class="col-md-6 col-lg-4">
+   <div class="col-md-6 col-lg-4">
     <div class="card shadow-lg">
     <div class="card-body p-5">
            <div class="text-center mb-4">
@@ -22,45 +22,45 @@
        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
   <DataAnnotationsValidator />
 
-             <div class="mb-3">
-          <label class="form-label fw-semibold">Email</label>
+   <div class="mb-3">
+        <label class="form-label fw-semibold">Email</label>
        <InputText class="form-control form-control-lg" @bind-Value="loginModel.Email" placeholder="seu@email.com" />
      <ValidationMessage For="@(() => loginModel.Email)" class="text-danger small" />
      </div>
 
-         <div class="mb-3">
+  <div class="mb-3">
       <label class="form-label fw-semibold">Senha</label>
-       <InputText type="password" class="form-control form-control-lg" @bind-Value="loginModel.Password" placeholder="••••••••" />
-         <ValidationMessage For="@(() => loginModel.Password)" class="text-danger small" />
+  <InputText type="password" class="form-control form-control-lg" @bind-Value="loginModel.Password" placeholder="••••••••" />
+   <ValidationMessage For="@(() => loginModel.Password)" class="text-danger small" />
       </div>
 
         @if (!string.IsNullOrEmpty(error))
-      {
-                 <div class="alert alert-danger d-flex align-items-center" role="alert">
+   {
+   <div class="alert alert-danger d-flex align-items-center" role="alert">
      <span class="oi oi-warning me-2"></span>
-      <span>@error</span>
-        </div>
-            }
+  <span>@error</span>
+  </div>
+  }
 
-       <button class="btn btn-primary btn-lg w-100 mb-3" type="submit" disabled="@isLoading">
+   <button class="btn btn-primary btn-lg w-100 mb-3" type="submit" disabled="@isLoading">
       @if (isLoading)
-                 {
+        {
 <span class="spinner-border spinner-border-sm me-2"></span>
      <span>Entrando...</span>
   }
   else
-          {
-      <span class="oi oi-account-login me-2"></span>
+ {
+<span class="oi oi-account-login me-2"></span>
         <span>Entrar</span>
    }
-                  </button>
+ </button>
       </EditForm>
 
-           <div class="mt-4 p-3 bg-light rounded">
-          <p class="text-center small text-muted mb-2"><strong>Credenciais de Teste:</strong></p>
+<div class="mt-4 p-3 bg-light rounded">
+     <p class="text-center small text-muted mb-2"><strong>Credenciais de Teste:</strong></p>
   <p class="small mb-1"><strong>Admin:</strong> admin@inovasaude.com.br</p>
      <p class="small mb-0"><strong>Senha:</strong> Admin@123</p>
-           </div>
+    </div>
     </div>
   </div>
         </div>
@@ -72,114 +72,72 @@
     private string? error;
     private bool isLoading = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Verificar se já está autenticado
-        var httpContext = HttpContextAccessor.HttpContext;
-if (httpContext?.User?.Identity?.IsAuthenticated == true)
-    {
- Navigation.NavigateTo("/dashboard");
-  }
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+     {
+    Navigation.NavigateTo("/dashboard");
+        }
     }
 
     private async Task HandleLogin()
     {
-        error = null;
-     isLoading = true;
+ error = null;
+ isLoading = true;
 
-   try
-   {
-            // Validar campos
-            if (string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
-            {
-       error = "Por favor, preencha todos os campos.";
-        return;
-  }
+    try
+        {
+     if (string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
+       {
+  error = "Por favor, preencha todos os campos.";
+           return;
+ }
 
-  // Buscar usuário
      var user = await UsuarioService.GetUsuarioByEmailAsync(loginModel.Email);
-  
-if (user == null)
-            {
-                error = "Email ou senha inválidos.";
-      return;
-            }
-
-            // Verificar senha
-   var verified = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.SenhaHash);
-            
-            if (!verified)
-            {
-     error = "Email ou senha inválidos.";
+   
+      if (user == null)
+       {
+   error = "Email ou senha inválidos.";
                 return;
-            }
-
-        // Verificar status do usuário
-            if (user.Status != "ATIVO")
-      {
-           error = "Usuário inativo. Entre em contato com o administrador.";
-    return;
-        }
-
-            // Criar claims
-            var claims = new List<Claim>
-            {
-   new Claim(ClaimTypes.NameIdentifier, user.Id),
-new Claim(ClaimTypes.Name, user.Nome),
-        new Claim(ClaimTypes.Email, user.Email),
-    new Claim("perfil", user.Perfil.ToString())
-            };
-
-     if (!string.IsNullOrEmpty(user.UbsId))
-  {
-      claims.Add(new Claim("ubsId", user.UbsId));
       }
 
-     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-   var authProperties = new AuthenticationProperties
-      {
-                IsPersistent = true,
-       ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8),
-           AllowRefresh = true
-            };
-
-        var httpContext = HttpContextAccessor.HttpContext;
-  if (httpContext != null)
+      var verified = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.SenhaHash);
+    
+ if (!verified)
             {
-         await httpContext.SignInAsync(
-        CookieAuthenticationDefaults.AuthenticationScheme,
-    principal,
-                    authProperties
-                );
+      error = "Email ou senha inválidos.";
+       return;
+            }
 
-   // Atualizar último acesso
-     user.UltimoAcesso = DateTime.UtcNow;
-            await UsuarioService.UpdateUsuarioAsync(user, new List<Models.Permissao>());
+          if (user.Status != "ATIVO")
+       {
+      error = "Usuário inativo. Entre em contato com o administrador.";
+    return;
+    }
 
-                // Redirecionar para dashboard com reload completo
- Navigation.NavigateTo("/dashboard", true);
-       }
+      // Redirecionar para o endpoint GET do controller que fará o login
+            var loginUrl = $"/account/login?email={Uri.EscapeDataString(loginModel.Email)}&password={Uri.EscapeDataString(loginModel.Password)}";
+      await JS.InvokeVoidAsync("eval", $"window.location.href = '{loginUrl}'");
         }
-  catch (Exception ex)
-        {
-            error = $"Erro ao fazer login: {ex.Message}";
-        }
-        finally
-        {
-      isLoading = false;
+      catch (Exception ex)
+    {
+ error = $"Erro: {ex.Message}";
+     }
+   finally
+    {
+    isLoading = false;
         }
     }
 
     public class LoginModel
-{
-  [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Email é obrigatório")]
+    {
+   [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Email é obrigatório")]
         [System.ComponentModel.DataAnnotations.EmailAddress(ErrorMessage = "Email inválido")]
- public string Email { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
-     [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Senha é obrigatória")]
-     [System.ComponentModel.DataAnnotations.MinLength(6, ErrorMessage = "Senha deve ter no mínimo 6 caracteres")]
-        public string Password { get; set; } = string.Empty;
-    }
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Senha é obrigatória")]
+[System.ComponentModel.DataAnnotations.MinLength(6, ErrorMessage = "Senha deve ter no mínimo 6 caracteres")]
+     public string Password { get; set; } = string.Empty;
+ }
 }
