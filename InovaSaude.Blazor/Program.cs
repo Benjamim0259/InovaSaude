@@ -15,23 +15,33 @@ builder.Services.AddServerSideBlazor();
 // Configurar Data Protection baseado no ambiente
 if (builder.Environment.IsProduction())
 {
-    // Em produção (Render), usar o banco de dados para persistir chaves
-    // Isso garante que as chaves sobrevivam a restarts e funcionem entre múltiplas instâncias
+    // Em produção (Render), configurar Data Protection
     var tempConnString = Environment.GetEnvironmentVariable("DATABASE_URL");
     if (!string.IsNullOrEmpty(tempConnString))
     {
-        // Converter DATABASE_URL para formato Npgsql
-        var url = tempConnString.Replace("postgres://", "http://").Replace("postgresql://", "http://");
-        var uri = new Uri(url);
-        var userInfo = uri.UserInfo.Split(':');
-        var dpConnString = $"Host={uri.Host};Port={(uri.Port > 0 && uri.Port != 80 ? uri.Port : 5432)};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+        try
+        {
+            // TEMPORÁRIO: Usar provider efêmero até migrations serem aplicadas
+            // Após primeiro deploy bem-sucedido e migrations aplicadas,
+            // descomentar linha abaixo para usar persistência no banco:
+            // .PersistKeysToDbContext<ApplicationDbContext>()
 
-        builder.Services.AddDataProtection()
-            .PersistKeysToDbContext<ApplicationDbContext>()
-            .SetApplicationName("InovaSaude")
-            .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+            builder.Services.AddDataProtection()
+                .SetApplicationName("InovaSaude")
+                .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
 
-        Console.WriteLine("[DataProtection] Configured to use PostgreSQL database for key storage");
+            Console.WriteLine("[DataProtection] Using ephemeral provider (temporary - waiting for migrations)");
+            Console.WriteLine("[DataProtection] Will switch to DB persistence after first successful boot");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[DataProtection] Error: {ex.Message}");
+            Console.WriteLine("[DataProtection] Using default ephemeral provider");
+
+            builder.Services.AddDataProtection()
+                .SetApplicationName("InovaSaude")
+                .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+        }
     }
 }
 else
@@ -44,8 +54,8 @@ else
     }
 
     builder.Services.AddDataProtection()
-     .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
-  .SetApplicationName("InovaSaude")
+        .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
+        .SetApplicationName("InovaSaude")
         .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
 
     Console.WriteLine($"[DataProtection] Configured to use filesystem at {dataProtectionPath}");
