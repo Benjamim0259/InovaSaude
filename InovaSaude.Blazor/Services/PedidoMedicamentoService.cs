@@ -301,6 +301,14 @@ estoque.UpdatedAt = DateTime.UtcNow;
         .Average(p => (p.DataAprovacao!.Value - p.DataPedido).TotalHours)
     };
     }
+
+    /// <summary>
+    /// Alias para ObterTodosPedidosAsync filtrado por status (compatibilidade)
+    /// </summary>
+    public Task<List<PedidoMedicamento>> GetPedidosByStatusAsync(string status)
+    {
+        return ObterTodosPedidosAsync(null, status);
+    }
 }
 
 public class PedidoEstatisticasDto

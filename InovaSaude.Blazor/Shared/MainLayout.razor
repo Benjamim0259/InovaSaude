@@ -32,6 +32,19 @@
 
     protected override void OnInitialized()
     {
-        ToastService.Initialize(toastNotification!);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && toastNotification != null)
+        {
+            ToastService.Initialize(
+                toastNotification,
+                toastNotification.ShowSuccess,
+                toastNotification.ShowError,
+                toastNotification.ShowWarning,
+                toastNotification.ShowInfo
+            );
+        }
     }
 }

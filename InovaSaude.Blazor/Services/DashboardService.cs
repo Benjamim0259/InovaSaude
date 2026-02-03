@@ -93,6 +93,61 @@ public class DashboardService
             .Take(5)
             .ToListAsync();
     }
+
+    public async Task<DashboardData> GetDashboardDataAsync(string? ubsId = null, DateTime? inicio = null, DateTime? fim = null)
+    {
+        inicio ??= DateTime.UtcNow.AddMonths(-1);
+        fim ??= DateTime.UtcNow;
+
+        var query = _context.Despesas.AsQueryable();
+
+        if (!string.IsNullOrEmpty(ubsId))
+        {
+            query = query.Where(d => d.UbsId == ubsId);
+        }
+
+        query = query.Where(d => d.CreatedAt >= inicio && d.CreatedAt <= fim);
+
+        var despesas = await query
+            .Include(d => d.Categoria)
+            .ToListAsync();
+
+        var porStatus = despesas
+            .GroupBy(d => d.Status)
+            .Select(g => new StatusData
+            {
+                Status = g.Key,
+                Total = g.Sum(d => d.Valor),
+                Quantidade = g.Count()
+            })
+            .ToList();
+
+        var porCategoria = despesas
+            .Where(d => d.Categoria != null)
+            .GroupBy(d => d.Categoria!.Nome)
+            .Select(g => new CategoriaData2
+            {
+                Categoria = g.Key,
+                Total = g.Sum(d => d.Valor),
+                Quantidade = g.Count()
+            })
+            .OrderByDescending(c => c.Total)
+            .ToList();
+
+        return new DashboardData
+        {
+            TotalGeral = despesas.Sum(d => d.Valor),
+            TotalDespesas = despesas.Count,
+            TotalPendente = despesas.Where(d => d.Status == "PENDENTE").Sum(d => d.Valor),
+            TotalPendentes = despesas.Count(d => d.Status == "PENDENTE"),
+            TotalAprovado = despesas.Where(d => d.Status == "APROVADA").Sum(d => d.Valor),
+            TotalAprovadas = despesas.Count(d => d.Status == "APROVADA"),
+            TotalPago = despesas.Where(d => d.Status == "PAGA").Sum(d => d.Valor),
+            TotalPagas = despesas.Count(d => d.Status == "PAGA"),
+            DespesasPorStatus = porStatus,
+            DespesasPorCategoria = porCategoria
+        };
+    }
 }
 
 public class DashboardStats
@@ -125,4 +180,32 @@ public class AtividadeRecente
     public string Descricao { get; set; } = string.Empty;
     public string Usuario { get; set; } = string.Empty;
     public DateTime DataHora { get; set; }
+}
+
+public class DashboardData
+{
+    public decimal TotalGeral { get; set; }
+    public int TotalDespesas { get; set; }
+    public decimal TotalPendente { get; set; }
+    public int TotalPendentes { get; set; }
+    public decimal TotalAprovado { get; set; }
+    public int TotalAprovadas { get; set; }
+    public decimal TotalPago { get; set; }
+    public int TotalPagas { get; set; }
+    public List<StatusData> DespesasPorStatus { get; set; } = new();
+    public List<CategoriaData2> DespesasPorCategoria { get; set; } = new();
+}
+
+public class StatusData
+{
+    public string Status { get; set; } = string.Empty;
+    public decimal Total { get; set; }
+    public int Quantidade { get; set; }
+}
+
+public class CategoriaData2
+{
+    public string Categoria { get; set; } = string.Empty;
+    public decimal Total { get; set; }
+    public int Quantidade { get; set; }
 }

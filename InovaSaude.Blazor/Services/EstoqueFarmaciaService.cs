@@ -301,6 +301,52 @@ MedicamentosVencidos = estoque.Count(e => e.DataValidade.HasValue &&
   QuantidadeTotalEstoque = estoque.Sum(e => e.QuantidadeAtual)
         };
     }
+
+    /// <summary>
+    /// Alias para ObterTodoEstoqueAsync (compatibilidade)
+    /// </summary>
+    public Task<List<EstoqueFarmacia>> GetAllAsync() => ObterTodoEstoqueAsync();
+
+    /// <summary>
+    /// Criar novo item de estoque (wrapper)
+    /// </summary>
+    public async Task CreateAsync(EstoqueFarmacia estoque)
+    {
+     await AdicionarEstoqueAsync(
+      estoque.NomeMedicamento,
+      estoque.QuantidadeAtual,
+    "system",
+       estoque.PrincipioAtivo,
+      estoque.Concentracao,
+      estoque.FormaFarmaceutica,
+       estoque.Lote,
+      estoque.DataValidade,
+estoque.Localizacao,
+       estoque.QuantidadeMinima
+ );
+    }
+
+    /// <summary>
+    /// Atualizar item de estoque (wrapper)
+    /// </summary>
+ public async Task UpdateAsync(EstoqueFarmacia estoque)
+    {
+        _context.Set<EstoqueFarmacia>().Update(estoque);
+  await _context.SaveChangesAsync();
+  }
+
+    /// <summary>
+    /// Deletar item de estoque
+    /// </summary>
+    public async Task DeleteAsync(string id)
+    {
+   var estoque = await _context.Set<EstoqueFarmacia>().FindAsync(id);
+ if (estoque != null)
+  {
+       _context.Set<EstoqueFarmacia>().Remove(estoque);
+ await _context.SaveChangesAsync();
+ }
+    }
 }
 
 public class EstoqueEstatisticasDto
