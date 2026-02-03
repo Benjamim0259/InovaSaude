@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InovaSaude.Blazor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260202194356_AddFarmaciaCentral")]
-    partial class AddFarmaciaCentral
+    [Migration("20260203125811_CompleteSystemWithApisAndPharmacy")]
+    partial class CompleteSystemWithApisAndPharmacy
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2086,25 +2086,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.HasIndex("WorkflowInstanceId");
 
                     b.ToTable("workflow_step_instances", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FriendlyName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Xml")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DataProtectionKeys");
                 });
 
             modelBuilder.Entity("InovaSaude.Blazor.Models.Anexo", b =>

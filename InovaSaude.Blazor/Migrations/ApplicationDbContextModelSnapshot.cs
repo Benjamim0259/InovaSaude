@@ -2085,25 +2085,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.ToTable("workflow_step_instances", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FriendlyName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Xml")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DataProtectionKeys");
-                });
-
             modelBuilder.Entity("InovaSaude.Blazor.Models.Anexo", b =>
                 {
                     b.HasOne("InovaSaude.Blazor.Models.Despesa", "Despesa")
