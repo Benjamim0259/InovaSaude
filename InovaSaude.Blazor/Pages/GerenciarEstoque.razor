@@ -1,0 +1,452 @@
+@page "/gerenciar-estoque"
+@using InovaSaude.Blazor.Models
+@using InovaSaude.Blazor.Services
+@inject EstoqueFarmaciaService EstoqueService
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "ADMIN,FARMACEUTICO")]
+
+<PageTitle>Gerenciar Estoque - Farmácia Central</PageTitle>
+
+<LoadingOverlay IsLoading="carregando" Message="Carregando estoque..." />
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+   <h2>?? Gerenciar Estoque de Medicamentos</h2>
+        <div>
+      <button class="btn btn-success me-2" @onclick="AbrirModalNovo">
+   <span class="oi oi-plus me-2"></span>Novo Medicamento
+  </button>
+      <button class="btn btn-primary" @onclick="AbrirModalMovimentacao">
+<span class="oi oi-transfer me-2"></span>Movimentação
+     </button>
+  </div>
+</div>
+
+<!-- Cards de Resumo -->
+<div class="row g-3 mb-4">
+ <div class="col-md-3">
+   <div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <h6 class="text-muted">Total de Medicamentos</h6>
+    <h3 class="mb-0">@estoque.Count</h3>
+   </div>
+</div>
+  </div>
+<div class="col-md-3">
+   <div class="card border-0 shadow-sm">
+  <div class="card-body">
+     <h6 class="text-muted">?? Estoque Baixo</h6>
+ <h3 class="mb-0 text-warning">@estoque.Count(e => e.QuantidadeAtual <= e.QuantidadeMinima)</h3>
+    </div>
+    </div>
+   </div>
+ <div class="col-md-3">
+   <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <h6 class="text-muted">? Sem Estoque</h6>
+<h3 class="mb-0 text-danger">@estoque.Count(e => e.QuantidadeAtual == 0)</h3>
+ </div>
+   </div>
+  </div>
+  <div class="col-md-3">
+  <div class="card border-0 shadow-sm">
+  <div class="card-body">
+ <h6 class="text-muted">? Adequado</h6>
+<h3 class="mb-0 text-success">@estoque.Count(e => e.QuantidadeAtual > e.QuantidadeMinima)</h3>
+ </div>
+        </div>
+     </div>
+    </div>
+
+    <!-- Filtros -->
+<div class="card mb-4">
+     <div class="card-body">
+      <div class="row g-3">
+     <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="?? Buscar medicamento..." @bind="filtroNome" @bind:event="oninput" />
+     </div>
+   <div class="col-md-3">
+   <select class="form-select" @bind="filtroStatus">
+        <option value="">Todos os status</option>
+    <option value="DISPONIVEL">Disponível</option>
+    <option value="BAIXO">Estoque Baixo</option>
+ <option value="ESGOTADO">Esgotado</option>
+    </select>
+            </div>
+   <div class="col-md-3">
+       <button class="btn btn-secondary" @onclick="LimparFiltros">
+      Limpar Filtros
+     </button>
+  </div>
+   </div>
+ </div>
+    </div>
+
+  <!-- Tabela de Estoque -->
+    <SkeletonLoader IsLoading="carregando" Type="SkeletonLoader.SkeletonType.Table" Rows="10" Columns="7">
+     <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+     <table class="table table-hover mb-0">
+      <thead class="table-light">
+  <tr>
+<th>Medicamento</th>
+ <th>Princípio Ativo</th>
+    <th>Forma / Concentração</th>
+      <th>Lote / Validade</th>
+ <th>Quantidade</th>
+<th>Status</th>
+<th>Ações</th>
+    </tr>
+  </thead>
+    <tbody>
+         @foreach (var item in EstoqueFiltrado)
+   {
+<tr>
+        <td>
+    <strong>@item.NomeMedicamento</strong>
+    @if (!string.IsNullOrEmpty(item.CodigoHorus))
+    {
+ <br/><small class="text-muted">HORUS: @item.CodigoHorus</small>
+   }
+ </td>
+   <td>@item.PrincipioAtivo</td>
+        <td>
+  @item.FormaFarmaceutica<br/>
+<small class="text-muted">@item.Concentracao</small>
+ </td>
+     <td>
+      <span class="badge bg-secondary">@(item.Lote ?? "N/A")</span><br/>
+  @if (item.DataValidade.HasValue)
+      {
+    var diasRestantes = (item.DataValidade.Value - DateTime.Now).Days;
+<small class="@(diasRestantes <= 30 ? "text-danger" : "text-muted")">
+      @item.DataValidade.Value.ToString("dd/MM/yyyy")
+  (@diasRestantes dias)
+       </small>
+  }
+ </td>
+<td>
+        <div class="d-flex align-items-center">
+ <div class="progress flex-grow-1 me-2" style="height: 20px; width: 100px;">
+  <div class="progress-bar @GetStatusColor(item)" 
+       style="width: @GetPercentual(item)%">
+    @item.QuantidadeAtual
+      </div>
+       </div>
+<small class="text-muted">/ @item.QuantidadeMinima mín</small>
+ </div>
+     </td>
+   <td>
+  <span class="badge @GetStatusBadgeClass(item)">
+@GetStatusText(item)
+    </span>
+      </td>
+   <td>
+<div class="btn-group btn-group-sm">
+      <button class="btn btn-primary" @onclick="() => EditarItem(item)" title="Editar">
+  <span class="oi oi-pencil"></span>
+ </button>
+ <button class="btn btn-danger" @onclick="() => DeletarItem(item)" title="Excluir">
+    <span class="oi oi-trash"></span>
+       </button>
+    </div>
+          </td>
+     </tr>
+       }
+        </tbody>
+  </table>
+      </div>
+    </div>
+   </div>
+ </SkeletonLoader>
+</div>
+
+<!-- Modal Novo/Editar Medicamento -->
+@if (mostrarModalEdicao)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg">
+   <div class="modal-content">
+<div class="modal-header">
+      <h5 class="modal-title">@(itemEditando == null ? "Novo" : "Editar") Medicamento</h5>
+          <button type="button" class="btn-close" @onclick="FecharModalEdicao"></button>
+  </div>
+  <div class="modal-body">
+   <div class="row g-3">
+       <div class="col-md-8">
+   <label class="form-label">Nome do Medicamento *</label>
+       <input type="text" class="form-control" @bind="formEstoque.NomeMedicamento" />
+  </div>
+      <div class="col-md-4">
+ <label class="form-label">Código HORUS</label>
+    <input type="text" class="form-control" @bind="formEstoque.CodigoHorus" />
+     </div>
+<div class="col-md-6">
+        <label class="form-label">Princípio Ativo</label>
+     <input type="text" class="form-control" @bind="formEstoque.PrincipioAtivo" />
+  </div>
+       <div class="col-md-6">
+    <label class="form-label">Concentração</label>
+<input type="text" class="form-control" @bind="formEstoque.Concentracao" placeholder="Ex: 500mg" />
+ </div>
+       <div class="col-md-6">
+        <label class="form-label">Forma Farmacêutica</label>
+    <input type="text" class="form-control" @bind="formEstoque.FormaFarmaceutica" placeholder="Ex: Comprimido" />
+      </div>
+<div class="col-md-6">
+ <label class="form-label">Localização</label>
+   <input type="text" class="form-control" @bind="formEstoque.Localizacao" placeholder="Ex: Prateleira A-1" />
+  </div>
+   <div class="col-md-4">
+      <label class="form-label">Lote</label>
+      <input type="text" class="form-control" @bind="formEstoque.Lote" />
+    </div>
+ <div class="col-md-4">
+<label class="form-label">Data Validade</label>
+   <input type="date" class="form-control" @bind="formEstoque.DataValidade" />
+ </div>
+  <div class="col-md-4">
+     <label class="form-label">Quantidade Atual *</label>
+    <input type="number" class="form-control" @bind="formEstoque.QuantidadeAtual" min="0" />
+   </div>
+<div class="col-md-6">
+   <label class="form-label">Quantidade Mínima *</label>
+      <input type="number" class="form-control" @bind="formEstoque.QuantidadeMinima" min="0" />
+ </div>
+  <div class="col-md-6">
+  <label class="form-label">Quantidade Máxima</label>
+ <input type="number" class="form-control" @bind="formEstoque.QuantidadeMaxima" min="0" />
+      </div>
+   </div>
+   </div>
+        <div class="modal-footer">
+     <button type="button" class="btn btn-secondary" @onclick="FecharModalEdicao">Cancelar</button>
+     <button type="button" class="btn btn-primary" @onclick="SalvarItem" disabled="@salvando">
+    @if (salvando) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        Salvar
+      </button>
+    </div>
+  </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<EstoqueFarmacia> estoque = new();
+ private EstoqueFarmacia? itemEditando;
+    private bool carregando = true;
+    private bool mostrarModalEdicao;
+private bool salvando;
+    private string filtroNome = "";
+    private string filtroStatus = "";
+    private FormEstoqueModel formEstoque = new();
+
+  private IEnumerable<EstoqueFarmacia> EstoqueFiltrado
+    {
+        get
+        {
+        var resultado = estoque.AsEnumerable();
+
+  if (!string.IsNullOrWhiteSpace(filtroNome))
+      resultado = resultado.Where(e => e.NomeMedicamento.Contains(filtroNome, StringComparison.OrdinalIgnoreCase));
+
+if (!string.IsNullOrWhiteSpace(filtroStatus))
+            {
+         resultado = filtroStatus switch
+ {
+       "DISPONIVEL" => resultado.Where(e => e.Status == "DISPONIVEL"),
+   "BAIXO" => resultado.Where(e => e.QuantidadeAtual <= e.QuantidadeMinima && e.QuantidadeAtual > 0),
+"ESGOTADO" => resultado.Where(e => e.QuantidadeAtual == 0),
+  _ => resultado
+ };
+    }
+
+      return resultado;
+ }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+  await CarregarEstoque();
+    }
+
+private async Task CarregarEstoque()
+    {
+  carregando = true;
+  try
+   {
+   estoque = await EstoqueService.GetAllAsync();
+     }
+     catch (Exception ex)
+{
+  ToastService.ShowError($"Erro ao carregar estoque: {ex.Message}");
+   }
+   finally
+        {
+   carregando = false;
+  }
+    }
+
+    private void AbrirModalNovo()
+{
+ itemEditando = null;
+        formEstoque = new FormEstoqueModel();
+     mostrarModalEdicao = true;
+    }
+
+    private void EditarItem(EstoqueFarmacia item)
+    {
+  itemEditando = item;
+  formEstoque = new FormEstoqueModel
+ {
+    NomeMedicamento = item.NomeMedicamento,
+    CodigoHorus = item.CodigoHorus,
+      PrincipioAtivo = item.PrincipioAtivo,
+    Concentracao = item.Concentracao,
+    FormaFarmaceutica = item.FormaFarmaceutica,
+      Lote = item.Lote,
+   DataValidade = item.DataValidade,
+     QuantidadeAtual = item.QuantidadeAtual,
+QuantidadeMinima = item.QuantidadeMinima,
+    QuantidadeMaxima = item.QuantidadeMaxima,
+            Localizacao = item.Localizacao
+};
+ mostrarModalEdicao = true;
+    }
+
+    private void FecharModalEdicao()
+    {
+  mostrarModalEdicao = false;
+    itemEditando = null;
+    }
+
+    private async Task SalvarItem()
+{
+        // Validação básica
+  if (string.IsNullOrWhiteSpace(formEstoque.NomeMedicamento))
+  {
+ToastService.ShowWarning("Nome do medicamento é obrigatório");
+   return;
+ }
+
+  salvando = true;
+try
+        {
+   if (itemEditando == null)
+      {
+  var novo = new EstoqueFarmacia
+ {
+      NomeMedicamento = formEstoque.NomeMedicamento,
+CodigoHorus = formEstoque.CodigoHorus,
+ PrincipioAtivo = formEstoque.PrincipioAtivo,
+     Concentracao = formEstoque.Concentracao,
+         FormaFarmaceutica = formEstoque.FormaFarmaceutica,
+Lote = formEstoque.Lote,
+      DataValidade = formEstoque.DataValidade,
+   QuantidadeAtual = formEstoque.QuantidadeAtual,
+    QuantidadeMinima = formEstoque.QuantidadeMinima,
+      QuantidadeMaxima = formEstoque.QuantidadeMaxima,
+ Localizacao = formEstoque.Localizacao,
+   Status = "DISPONIVEL"
+      };
+  await EstoqueService.CreateAsync(novo);
+     }
+else
+      {
+   itemEditando.NomeMedicamento = formEstoque.NomeMedicamento;
+        itemEditando.CodigoHorus = formEstoque.CodigoHorus;
+itemEditando.PrincipioAtivo = formEstoque.PrincipioAtivo;
+   itemEditando.Concentracao = formEstoque.Concentracao;
+ itemEditando.FormaFarmaceutica = formEstoque.FormaFarmaceutica;
+        itemEditando.Lote = formEstoque.Lote;
+   itemEditando.DataValidade = formEstoque.DataValidade;
+   itemEditando.QuantidadeAtual = formEstoque.QuantidadeAtual;
+itemEditando.QuantidadeMinima = formEstoque.QuantidadeMinima;
+itemEditando.QuantidadeMaxima = formEstoque.QuantidadeMaxima;
+        itemEditando.Localizacao = formEstoque.Localizacao;
+   await EstoqueService.UpdateAsync(itemEditando);
+ }
+
+      await CarregarEstoque();
+  FecharModalEdicao();
+ToastService.ShowSuccess("Medicamento salvo com sucesso!");
+}
+catch (Exception ex)
+{
+ToastService.ShowError($"Erro ao salvar: {ex.Message}");
+}
+finally
+  {
+  salvando = false;
+ }
+    }
+
+    private async Task DeletarItem(EstoqueFarmacia item)
+    {
+     // TODO: Implementar confirmação
+        try
+        {
+   await EstoqueService.DeleteAsync(item.Id);
+   await CarregarEstoque();
+ToastService.ShowSuccess("Medicamento removido");
+}
+        catch (Exception ex)
+ {
+ ToastService.ShowError($"Erro ao deletar: {ex.Message}");
+ }
+    }
+
+    private void AbrirModalMovimentacao()
+    {
+   ToastService.ShowInfo("Funcionalidade de movimentação em desenvolvimento");
+    }
+
+private void LimparFiltros()
+    {
+  filtroNome = "";
+        filtroStatus = "";
+ }
+
+    private string GetStatusColor(EstoqueFarmacia item)
+ {
+    if (item.QuantidadeAtual == 0) return "bg-danger";
+     if (item.QuantidadeAtual <= item.QuantidadeMinima) return "bg-warning";
+     return "bg-success";
+    }
+
+    private string GetStatusBadgeClass(EstoqueFarmacia item)
+{
+   if (item.QuantidadeAtual == 0) return "bg-danger";
+  if (item.QuantidadeAtual <= item.QuantidadeMinima) return "bg-warning";
+  return "bg-success";
+    }
+
+private string GetStatusText(EstoqueFarmacia item)
+    {
+   if (item.QuantidadeAtual == 0) return "Esgotado";
+        if (item.QuantidadeAtual <= item.QuantidadeMinima) return "Baixo";
+        return "Disponível";
+    }
+
+ private double GetPercentual(EstoqueFarmacia item)
+    {
+     if (item.QuantidadeMinima == 0) return 100;
+        var percentual = (double)item.QuantidadeAtual / item.QuantidadeMinima * 100;
+        return Math.Min(percentual, 100);
+ }
+
+    private class FormEstoqueModel
+    {
+        public string NomeMedicamento { get; set; } = string.Empty;
+    public string? CodigoHorus { get; set; }
+ public string? PrincipioAtivo { get; set; }
+  public string? Concentracao { get; set; }
+ public string? FormaFarmaceutica { get; set; }
+      public string? Lote { get; set; }
+        public DateTime? DataValidade { get; set; }
+  public int QuantidadeAtual { get; set; }
+        public int QuantidadeMinima { get; set; }
+public int? QuantidadeMaxima { get; set; }
+public string? Localizacao { get; set; }
+    }
+}
