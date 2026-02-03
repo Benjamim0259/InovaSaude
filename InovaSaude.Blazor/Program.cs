@@ -161,6 +161,7 @@ builder.Services.AddAuthorization();
 
 // Add custom services
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<ToastService>(); // TOAST SERVICE CRÍTICO!
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<UBSService>();
