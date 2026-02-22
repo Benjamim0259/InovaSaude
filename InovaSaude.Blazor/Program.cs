@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using InovaSaude.Blazor.Data;
 using InovaSaude.Blazor.Services;
 
+// Configuração global do Npgsql para aceitar DateTime sem Kind
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -145,7 +148,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
    {
             throw new InvalidOperationException("PostgreSQL connection string not found. Set DATABASE_URL or ConnectionStrings__DefaultConnection");
      }
-        
+
     Console.WriteLine("[DB] Configuring PostgreSQL with Npgsql");
     options.UseNpgsql(finalConnectionString);
     }
