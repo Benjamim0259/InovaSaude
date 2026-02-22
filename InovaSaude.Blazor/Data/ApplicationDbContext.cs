@@ -114,6 +114,18 @@ public class ApplicationDbContext : DbContext
             .Property(p => p.Amount)
             .HasPrecision(18, 2);
 
+        modelBuilder.Entity<NemesisIndicador>()
+            .Property(n => n.ValorNumerico)
+            .HasPrecision(18, 4);
+
+        modelBuilder.Entity<NemesisIndicador>()
+            .Property(n => n.Meta)
+            .HasPrecision(18, 4);
+
+        modelBuilder.Entity<NemesisIndicador>()
+            .Property(n => n.PercentualAlcance)
+            .HasPrecision(18, 4);
+
         // Configure relationships
         modelBuilder.Entity<Usuario>()
             .HasMany(u => u.UbsCoordenadas)

@@ -15,14 +15,29 @@ builder.Services.AddServerSideBlazor();
 // Configurar Data Protection baseado no ambiente
 if (builder.Environment.IsProduction())
 {
-    // TEMPORÁRIO: Em produção, usar provider que NÃO depende do banco
-    // até as migrations serem aplicadas com sucesso
-    Console.WriteLine("[DataProtection] TEMPORARY FIX: Using in-memory ephemeral provider");
-    Console.WriteLine("[DataProtection] This prevents DB access before migrations are applied");
-    
-    builder.Services.AddDataProtection()
-    .SetApplicationName("InovaSaude")
-        .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+    // Em produção (Render), usar sistema de arquivos persistente
+    var dataProtectionPath = Path.Combine("/app", "keys");
+    try
+    {
+        if (!Directory.Exists(dataProtectionPath))
+        {
+            Directory.CreateDirectory(dataProtectionPath);
+        }
+
+        Console.WriteLine($"[DataProtection] Configured to use filesystem at {dataProtectionPath}");
+        builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
+            .SetApplicationName("InovaSaude")
+            .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[DataProtection] WARNING: Could not create persistent storage: {ex.Message}");
+        Console.WriteLine("[DataProtection] Falling back to ephemeral provider");
+        builder.Services.AddDataProtection()
+            .SetApplicationName("InovaSaude")
+            .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+    }
 }
 else
 {

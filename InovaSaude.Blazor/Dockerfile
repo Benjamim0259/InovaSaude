@@ -24,6 +24,9 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 # Copiar arquivos publicados
 COPY --from=publish /app/publish .
 
+# Criar diretório para Data Protection keys
+RUN mkdir -p /app/keys && chown -R 1000:1000 /app/keys
+
 # Expor porta
 EXPOSE 5163
 
