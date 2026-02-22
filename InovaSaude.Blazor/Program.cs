@@ -165,6 +165,7 @@ builder.Services.AddSingleton<ToastService>(); // TOAST SERVICE CRÍTICO!
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<UBSService>();
+builder.Services.AddScoped<FuncionarioService>();
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<DespesaService>();
 builder.Services.AddScoped<RelatorioService>();
@@ -179,10 +180,6 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<InovaSaude.Blazor.Services.Integrations.HorusIntegrationService>();
 builder.Services.AddScoped<InovaSaude.Blazor.Services.Integrations.EsusPecIntegrationService>();
 builder.Services.AddScoped<InovaSaude.Blazor.Services.Integrations.NemesisIntegrationService>();
-
-// Farmácia Central
-builder.Services.AddScoped<PedidoMedicamentoService>();
-builder.Services.AddScoped<EstoqueFarmaciaService>();
 
 // Add HttpClient for API calls with BaseAddress
 builder.Services.AddScoped(sp => new HttpClient 

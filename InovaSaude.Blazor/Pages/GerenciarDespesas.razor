@@ -13,9 +13,14 @@
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>💰 Gerenciar Despesas</h2>
-    <button class="btn btn-primary btn-lg" @onclick="AbrirModalNovaDespesa">
-       <span class="oi oi-plus me-2"></span>Nova Despesa
-        </button>
+        <div>
+            <button class="btn btn-success btn-lg me-2" @onclick="AbrirModalDespesaRapida">
+                <span class="oi oi-flash me-2"></span>Despesa Rápida
+            </button>
+            <button class="btn btn-primary btn-lg" @onclick="AbrirModalNovaDespesa">
+                <span class="oi oi-plus me-2"></span>Nova Despesa
+            </button>
+        </div>
     </div>
 
     @if (carregando)
@@ -342,15 +347,78 @@ else
     </div>
 }
 
+<!-- Modal Despesa Rápida -->
+@if (mostrarModalRapida)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">⚡ Despesa Rápida</h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="FecharModalRapida"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="despesaRapidaForm" OnValidSubmit="SalvarDespesaRapida">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Descrição ou Nota Fiscal *</label>
+                            <InputText class="form-control" @bind-Value="despesaRapidaForm.Descricao" placeholder="Ex: Compra de material ou NF 123456" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Valor *</label>
+                            <InputNumber class="form-control" @bind-Value="despesaRapidaForm.Valor" placeholder="0,00" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">UBS *</label>
+                            <select class="form-select" @bind="despesaRapidaForm.UbsId">
+                                <option value="">Selecione...</option>
+                                @foreach (var ubs in ubsList)
+                                {
+                                    <option value="@ubs.Id">@ubs.Nome</option>
+                                }
+                            </select>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(mensagemErro))
+                        {
+                            <div class="alert alert-danger">
+                                <span class="oi oi-warning me-2"></span>
+                                @mensagemErro
+                            </div>
+                        }
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="FecharModalRapida">Cancelar</button>
+                            <button type="submit" class="btn btn-success" disabled="@salvando">
+                                @if (salvando)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                }
+                                ⚡ Adicionar Rápido
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private List<Despesa> despesas = new();
     private List<UBS> ubsList = new();
     private List<Categoria> categorias = new();
     private bool carregando = true;
     private bool mostrarModal = false;
+    private bool mostrarModalRapida = false;
     private bool salvando = false;
     private Despesa? despesaEditando = null;
     private DespesaFormModel despesaForm = new();
+    private DespesaRapidaFormModel despesaRapidaForm = new();
     private string? mensagemErro;
 
     // Filtros
@@ -427,6 +495,58 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
     despesaForm = new DespesaFormModel();
         mensagemErro = null;
  mostrarModal = true;
+    }
+
+    private void AbrirModalDespesaRapida()
+    {
+        despesaRapidaForm = new DespesaRapidaFormModel();
+        mensagemErro = null;
+        mostrarModalRapida = true;
+    }
+
+    private void FecharModalRapida()
+    {
+        mostrarModalRapida = false;
+        mensagemErro = null;
+    }
+
+    private async Task SalvarDespesaRapida()
+    {
+        salvando = true;
+        mensagemErro = null;
+
+        try
+        {
+            var categoriaOutros = categorias.FirstOrDefault(c => c.Nome.Contains("Outros") || c.Nome.Contains("Diverso"));
+            if (categoriaOutros == null)
+            {
+                categoriaOutros = categorias.FirstOrDefault();
+            }
+
+            var novaDespesa = new Despesa
+            {
+                Descricao = despesaRapidaForm.Descricao,
+                Valor = despesaRapidaForm.Valor,
+                CategoriaId = categoriaOutros?.Id ?? categorias.First().Id,
+                Tipo = "VARIAVEL",
+                UbsId = despesaRapidaForm.UbsId!,
+                Status = "PENDENTE",
+                NumeroNota = despesaRapidaForm.Descricao.Contains("NF") ? despesaRapidaForm.Descricao : null,
+                UsuarioCriacaoId = "admin-id"
+            };
+
+            await DespesaService.CreateDespesaAsync(novaDespesa);
+            await CarregarDados();
+            FecharModalRapida();
+        }
+        catch (Exception ex)
+        {
+            mensagemErro = $"Erro ao salvar despesa rápida: {ex.Message}";
+        }
+        finally
+        {
+            salvando = false;
+        }
     }
 
     private void AbrirModalEditarDespesa(Despesa despesa)
@@ -626,5 +746,19 @@ public decimal Valor { get; set; }
         public string? NumeroNota { get; set; }
  public string? NumeroEmpenho { get; set; }
         public string? Observacoes { get; set; }
+    }
+
+    public class DespesaRapidaFormModel
+    {
+        [Required(ErrorMessage = "Descrição ou Nota Fiscal é obrigatória")]
+        [StringLength(1000)]
+        public string Descricao { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Valor é obrigatório")]
+        [Range(0.01, 999999999, ErrorMessage = "Valor deve ser maior que zero")]
+        public decimal Valor { get; set; }
+
+        [Required(ErrorMessage = "UBS é obrigatória")]
+        public string? UbsId { get; set; }
     }
 }

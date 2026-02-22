@@ -2,6 +2,7 @@
 @using InovaSaude.Blazor.Services
 @using InovaSaude.Blazor.Models
 @inject UBSService UBSService
+@inject FuncionarioService FuncionarioService
 @inject NavigationManager Navigation
 @attribute [Authorize]
 
@@ -11,7 +12,7 @@
             <h3>🏥 Gerenciamento de UBS</h3>
         </div>
         <div class="col-auto">
-            <button class="btn btn-primary" @onclick="() => ShowModal()">
+            <button class="btn btn-primary" @onclick="() => ShowModalUBS()">
                 ➕ Nova UBS
             </button>
         </div>
@@ -27,61 +28,57 @@
     }
     else
     {
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nome</th>
-                                <th>Endereço</th>
-                                <th>Coordenador</th>
-                                <th>Capacidade</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var ubs in ubsList)
-                            {
-                                <tr>
-                                    <td><strong>@ubs.Codigo</strong></td>
-                                    <td>@ubs.Nome</td>
-                                    <td>@ubs.Endereco</td>
-                                    <td>@(ubs.Coordenador?.Nome ?? "-")</td>
-                                    <td>@ubs.CapacidadeAtendimento</td>
-                                    <td>
-                                        <span class="badge @(ubs.Status == "ATIVA" ? "bg-success" : "bg-danger")">
-                                            @ubs.Status
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-info" @onclick="() => ShowModal(ubs)">
-                                            ✏️ Editar
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteUBS(ubs.Id)">
-                                            🗑️ Excluir
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+        <div class="row g-4">
+            @foreach (var ubs in ubsList)
+            {
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="text-center pt-3">
+                            <img src="/images/ubs-padrao.jfif" alt="@ubs.Nome" class="rounded" style="width: 100%; max-width: 200px; height: 150px; object-fit: cover;" />
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">@ubs.Nome</h5>
+                            <p class="text-muted mb-2">
+                                <small>📍 Código: @ubs.Codigo</small>
+                            </p>
+                            <p class="text-muted mb-2">
+                                <small>👤 Gestor: @(ubs.Coordenador?.Nome ?? "Sem gestor")</small>
+                            </p>
+                            <p class="text-muted mb-2">
+                                <small>📞 @(ubs.Telefone ?? "Sem telefone")</small>
+                            </p>
+                            <p class="mb-2">
+                                <span class="badge @(ubs.Status == "ATIVA" ? "bg-success" : "bg-danger")">
+                                    @ubs.Status
+                                </span>
+                            </p>
+                            <div class="d-flex gap-2 mt-3">
+                                <button class="btn btn-sm btn-info flex-fill" @onclick="() => ShowModalUBS(ubs)">
+                                    ✏️ Editar
+                                </button>
+                                <button class="btn btn-sm btn-primary flex-fill" @onclick="() => ShowModalFuncionarios(ubs)">
+                                    👥 Funcionários
+                                </button>
+                                <button class="btn btn-sm btn-danger" @onclick="() => DeleteUBS(ubs.Id)">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     }
 </div>
 
-@if (showModal)
+@if (showModalUBS)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">@(editingUBS?.Id == null ? "Nova UBS" : "Editar UBS")</h5>
-                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                    <button type="button" class="btn-close" @onclick="CloseModalUBS"></button>
                 </div>
                 <div class="modal-body">
                     <EditForm Model="editingUBS" OnValidSubmit="SaveUBS">
@@ -137,7 +134,124 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                            <button type="button" class="btn btn-secondary" @onclick="CloseModalUBS">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (showModalFuncionarios)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">👥 Funcionários - @selectedUBS?.Nome</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModalFuncionarios"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h6>Lista de Funcionários</h6>
+                        <button class="btn btn-sm btn-primary" @onclick="() => ShowModalEditFuncionario()">
+                            ➕ Adicionar Funcionário
+                        </button>
+                    </div>
+
+                    @if (funcionariosList == null)
+                    {
+                        <div class="text-center">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Carregando...</span>
+                            </div>
+                        </div>
+                    }
+                    else if (!funcionariosList.Any())
+                    {
+                        <div class="alert alert-info">
+                            Nenhum funcionário cadastrado para esta UBS.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Cargo</th>
+                                        <th class="text-end">Salário</th>
+                                        <th class="text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var func in funcionariosList)
+                                    {
+                                        <tr>
+                                            <td>@func.Nome</td>
+                                            <td>@(func.Cargo ?? "-")</td>
+                                            <td class="text-end">@func.Salario.ToString("C")</td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-info" @onclick="() => ShowModalEditFuncionario(func)">
+                                                    ✏️
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" @onclick="() => DeleteFuncionario(func.Id)">
+                                                    🗑️
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr class="fw-bold">
+                                        <td colspan="2">Total de Salários</td>
+                                        <td class="text-end">@funcionariosList.Sum(f => f.Salario).ToString("C")</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (showModalEditFuncionario)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.7);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(editingFuncionario?.Id == null ? "Novo Funcionário" : "Editar Funcionário")</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModalEditFuncionario"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="editingFuncionario" OnValidSubmit="SaveFuncionario">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Nome *</label>
+                            <InputText class="form-control" @bind-Value="editingFuncionario!.Nome" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Cargo</label>
+                            <InputText class="form-control" @bind-Value="editingFuncionario!.Cargo" placeholder="Ex: Enfermeiro, Médico, etc." />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Salário *</label>
+                            <InputNumber class="form-control" @bind-Value="editingFuncionario!.Salario" />
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="CloseModalEditFuncionario">Cancelar</button>
                             <button type="submit" class="btn btn-primary">💾 Salvar</button>
                         </div>
                     </EditForm>
@@ -151,7 +265,14 @@
     private List<UBS>? ubsList;
     private List<Usuario>? coordenadores;
     private UBS? editingUBS;
-    private bool showModal = false;
+    private bool showModalUBS = false;
+
+    private bool showModalFuncionarios = false;
+    private UBS? selectedUBS;
+    private List<Funcionario>? funcionariosList;
+
+    private bool showModalEditFuncionario = false;
+    private Funcionario? editingFuncionario;
 
     protected override async Task OnInitializedAsync()
     {
@@ -164,7 +285,7 @@
         coordenadores = await UBSService.GetCoordenadoresDisponiveisAsync();
     }
 
-    private void ShowModal(UBS? ubs = null)
+    private void ShowModalUBS(UBS? ubs = null)
     {
         editingUBS = ubs ?? new UBS
         {
@@ -173,12 +294,12 @@
             CapacidadeAtendimento = 100,
             CreatedAt = DateTime.UtcNow
         };
-        showModal = true;
+        showModalUBS = true;
     }
 
-    private void CloseModal()
+    private void CloseModalUBS()
     {
-        showModal = false;
+        showModalUBS = false;
         editingUBS = null;
     }
 
@@ -198,7 +319,7 @@
             }
 
             await LoadData();
-            CloseModal();
+            CloseModalUBS();
         }
         catch (Exception ex)
         {
@@ -215,8 +336,72 @@
         }
     }
 
+    private async Task ShowModalFuncionarios(UBS ubs)
+    {
+        selectedUBS = ubs;
+        funcionariosList = await FuncionarioService.GetByUbsIdAsync(ubs.Id);
+        showModalFuncionarios = true;
+    }
+
+    private void CloseModalFuncionarios()
+    {
+        showModalFuncionarios = false;
+        selectedUBS = null;
+        funcionariosList = null;
+    }
+
+    private void ShowModalEditFuncionario(Funcionario? funcionario = null)
+    {
+        editingFuncionario = funcionario ?? new Funcionario
+        {
+            Id = Guid.NewGuid().ToString(),
+            UbsId = selectedUBS!.Id,
+            CreatedAt = DateTime.UtcNow
+        };
+        showModalEditFuncionario = true;
+    }
+
+    private void CloseModalEditFuncionario()
+    {
+        showModalEditFuncionario = false;
+        editingFuncionario = null;
+    }
+
+    private async Task SaveFuncionario()
+    {
+        if (editingFuncionario == null) return;
+
+        try
+        {
+            if (funcionariosList?.Any(f => f.Id == editingFuncionario.Id) == true)
+            {
+                await FuncionarioService.UpdateAsync(editingFuncionario);
+            }
+            else
+            {
+                await FuncionarioService.CreateAsync(editingFuncionario);
+            }
+
+            funcionariosList = await FuncionarioService.GetByUbsIdAsync(selectedUBS!.Id);
+            CloseModalEditFuncionario();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao salvar funcionário: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteFuncionario(string id)
+    {
+        if (confirm("Deseja realmente excluir este funcionário?"))
+        {
+            await FuncionarioService.DeleteAsync(id);
+            funcionariosList = await FuncionarioService.GetByUbsIdAsync(selectedUBS!.Id);
+        }
+    }
+
     private bool confirm(string message)
     {
-        return true; // Simulação - em produção usar JSInterop
+        return true;
     }
 }

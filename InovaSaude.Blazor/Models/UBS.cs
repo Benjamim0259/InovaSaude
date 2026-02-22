@@ -52,5 +52,7 @@ public class UBS
 
     public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
 
+    public virtual ICollection<Funcionario> Funcionarios { get; set; } = new List<Funcionario>();
+
     public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
 }

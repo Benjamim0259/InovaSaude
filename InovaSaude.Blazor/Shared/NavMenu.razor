@@ -60,53 +60,20 @@
                   </NavLink>
 </div>
 
-         <div class="nav-item px-3">
-          <NavLink class="nav-link" href="integracoes">
-   <span class="oi oi-cloud-upload" aria-hidden="true"></span> Integrações
-          </NavLink>
-                </div>
+                   <div class="nav-item px-3">
+                  <NavLink class="nav-link" href="integracoes">
+           <span class="oi oi-cloud-upload" aria-hidden="true"></span> Integrações
+                  </NavLink>
+                        </div>
 
-       <hr class="my-2" />
-       <div class="px-3 mb-2">
-  <small class="text-muted">FARMÁCIA CENTRAL</small>
-      </div>
+               <hr class="my-2" />
 
-         <div class="nav-item px-3">
-      <NavLink class="nav-link" href="pedidos-medicamentos">
-        <span class="oi oi-clipboard" aria-hidden="true"></span> Meus Pedidos
-      </NavLink>
+                 <div class="nav-item px-3">
+         <a class="nav-link text-danger" href="#" @onclick="Logout" @onclick:preventDefault>
+               <span class="oi oi-account-logout" aria-hidden="true"></span> Sair
+         </a>
              </div>
-
-       <AuthorizeView Roles="ADMIN,FARMACEUTICO">
-    <Authorized Context="farmaciaContext">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="aprovar-pedidos">
-   <span class="oi oi-check" aria-hidden="true"></span> Aprovar Pedidos
-       </NavLink>
-  </div>
-
-          <div class="nav-item px-3">
-       <NavLink class="nav-link" href="gerenciar-estoque">
-             <span class="oi oi-box" aria-hidden="true"></span> Gerenciar Estoque
-        </NavLink>
-  </div>
-       </Authorized>
-      </AuthorizeView>
-
- <div class="nav-item px-3">
-      <NavLink class="nav-link" href="integracoes-externas">
-      <span class="oi oi-globe" aria-hidden="true"></span> APIs Externas
-          </NavLink>
-        </div>
-
-        <hr class="my-2" />
-
-         <div class="nav-item px-3">
- <a class="nav-link text-danger" href="#" @onclick="Logout" @onclick:preventDefault>
-       <span class="oi oi-account-logout" aria-hidden="true"></span> Sair
- </a>
-     </div>
-            </Authorized>
+                    </Authorized>
         <NotAuthorized>
  <!-- Opções para visitantes não autenticados -->
     <hr class="my-2" />

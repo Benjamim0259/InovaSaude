@@ -22,6 +22,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<PermissaoUsuario> PermissoesUsuario { get; set; }
     public DbSet<UBS> UBS { get; set; }
+    public DbSet<Funcionario> Funcionarios { get; set; }
     public DbSet<Fornecedor> Fornecedores { get; set; }
     public DbSet<Categoria> Categorias { get; set; }
     public DbSet<Despesa> Despesas { get; set; }
@@ -105,6 +106,10 @@ public class ApplicationDbContext : DbContext
             .Property(d => d.Valor)
             .HasPrecision(18, 2);
 
+        modelBuilder.Entity<Funcionario>()
+            .Property(f => f.Salario)
+            .HasPrecision(18, 2);
+
         modelBuilder.Entity<PaymentTransaction>()
             .Property(p => p.Amount)
             .HasPrecision(18, 2);
@@ -150,6 +155,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Usuario>().ToTable("usuarios");
         modelBuilder.Entity<PermissaoUsuario>().ToTable("permissoes_usuario");
         modelBuilder.Entity<UBS>().ToTable("ubs");
+        modelBuilder.Entity<Funcionario>().ToTable("funcionarios");
         modelBuilder.Entity<Fornecedor>().ToTable("fornecedores");
         modelBuilder.Entity<Categoria>().ToTable("categorias");
         modelBuilder.Entity<Despesa>().ToTable("despesas");
