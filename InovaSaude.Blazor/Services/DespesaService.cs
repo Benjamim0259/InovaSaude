@@ -79,6 +79,13 @@ public class DespesaService
 
         try
         {
+            // Validar se o usuário existe
+            var usuarioExists = await _context.Usuarios.AnyAsync(u => u.Id == despesa.UsuarioCriacaoId);
+            if (!usuarioExists)
+            {
+                throw new Exception("Usuário de criação não encontrado");
+            }
+
             _context.Despesas.Add(despesa);
             await _context.SaveChangesAsync();
 

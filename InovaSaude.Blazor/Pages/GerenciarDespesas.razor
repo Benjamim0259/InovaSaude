@@ -5,7 +5,9 @@
 @inject DespesaService DespesaService
 @inject UBSService UBSService
 @inject CategoriaService CategoriaService
+@inject AuthService AuthService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 @attribute [Authorize]
 
 <PageTitle>Gerenciar Despesas - InovaSaúde</PageTitle>
@@ -517,22 +519,35 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
 
         try
         {
+            var usuarioId = await AuthService.GetCurrentUserIdAsync();
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                mensagemErro = "Usuário não autenticado";
+                return;
+            }
+
             var categoriaOutros = categorias.FirstOrDefault(c => c.Nome.Contains("Outros") || c.Nome.Contains("Diverso"));
             if (categoriaOutros == null)
             {
                 categoriaOutros = categorias.FirstOrDefault();
             }
 
+            if (categoriaOutros == null)
+            {
+                mensagemErro = "Nenhuma categoria disponível. Por favor, crie uma categoria primeiro.";
+                return;
+            }
+
             var novaDespesa = new Despesa
             {
                 Descricao = despesaRapidaForm.Descricao,
                 Valor = despesaRapidaForm.Valor,
-                CategoriaId = categoriaOutros?.Id ?? categorias.First().Id,
+                CategoriaId = categoriaOutros.Id,
                 Tipo = "VARIAVEL",
                 UbsId = despesaRapidaForm.UbsId!,
                 Status = "PENDENTE",
                 NumeroNota = despesaRapidaForm.Descricao.Contains("NF") ? despesaRapidaForm.Descricao : null,
-                UsuarioCriacaoId = "admin-id"
+                UsuarioCriacaoId = usuarioId
             };
 
             await DespesaService.CreateDespesaAsync(novaDespesa);
@@ -584,6 +599,13 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
 
         try
         {
+            var usuarioId = await AuthService.GetCurrentUserIdAsync();
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                mensagemErro = "Usuário não autenticado";
+                return;
+            }
+
             if (despesaEditando == null)
             {
          // Criar nova despesa
@@ -600,7 +622,7 @@ Valor = despesaForm.Valor,
      NumeroNota = despesaForm.NumeroNota,
           NumeroEmpenho = despesaForm.NumeroEmpenho,
      Observacoes = despesaForm.Observacoes,
-   UsuarioCriacaoId = "admin-id" // TODO: Pegar do contexto de autenticação
+   UsuarioCriacaoId = usuarioId
    };
 
      await DespesaService.CreateDespesaAsync(novaDespesa);
@@ -670,7 +692,8 @@ Valor = despesaForm.Valor,
 
     private async Task ExcluirDespesa(Despesa despesa)
   {
-        if (confirm($"Tem certeza que deseja excluir a despesa '{despesa.Descricao}'?"))
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Tem certeza que deseja excluir a despesa '{despesa.Descricao}'?");
+        if (confirmed)
         {
       try
   {
@@ -684,7 +707,7 @@ Valor = despesaForm.Valor,
         }
     }
 
-    private bool confirm(string message) => true; // Implementar JSInterop
+    private bool confirm(string message) => true;
 
   private string GetStatusBadgeClass(string status) => status switch
     {

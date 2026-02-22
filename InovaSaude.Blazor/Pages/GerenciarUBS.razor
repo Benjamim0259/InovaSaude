@@ -4,6 +4,7 @@
 @inject UBSService UBSService
 @inject FuncionarioService FuncionarioService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 @attribute [Authorize]
 
 <div class="container-fluid">
@@ -329,10 +330,18 @@
 
     private async Task DeleteUBS(string id)
     {
-        if (confirm("Deseja realmente excluir esta UBS?"))
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Deseja realmente excluir esta UBS?");
+        if (confirmed)
         {
-            await UBSService.DeleteUBSAsync(id);
-            await LoadData();
+            try
+            {
+                await UBSService.DeleteUBSAsync(id);
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", $"Erro ao excluir UBS: {ex.Message}");
+            }
         }
     }
 
@@ -387,21 +396,24 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao salvar funcionário: {ex.Message}");
+            await JSRuntime.InvokeVoidAsync("alert", $"Erro ao salvar funcionário: {ex.Message}");
         }
     }
 
     private async Task DeleteFuncionario(string id)
     {
-        if (confirm("Deseja realmente excluir este funcionário?"))
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Deseja realmente excluir este funcionário?");
+        if (confirmed)
         {
-            await FuncionarioService.DeleteAsync(id);
-            funcionariosList = await FuncionarioService.GetByUbsIdAsync(selectedUBS!.Id);
+            try
+            {
+                await FuncionarioService.DeleteAsync(id);
+                funcionariosList = await FuncionarioService.GetByUbsIdAsync(selectedUBS!.Id);
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", $"Erro ao excluir funcionário: {ex.Message}");
+            }
         }
-    }
-
-    private bool confirm(string message)
-    {
-        return true;
     }
 }

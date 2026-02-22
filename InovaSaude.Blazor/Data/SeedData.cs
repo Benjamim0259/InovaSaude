@@ -37,6 +37,47 @@ public static class SeedData
             await context.SaveChangesAsync();
         }
 
+        // Seed additional test users
+        if (await context.Usuarios.CountAsync() == 1)
+        {
+            var usuarios = new List<Usuario>
+            {
+                new Usuario
+                {
+                    Nome = "Coordenador Teste",
+                    Email = "coordenador@inovasaude.com.br",
+                    SenhaHash = BCrypt.Net.BCrypt.HashPassword("Coord@123"),
+                    Perfil = PerfilUsuario.COORDENADOR,
+                    Status = "ATIVO",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Usuario
+                {
+                    Nome = "Gestor Teste",
+                    Email = "gestor@inovasaude.com.br",
+                    SenhaHash = BCrypt.Net.BCrypt.HashPassword("Gestor@123"),
+                    Perfil = PerfilUsuario.GESTOR,
+                    Status = "ATIVO",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Usuario
+                {
+                    Nome = "Operador Teste",
+                    Email = "operador@inovasaude.com.br",
+                    SenhaHash = BCrypt.Net.BCrypt.HashPassword("Oper@123"),
+                    Perfil = PerfilUsuario.OPERADOR,
+                    Status = "ATIVO",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                }
+            };
+
+            context.Usuarios.AddRange(usuarios);
+            await context.SaveChangesAsync();
+        }
+
         // Seed default categories
         if (!await context.Categorias.AnyAsync())
         {
