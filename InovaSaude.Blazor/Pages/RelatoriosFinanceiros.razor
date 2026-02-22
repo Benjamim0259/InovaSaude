@@ -1,0 +1,661 @@
+@page "/relatorios-financeiros"
+@using InovaSaude.Blazor.Services
+@using InovaSaude.Blazor.Models
+@using System.Globalization
+@inject DespesaService DespesaService
+@inject FuncionarioService FuncionarioService
+@inject UBSService UBSService
+@inject CategoriaService CategoriaService
+@inject IJSRuntime JSRuntime
+@attribute [Authorize]
+
+<PageTitle>Relatórios Financeiros - InovaSaúde</PageTitle>
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📊 Relatórios Financeiros</h2>
+        <div class="btn-group">
+            <button class="btn btn-outline-success" @onclick="ExportarExcel" disabled="@carregando">
+                <span class="oi oi-data-transfer-download me-2"></span>Excel
+            </button>
+            <button class="btn btn-outline-danger" @onclick="ExportarPDF" disabled="@carregando">
+                <span class="oi oi-document me-2"></span>PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">🔍 Filtros</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">Período</label>
+                    <select class="form-select" @bind="periodoSelecionado" @bind:after="CarregarDados">
+                        <option value="mes">Mês Atual</option>
+                        <option value="trimestre">Último Trimestre</option>
+                        <option value="semestre">Último Semestre</option>
+                        <option value="ano">Ano Atual</option>
+                        <option value="personalizado">Personalizado</option>
+                    </select>
+                </div>
+                @if (periodoSelecionado == "personalizado")
+                {
+                    <div class="col-md-3">
+                        <label class="form-label">Data Início</label>
+                        <input type="date" class="form-control" @bind="dataInicio" @bind:after="CarregarDados" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Data Fim</label>
+                        <input type="date" class="form-control" @bind="dataFim" @bind:after="CarregarDados" />
+                    </div>
+                }
+                <div class="col-md-3">
+                    <label class="form-label">UBS</label>
+                    <select class="form-select" @bind="ubsIdFiltro" @bind:after="CarregarDados">
+                        <option value="">Todas</option>
+                        @foreach (var ubs in ubsList)
+                        {
+                            <option value="@ubs.Id">@ubs.Nome</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (carregando)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+            <p class="mt-3">Carregando relatórios...</p>
+        </div>
+    }
+    else
+    {
+        <!-- DASHBOARD EXECUTIVO -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card border-primary">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-2">💰 Total Despesas</h6>
+                        <h3 class="text-primary mb-0">@totalDespesas.ToString("C", new CultureInfo("pt-BR"))</h3>
+                        <small class="text-muted">@quantidadeDespesas despesas</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-success">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-2">✅ Aprovadas</h6>
+                        <h3 class="text-success mb-0">@totalAprovadas.ToString("C", new CultureInfo("pt-BR"))</h3>
+                        <small class="text-muted">@quantidadeAprovadas despesas</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-warning">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-2">⏳ Pendentes</h6>
+                        <h3 class="text-warning mb-0">@totalPendentes.ToString("C", new CultureInfo("pt-BR"))</h3>
+                        <small class="text-muted">@quantidadePendentes despesas</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-info">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-2">👥 Total Salários</h6>
+                        <h3 class="text-info mb-0">@totalSalarios.ToString("C", new CultureInfo("pt-BR"))</h3>
+                        <small class="text-muted">@quantidadeFuncionarios funcionários</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico de Barras por Categoria -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">📊 Despesas por Categoria</h5>
+            </div>
+            <div class="card-body">
+                @if (despesasPorCategoria.Any())
+                {
+                    <div class="row">
+                        <div class="col-md-8">
+                            @foreach (var item in despesasPorCategoria.OrderByDescending(x => x.Total))
+                            {
+                                var percentual = totalDespesas > 0 ? (item.Total / totalDespesas * 100) : 0;
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span><strong>@item.CategoriaNome</strong></span>
+                                        <span>@item.Total.ToString("C", new CultureInfo("pt-BR")) (@percentual.ToString("F1")%)</span>
+                                    </div>
+                                    <div class="progress" style="height: 30px;">
+                                        <div class="progress-bar @GetCategoriaColor(item.CategoriaNome)" 
+                                             role="progressbar" 
+                                             style="width: @percentual%"
+                                             aria-valuenow="@percentual" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                            @item.Quantidade despesas
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="mb-3">Top 3 Categorias</h6>
+                            @foreach (var item in despesasPorCategoria.OrderByDescending(x => x.Total).Take(3))
+                            {
+                                <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                    <span>@item.CategoriaNome</span>
+                                    <span class="badge @GetCategoriaColor(item.CategoriaNome)">
+                                        @item.Total.ToString("C", new CultureInfo("pt-BR"))
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">Nenhuma despesa no período selecionado.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Ranking de UBS por Gastos -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">🏥 Ranking UBS - Despesas</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (despesasPorUBS.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>UBS</th>
+                                            <th class="text-end">Total</th>
+                                            <th class="text-end">Qtd</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{ int posicao = 1; }
+                                        @foreach (var item in despesasPorUBS.OrderByDescending(x => x.Total))
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @if (posicao == 1) { <span class="badge bg-warning">🥇</span> }
+                                                    else if (posicao == 2) { <span class="badge bg-secondary">🥈</span> }
+                                                    else if (posicao == 3) { <span class="badge bg-danger">🥉</span> }
+                                                    else { <span>@posicao</span> }
+                                                </td>
+                                                <td>@item.UbsNome</td>
+                                                <td class="text-end"><strong>@item.Total.ToString("C", new CultureInfo("pt-BR"))</strong></td>
+                                                <td class="text-end">@item.Quantidade</td>
+                                            </tr>
+                                            posicao++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Nenhuma despesa no período.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">👥 Ranking UBS - Salários</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (salariosPorUBS.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>UBS</th>
+                                            <th class="text-end">Total Salários</th>
+                                            <th class="text-end">Funcionários</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{ int pos = 1; }
+                                        @foreach (var item in salariosPorUBS.OrderByDescending(x => x.TotalSalarios))
+                                        {
+                                            <tr>
+                                                <td>@pos</td>
+                                                <td>@item.UbsNome</td>
+                                                <td class="text-end"><strong>@item.TotalSalarios.ToString("C", new CultureInfo("pt-BR"))</strong></td>
+                                                <td class="text-end">@item.QuantidadeFuncionarios</td>
+                                            </tr>
+                                            pos++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Nenhum funcionário cadastrado.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evolução Mensal -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">📈 Evolução Mensal de Gastos</h5>
+            </div>
+            <div class="card-body">
+                @if (evolucaoMensal.Any())
+                {
+                    <div style="overflow-x: auto;">
+                        @foreach (var mes in evolucaoMensal.OrderBy(x => x.Mes))
+                        {
+                            var altura = totalDespesas > 0 ? (mes.Total / totalDespesas * 300) : 0;
+                            <div class="d-inline-block text-center me-3" style="width: 80px;">
+                                <div class="bg-primary rounded" 
+                                     style="height: @altura.ToString("F0")px; min-height: 20px; vertical-align: bottom;"
+                                     title="@mes.Total.ToString("C", new CultureInfo("pt-BR"))">
+                                </div>
+                                <small class="d-block mt-2"><strong>@mes.Total.ToString("C0", new CultureInfo("pt-BR"))</strong></small>
+                                <small class="text-muted">@mes.MesNome</small>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">Nenhuma despesa para mostrar evolução.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Alertas de Orçamento -->
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">⚠️ Alertas de Orçamento</h5>
+            </div>
+            <div class="card-body">
+                @if (alertasOrcamento.Any())
+                {
+                    @foreach (var alerta in alertasOrcamento)
+                    {
+                        <div class="alert alert-danger d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>@alerta.CategoriaNome</strong>
+                                <p class="mb-0 small">
+                                    Gasto: @alerta.TotalGasto.ToString("C", new CultureInfo("pt-BR")) | 
+                                    Orçamento: @alerta.OrcamentoMensal.ToString("C", new CultureInfo("pt-BR")) | 
+                                    <span class="text-danger">Excedido em @alerta.PercentualExcedido.ToString("F1")%</span>
+                                </p>
+                            </div>
+                            <span class="badge bg-danger" style="font-size: 1.2rem;">
+                                @((alerta.TotalGasto / alerta.OrcamentoMensal * 100).ToString("F0"))%
+                            </span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-success">
+                        <span class="oi oi-check me-2"></span>
+                        Nenhum orçamento excedido no período! 🎉
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Despesas Detalhadas por Categoria -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">📋 Detalhamento por Categoria</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var cat in despesasPorCategoria.OrderByDescending(x => x.Total))
+                {
+                    <div class="mb-4">
+                        <h6 class="border-bottom pb-2">
+                            @cat.CategoriaNome - @cat.Total.ToString("C", new CultureInfo("pt-BR"))
+                            <span class="badge bg-secondary ms-2">@cat.Quantidade despesas</span>
+                        </h6>
+                        @{
+                            var despesasCategoria = todasDespesas.Where(d => d.Categoria?.Nome == cat.CategoriaNome).ToList();
+                        }
+                        @if (despesasCategoria.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Descrição</th>
+                                            <th>UBS</th>
+                                            <th class="text-end">Valor</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var desp in despesasCategoria.OrderByDescending(d => d.CreatedAt))
+                                        {
+                                            <tr>
+                                                <td>@desp.CreatedAt.ToString("dd/MM/yy")</td>
+                                                <td>@desp.Descricao</td>
+                                                <td>@desp.Ubs?.Nome</td>
+                                                <td class="text-end">@desp.Valor.ToString("C", new CultureInfo("pt-BR"))</td>
+                                                <td><span class="badge @GetStatusBadge(desp.Status)">@desp.Status</span></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Comparativo UBS vs Salários -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">🏥 Comparativo UBS - Despesas vs Salários</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>UBS</th>
+                                <th class="text-end">Despesas</th>
+                                <th class="text-end">Salários</th>
+                                <th class="text-end">Total Geral</th>
+                                <th class="text-end">Funcionários</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ubs in ubsList)
+                            {
+                                var despUbs = despesasPorUBS.FirstOrDefault(d => d.UbsNome == ubs.Nome);
+                                var salUbs = salariosPorUBS.FirstOrDefault(s => s.UbsNome == ubs.Nome);
+                                var totalDesp = despUbs?.Total ?? 0;
+                                var totalSal = salUbs?.TotalSalarios ?? 0;
+                                var totalGeral = totalDesp + totalSal;
+
+                                <tr>
+                                    <td><strong>@ubs.Nome</strong></td>
+                                    <td class="text-end">@totalDesp.ToString("C", new CultureInfo("pt-BR"))</td>
+                                    <td class="text-end">@totalSal.ToString("C", new CultureInfo("pt-BR"))</td>
+                                    <td class="text-end"><strong>@totalGeral.ToString("C", new CultureInfo("pt-BR"))</strong></td>
+                                    <td class="text-end">@(salUbs?.QuantidadeFuncionarios ?? 0)</td>
+                                </tr>
+                            }
+                            <tr class="table-dark">
+                                <td><strong>TOTAL GERAL</strong></td>
+                                <td class="text-end"><strong>@totalDespesas.ToString("C", new CultureInfo("pt-BR"))</strong></td>
+                                <td class="text-end"><strong>@totalSalarios.ToString("C", new CultureInfo("pt-BR"))</strong></td>
+                                <td class="text-end"><strong>@((totalDespesas + totalSalarios).ToString("C", new CultureInfo("pt-BR")))</strong></td>
+                                <td class="text-end"><strong>@quantidadeFuncionarios</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Despesa> todasDespesas = new();
+    private List<UBS> ubsList = new();
+    private List<Categoria> categorias = new();
+    private List<Funcionario> todosFuncionarios = new();
+
+    private bool carregando = true;
+    private string periodoSelecionado = "mes";
+    private DateTime dataInicio = DateTime.UtcNow.AddMonths(-1);
+    private DateTime dataFim = DateTime.UtcNow;
+    private string ubsIdFiltro = "";
+
+    // Métricas
+    private decimal totalDespesas = 0;
+    private int quantidadeDespesas = 0;
+    private decimal totalAprovadas = 0;
+    private int quantidadeAprovadas = 0;
+    private decimal totalPendentes = 0;
+    private int quantidadePendentes = 0;
+    private decimal totalSalarios = 0;
+    private int quantidadeFuncionarios = 0;
+
+    private List<DespesaPorCategoria> despesasPorCategoria = new();
+    private List<DespesaPorUBS> despesasPorUBS = new();
+    private List<SalarioPorUBS> salariosPorUBS = new();
+    private List<EvolucaoMensal> evolucaoMensal = new();
+    private List<AlertaOrcamento> alertasOrcamento = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarDados();
+    }
+
+    private async Task CarregarDados()
+    {
+        carregando = true;
+        try
+        {
+            // Ajustar datas conforme período
+            switch (periodoSelecionado)
+            {
+                case "mes":
+                    dataInicio = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+                    dataFim = dataInicio.AddMonths(1).AddDays(-1);
+                    break;
+                case "trimestre":
+                    dataInicio = DateTime.UtcNow.AddMonths(-3);
+                    dataFim = DateTime.UtcNow;
+                    break;
+                case "semestre":
+                    dataInicio = DateTime.UtcNow.AddMonths(-6);
+                    dataFim = DateTime.UtcNow;
+                    break;
+                case "ano":
+                    dataInicio = new DateTime(DateTime.UtcNow.Year, 1, 1);
+                    dataFim = new DateTime(DateTime.UtcNow.Year, 12, 31);
+                    break;
+            }
+
+            // Carregar dados
+            ubsList = await UBSService.GetAllUBSAsync();
+            categorias = await CategoriaService.GetAllCategoriasAsync();
+            
+            todasDespesas = await DespesaService.GetDespesasByPeriodoAsync(dataInicio, dataFim);
+            if (!string.IsNullOrEmpty(ubsIdFiltro))
+            {
+                todasDespesas = todasDespesas.Where(d => d.UbsId == ubsIdFiltro).ToList();
+            }
+
+            todosFuncionarios = await FuncionarioService.GetAllAsync();
+            if (!string.IsNullOrEmpty(ubsIdFiltro))
+            {
+                todosFuncionarios = todosFuncionarios.Where(f => f.UbsId == ubsIdFiltro).ToList();
+            }
+
+            CalcularMetricas();
+        }
+        finally
+        {
+            carregando = false;
+        }
+    }
+
+    private void CalcularMetricas()
+    {
+        // Totais gerais
+        totalDespesas = todasDespesas.Sum(d => d.Valor);
+        quantidadeDespesas = todasDespesas.Count;
+        
+        totalAprovadas = todasDespesas.Where(d => d.Status == "APROVADA" || d.Status == "PAGA").Sum(d => d.Valor);
+        quantidadeAprovadas = todasDespesas.Count(d => d.Status == "APROVADA" || d.Status == "PAGA");
+        
+        totalPendentes = todasDespesas.Where(d => d.Status == "PENDENTE").Sum(d => d.Valor);
+        quantidadePendentes = todasDespesas.Count(d => d.Status == "PENDENTE");
+        
+        totalSalarios = todosFuncionarios.Sum(f => f.Salario);
+        quantidadeFuncionarios = todosFuncionarios.Count;
+
+        // Despesas por categoria
+        despesasPorCategoria = todasDespesas
+            .GroupBy(d => d.Categoria?.Nome ?? "Sem Categoria")
+            .Select(g => new DespesaPorCategoria
+            {
+                CategoriaNome = g.Key,
+                Total = g.Sum(d => d.Valor),
+                Quantidade = g.Count()
+            })
+            .ToList();
+
+        // Despesas por UBS
+        despesasPorUBS = todasDespesas
+            .GroupBy(d => d.Ubs?.Nome ?? "Sem UBS")
+            .Select(g => new DespesaPorUBS
+            {
+                UbsNome = g.Key,
+                Total = g.Sum(d => d.Valor),
+                Quantidade = g.Count()
+            })
+            .ToList();
+
+        // Salários por UBS
+        salariosPorUBS = todosFuncionarios
+            .GroupBy(f => f.Ubs?.Nome ?? "Sem UBS")
+            .Select(g => new SalarioPorUBS
+            {
+                UbsNome = g.Key,
+                TotalSalarios = g.Sum(f => f.Salario),
+                QuantidadeFuncionarios = g.Count()
+            })
+            .ToList();
+
+        // Evolução mensal
+        evolucaoMensal = todasDespesas
+            .GroupBy(d => new { d.CreatedAt.Year, d.CreatedAt.Month })
+            .Select(g => new EvolucaoMensal
+            {
+                Ano = g.Key.Year,
+                Mes = g.Key.Month,
+                MesNome = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMM/yy", new CultureInfo("pt-BR")),
+                Total = g.Sum(d => d.Valor),
+                Quantidade = g.Count()
+            })
+            .OrderBy(e => e.Ano).ThenBy(e => e.Mes)
+            .ToList();
+
+        // Alertas de orçamento ultrapassado
+        alertasOrcamento = despesasPorCategoria
+            .Select(d => {
+                var categoria = categorias.FirstOrDefault(c => c.Nome == d.CategoriaNome);
+                if (categoria == null || categoria.OrcamentoMensal == 0) return null;
+
+                var percentual = (d.Total / categoria.OrcamentoMensal) * 100;
+                if (percentual <= 100) return null;
+
+                return new AlertaOrcamento
+                {
+                    CategoriaNome = d.CategoriaNome,
+                    OrcamentoMensal = categoria.OrcamentoMensal ?? 0,
+                    TotalGasto = d.Total,
+                    PercentualExcedido = (decimal)(percentual - 100)
+                };
+            })
+            .Where(a => a != null)
+            .Cast<AlertaOrcamento>()
+            .OrderByDescending(a => a.PercentualExcedido)
+            .ToList();
+    }
+
+    private string GetCategoriaColor(string categoria) => categoria switch
+    {
+        "Medicamentos" => "bg-danger",
+        "Material Médico" => "bg-primary",
+        "Contas Fixas" => "bg-warning",
+        "Pessoal" => "bg-success",
+        "Infraestrutura" => "bg-secondary",
+        "Serviços" => "bg-info",
+        _ => "bg-dark"
+    };
+
+    private string GetStatusBadge(string status) => status switch
+    {
+        "PENDENTE" => "bg-warning",
+        "APROVADA" => "bg-success",
+        "REJEITADA" => "bg-danger",
+        "PAGA" => "bg-info",
+        _ => "bg-secondary"
+    };
+
+    private async Task ExportarExcel()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Exportação Excel em desenvolvimento");
+    }
+
+    private async Task ExportarPDF()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Exportação PDF em desenvolvimento");
+    }
+
+    // DTOs
+    public class DespesaPorCategoria
+    {
+        public string CategoriaNome { get; set; } = "";
+        public decimal Total { get; set; }
+        public int Quantidade { get; set; }
+    }
+
+    public class DespesaPorUBS
+    {
+        public string UbsNome { get; set; } = "";
+        public decimal Total { get; set; }
+        public int Quantidade { get; set; }
+    }
+
+    public class SalarioPorUBS
+    {
+        public string UbsNome { get; set; } = "";
+        public decimal TotalSalarios { get; set; }
+        public int QuantidadeFuncionarios { get; set; }
+    }
+
+    public class EvolucaoMensal
+    {
+        public int Ano { get; set; }
+        public int Mes { get; set; }
+        public string MesNome { get; set; } = "";
+        public decimal Total { get; set; }
+        public int Quantidade { get; set; }
+    }
+
+    public class AlertaOrcamento
+    {
+        public string CategoriaNome { get; set; } = "";
+        public decimal OrcamentoMensal { get; set; }
+        public decimal TotalGasto { get; set; }
+        public decimal PercentualExcedido { get; set; }
+    }
+}
