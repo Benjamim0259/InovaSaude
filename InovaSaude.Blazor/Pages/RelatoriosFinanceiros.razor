@@ -452,7 +452,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await CarregarDados();
+        try
+        {
+            await CarregarDados();
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Erro ao carregar relatórios:", ex.ToString());
+            carregando = false;
+        }
     }
 
     private async Task CarregarDados()
@@ -464,7 +472,7 @@
             switch (periodoSelecionado)
             {
                 case "mes":
-                    dataInicio = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+                    dataInicio = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1, 0, 0, 0, DateTimeKind.Utc);
                     dataFim = dataInicio.AddMonths(1).AddDays(-1);
                     break;
                 case "trimestre":
@@ -476,28 +484,32 @@
                     dataFim = DateTime.UtcNow;
                     break;
                 case "ano":
-                    dataInicio = new DateTime(DateTime.UtcNow.Year, 1, 1);
-                    dataFim = new DateTime(DateTime.UtcNow.Year, 12, 31);
+                    dataInicio = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                    dataFim = new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59, DateTimeKind.Utc);
                     break;
             }
 
             // Carregar dados
-            ubsList = await UBSService.GetAllUBSAsync();
-            categorias = await CategoriaService.GetAllCategoriasAsync();
-            
-            todasDespesas = await DespesaService.GetDespesasByPeriodoAsync(dataInicio, dataFim);
+            ubsList = await UBSService.GetAllUBSAsync() ?? new List<UBS>();
+            categorias = await CategoriaService.GetAllCategoriasAsync() ?? new List<Categoria>();
+
+            todasDespesas = await DespesaService.GetDespesasByPeriodoAsync(dataInicio, dataFim) ?? new List<Despesa>();
             if (!string.IsNullOrEmpty(ubsIdFiltro))
             {
                 todasDespesas = todasDespesas.Where(d => d.UbsId == ubsIdFiltro).ToList();
             }
 
-            todosFuncionarios = await FuncionarioService.GetAllAsync();
+            todosFuncionarios = await FuncionarioService.GetAllAsync() ?? new List<Funcionario>();
             if (!string.IsNullOrEmpty(ubsIdFiltro))
             {
                 todosFuncionarios = todosFuncionarios.Where(f => f.UbsId == ubsIdFiltro).ToList();
             }
 
             CalcularMetricas();
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Erro ao carregar dados:", ex.ToString());
         }
         finally
         {
