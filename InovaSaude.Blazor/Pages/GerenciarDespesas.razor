@@ -557,6 +557,11 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
         catch (Exception ex)
         {
             mensagemErro = $"Erro ao salvar despesa rápida: {ex.Message}";
+            if (ex.InnerException != null)
+            {
+                mensagemErro += $"\n\nDetalhes: {ex.InnerException.Message}";
+            }
+            await JSRuntime.InvokeVoidAsync("console.error", "Erro completo:", ex.ToString());
         }
         finally
         {
@@ -652,6 +657,11 @@ Valor = despesaForm.Valor,
         catch (Exception ex)
         {
             mensagemErro = $"Erro ao salvar despesa: {ex.Message}";
+            if (ex.InnerException != null)
+            {
+                mensagemErro += $"\n\nDetalhes: {ex.InnerException.Message}";
+            }
+            await JSRuntime.InvokeVoidAsync("console.error", "Erro completo:", ex.ToString());
     }
         finally
    {

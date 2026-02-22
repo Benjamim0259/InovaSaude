@@ -12,16 +12,42 @@ public static class SeedData
         using var scope = services.CreateScope();
         var provider = scope.ServiceProvider;
         var context = provider.GetRequiredService<ApplicationDbContext>();
+        var logger = provider.GetRequiredService<ILogger<Program>>();
 
-        // Apply pending migrations
-        if ((await context.Database.GetPendingMigrationsAsync()).Any())
+        try
         {
-            await context.Database.MigrateAsync();
+            // Apply pending migrations
+            logger.LogInformation("Verificando migrations pendentes...");
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+            if (pendingMigrations.Any())
+            {
+                logger.LogInformation($"Aplicando {pendingMigrations.Count()} migrations...");
+                await context.Database.MigrateAsync();
+                logger.LogInformation("Migrations aplicadas com sucesso!");
+            }
+            else
+            {
+                logger.LogInformation("Nenhuma migration pendente.");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Erro ao aplicar migrations. Continuando...");
         }
 
         // Criar tabela funcionarios se não existir (workaround para migrations)
         try
         {
+            logger.LogInformation("Verificando tabela funcionarios...");
+
+            // Tentar verificar se a tabela existe consultando
+            var tabelaExiste = await context.Database.ExecuteSqlRawAsync(@"
+                SELECT 1 FROM information_schema.tables 
+                WHERE table_schema = 'public' 
+                AND table_name = 'funcionarios'
+            ");
+
+            logger.LogInformation("Criando tabela funcionarios se não existir...");
             await context.Database.ExecuteSqlRawAsync(@"
                 CREATE TABLE IF NOT EXISTS funcionarios (
                     ""Id"" text NOT NULL,
@@ -31,16 +57,34 @@ public static class SeedData
                     ""Cargo"" character varying(50),
                     ""CreatedAt"" timestamp with time zone NOT NULL,
                     ""UpdatedAt"" timestamp with time zone NOT NULL,
-                    CONSTRAINT ""PK_funcionarios"" PRIMARY KEY (""Id""),
-                    CONSTRAINT ""FK_funcionarios_ubs_UbsId"" FOREIGN KEY (""UbsId"") REFERENCES ubs(""Id"") ON DELETE CASCADE
+                    CONSTRAINT ""PK_funcionarios"" PRIMARY KEY (""Id"")
                 );
+            ");
+
+            // Adicionar FK separadamente
+            await context.Database.ExecuteSqlRawAsync(@"
+                DO $$ 
+                BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1 FROM information_schema.table_constraints 
+                        WHERE constraint_name = 'FK_funcionarios_ubs_UbsId'
+                    ) THEN
+                        ALTER TABLE funcionarios 
+                        ADD CONSTRAINT ""FK_funcionarios_ubs_UbsId"" 
+                        FOREIGN KEY (""UbsId"") REFERENCES ubs(""Id"") ON DELETE CASCADE;
+                    END IF;
+                END $$;
+            ");
+
+            await context.Database.ExecuteSqlRawAsync(@"
                 CREATE INDEX IF NOT EXISTS ""IX_funcionarios_UbsId"" ON funcionarios (""UbsId"");
             ");
+
+            logger.LogInformation("Tabela funcionarios verificada/criada com sucesso!");
         }
         catch (Exception ex)
         {
-            var logger = provider.GetRequiredService<ILogger<Program>>();
-            logger.LogWarning(ex, "Tabela funcionarios já existe ou erro ao criar");
+            logger.LogError(ex, "Erro ao criar tabela funcionarios");
         }
 
         // Seed Admin user

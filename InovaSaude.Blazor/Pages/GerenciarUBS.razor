@@ -340,7 +340,13 @@
             }
             catch (Exception ex)
             {
-                await JSRuntime.InvokeVoidAsync("alert", $"Erro ao excluir UBS: {ex.Message}");
+                var errorMsg = $"Erro ao excluir UBS: {ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    errorMsg += $"\n\nDetalhes: {ex.InnerException.Message}";
+                }
+                await JSRuntime.InvokeVoidAsync("alert", errorMsg);
+                await JSRuntime.InvokeVoidAsync("console.error", "Erro completo:", ex.ToString());
             }
         }
     }
@@ -396,7 +402,13 @@
         }
         catch (Exception ex)
         {
-            await JSRuntime.InvokeVoidAsync("alert", $"Erro ao salvar funcionário: {ex.Message}");
+            var errorMsg = $"Erro ao salvar funcionário: {ex.Message}";
+            if (ex.InnerException != null)
+            {
+                errorMsg += $"\n\nDetalhes: {ex.InnerException.Message}";
+            }
+            await JSRuntime.InvokeVoidAsync("alert", errorMsg);
+            await JSRuntime.InvokeVoidAsync("console.error", "Erro completo:", ex.ToString());
         }
     }
 

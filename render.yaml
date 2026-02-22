@@ -11,6 +11,10 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: "http://0.0.0.0:5163"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: inovasaude-db
+          property: connectionString
       - key: ConnectionStrings__DefaultConnection
         fromDatabase:
           name: inovasaude-db
