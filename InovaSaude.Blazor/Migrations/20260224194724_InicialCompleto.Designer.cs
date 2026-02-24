@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InovaSaude.Blazor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260224141922_InicialCompleto")]
+    [Migration("20260224194724_InicialCompleto")]
     partial class InicialCompleto
     {
         /// <inheritdoc />
