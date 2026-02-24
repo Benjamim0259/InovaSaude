@@ -3,7 +3,7 @@
 @using InovaSaude.Blazor.Services
 @using InovaSaude.Blazor.Models
 @inject DespesaService DespesaService
-@inject UBSService UBSService
+@inject ESFService ESFService
 @inject CategoriaService CategoriaService
 @inject AuthService AuthService
 @inject NavigationManager Navigation
@@ -36,51 +36,43 @@
     }
 else
     {
-    <!-- Cards de Resumo -->
-        <div class="row mb-4">
- <div class="col-md-3">
- <div class="card border-primary text-center">
-         <div class="card-body">
-         <h6 class="text-muted">Total Gasto</h6>
-            <h3 class="text-primary">@despesas.Sum(d => d.Valor).ToString("C")</h3>
-          </div>
-     </div>
-  </div>
-        <div class="col-md-3">
-     <div class="card border-warning text-center">
+           <!-- Cards de Resumo -->
+           <div class="row mb-4">
+    <div class="col-md-4">
+    <div class="card border-primary text-center">
             <div class="card-body">
-    <h6 class="text-muted">Pendentes</h6>
-     <h3 class="text-warning">@despesas.Count(d => d.Status == "PENDENTE")</h3>
-   </div>
-         </div>
-    </div>
-  <div class="col-md-3">
- <div class="card border-success text-center">
- <div class="card-body">
-         <h6 class="text-muted">Aprovadas</h6>
-     <h3 class="text-success">@despesas.Count(d => d.Status == "APROVADA" || d.Status == "PAGA")</h3>
-               </div>
-      </div>
-       </div>
-         <div class="col-md-3">
-        <div class="card border-danger text-center">
-          <div class="card-body">
-              <h6 class="text-muted">Rejeitadas</h6>
-         <h3 class="text-danger">@despesas.Count(d => d.Status == "REJEITADA")</h3>
-      </div>
-    </div>
-            </div>
+            <h6 class="text-muted">Total Gasto</h6>
+               <h3 class="text-primary">@despesas.Sum(d => d.Valor).ToString("C")</h3>
+             </div>
         </div>
+     </div>
+           <div class="col-md-4">
+        <div class="card border-success text-center">
+    <div class="card-body">
+            <h6 class="text-muted">Total de Despesas</h6>
+        <h3 class="text-success">@despesas.Count</h3>
+      </div>
+            </div>
+       </div>
+     <div class="col-md-4">
+    <div class="card border-info text-center">
+    <div class="card-body">
+            <h6 class="text-muted">Média por Despesa</h6>
+        <h3 class="text-info">@((despesas.Any() ? despesas.Average(d => d.Valor) : 0).ToString("C"))</h3>
+                  </div>
+         </div>
+          </div>
+           </div>
 
         <!-- Filtros -->
      <div class="card mb-4">
             <div class="card-body">
      <div class="row g-3">
-         <div class="col-md-3">
+         <div class="col-md-4">
        <label class="form-label">Pesquisar</label>
     <input type="text" class="form-control" @bind="filtroDescricao" @bind:event="oninput" placeholder="Descrição..." />
          </div>
-       <div class="col-md-2">
+       <div class="col-md-3">
   <label class="form-label">Categoria</label>
        <select class="form-select" @bind="filtroCategoria">
      <option value="">Todas</option>
@@ -90,27 +82,17 @@ else
       }
     </select>
                  </div>
-        <div class="col-md-2">
-      <label class="form-label">Status</label>
-              <select class="form-select" @bind="filtroStatus">
-                <option value="">Todos</option>
-   <option value="PENDENTE">Pendente</option>
-           <option value="APROVADA">Aprovada</option>
-   <option value="PAGA">Paga</option>
-     <option value="REJEITADA">Rejeitada</option>
-            </select>
-   </div>
-    <div class="col-md-2">
-      <label class="form-label">UBS</label>
-<select class="form-select" @bind="filtroUBS">
+    <div class="col-md-3">
+      <label class="form-label">ESF - Estrat�gia Sa�de da Fam�lia</label>
+<select class="form-select" @bind="filtroESF">
         <option value="">Todas</option>
-      @foreach (var ubs in ubsList)
+      @foreach (var esf in esfList)
                 {
-         <option value="@ubs.Id">@ubs.Nome</option>
+         <option value="@esf.Id">@esf.Nome</option>
         }
    </select>
     </div>
-         <div class="col-md-3 d-flex align-items-end">
+         <div class="col-md-2 d-flex align-items-end">
  <button class="btn btn-secondary w-100" @onclick="LimparFiltros">
                <span class="oi oi-x me-2"></span>Limpar Filtros
        </button>
@@ -130,9 +112,8 @@ else
    <th>Descrição</th>
   <th>Categoria</th>
         <th>Tipo</th>
-  <th>UBS</th>
+  <th>ESF</th>
        <th class="text-end">Valor</th>
-<th>Status</th>
           <th>Vencimento</th>
         <th class="text-center">Ações</th>
          </tr>
@@ -160,18 +141,13 @@ else
                     <small class="text-muted">@despesa.Tipo</small>
     </td>
         <td>
-       <small>@(despesa.Ubs?.Nome ?? "-")</small>
+       <small>@(despesa.Esf?.Nome ?? "-")</small>
          </td>
            <td class="text-end">
    <strong class="@(despesa.Valor > 5000 ? "text-danger" : "text-success")">
           @despesa.Valor.ToString("C")
            </strong>
              </td>
-                <td>
-         <span class="badge @GetStatusBadgeClass(despesa.Status)">
-       @despesa.Status
-           </span>
-        </td>
     <td>
         @if (despesa.DataVencimento.HasValue)
     {
@@ -194,15 +170,6 @@ else
       <button class="btn btn-outline-info" @onclick="() => AbrirModalEditarDespesa(despesa)" title="Editar">
     <span class="oi oi-pencil"></span>
    </button>
-              @if (despesa.Status == "PENDENTE")
-      {
-      <button class="btn btn-outline-success" @onclick="@(() => AprovarDespesa(despesa))" title="Aprovar">
-     <span class="oi oi-check"></span>
-         </button>
-       <button class="btn btn-outline-danger" @onclick="@(() => RejeitarDespesa(despesa))" title="Rejeitar">
-      <span class="oi oi-x"></span>
-    </button>
-     }
              <button class="btn btn-outline-danger" @onclick="() => ExcluirDespesa(despesa)" title="Excluir">
        <span class="oi oi-trash"></span>
              </button>
@@ -279,33 +246,24 @@ else
                 </div>
    <div class="col-md-4">
       <label class="form-label">UBS *</label>
-         <select class="form-select" @bind="despesaForm.UbsId">
+         <select class="form-select" @bind="despesaForm.EsfId">
         <option value="">Selecione...</option>
-    @foreach (var ubs in ubsList)
+    @foreach (var ubs in esfList)
      {
         <option value="@ubs.Id">@ubs.Nome</option>
    }
                </select>
-   <ValidationMessage For="@(() => despesaForm.UbsId)" />
+   <ValidationMessage For="@(() => despesaForm.EsfId)" />
  </div>
 
                <!-- Linha 3 -->
-            <div class="col-md-4">
+            <div class="col-md-6">
         <label class="form-label">Data Vencimento</label>
          <InputDate class="form-control" @bind-Value="despesaForm.DataVencimento" />
    </div>
-     <div class="col-md-4">
+     <div class="col-md-6">
           <label class="form-label">Data Pagamento</label>
  <InputDate class="form-control" @bind-Value="despesaForm.DataPagamento" />
-     </div>
-      <div class="col-md-4">
-  <label class="form-label">Status</label>
- <select class="form-select" @bind="despesaForm.Status">
-              <option value="PENDENTE">⏳ Pendente</option>
-           <option value="APROVADA">✅ Aprovada</option>
-           <option value="REJEITADA">❌ Rejeitada</option>
-            <option value="PAGA">💵 Paga</option>
-    </select>
      </div>
 
               <!-- Linha 4 - Documentos -->
@@ -375,10 +333,21 @@ else
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">UBS *</label>
-                            <select class="form-select" @bind="despesaRapidaForm.UbsId">
+                            <label class="form-label">Categoria *</label>
+                            <select class="form-select" @bind="despesaRapidaForm.CategoriaId">
                                 <option value="">Selecione...</option>
-                                @foreach (var ubs in ubsList)
+                                @foreach (var categoria in categorias)
+                                {
+                                    <option value="@categoria.Id">@GetCategoriaIcon(categoria.Nome) @categoria.Nome</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">UBS *</label>
+                            <select class="form-select" @bind="despesaRapidaForm.EsfId">
+                                <option value="">Selecione...</option>
+                                @foreach (var ubs in esfList)
                                 {
                                     <option value="@ubs.Id">@ubs.Nome</option>
                                 }
@@ -412,7 +381,7 @@ else
 
 @code {
     private List<Despesa> despesas = new();
-    private List<UBS> ubsList = new();
+    private List<ESF> esfList = new();
     private List<Categoria> categorias = new();
     private bool carregando = true;
     private bool mostrarModal = false;
@@ -426,8 +395,7 @@ else
     // Filtros
     private string filtroDescricao = "";
     private string filtroCategoria = "";
-    private string filtroStatus = "";
-    private string filtroUBS = "";
+    private string filtroESF = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -440,7 +408,7 @@ else
       try
         {
      despesas = await DespesaService.GetAllDespesasAsync();
-            ubsList = await UBSService.GetAllUBSAsync();
+            esfList = await ESFService.GetAllESFAsync();
             categorias = await CategoriaService.GetAllCategoriasAsync();
         }
         catch (Exception ex)
@@ -469,17 +437,12 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
     query = query.Where(d => d.CategoriaId == filtroCategoria);
             }
 
-            if (!string.IsNullOrWhiteSpace(filtroStatus))
-         {
-                query = query.Where(d => d.Status == filtroStatus);
-            }
+     if (!string.IsNullOrWhiteSpace(filtroESF))
+             {
+            query = query.Where(d => d.EsfId == filtroESF);
+           }
 
-     if (!string.IsNullOrWhiteSpace(filtroUBS))
-         {
-        query = query.Where(d => d.UbsId == filtroUBS);
-       }
-
-    return query.OrderByDescending(d => d.CreatedAt);
+        return query.OrderByDescending(d => d.CreatedAt);
       }
   }
 
@@ -487,8 +450,7 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
     {
         filtroDescricao = "";
         filtroCategoria = "";
-        filtroStatus = "";
-        filtroUBS = "";
+        filtroESF = "";
     }
 
     private void AbrirModalNovaDespesa()
@@ -526,15 +488,9 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
                 return;
             }
 
-            var categoriaOutros = categorias.FirstOrDefault(c => c.Nome.Contains("Outros") || c.Nome.Contains("Diverso"));
-            if (categoriaOutros == null)
+            if (string.IsNullOrEmpty(despesaRapidaForm.CategoriaId))
             {
-                categoriaOutros = categorias.FirstOrDefault();
-            }
-
-            if (categoriaOutros == null)
-            {
-                mensagemErro = "Nenhuma categoria disponível. Por favor, crie uma categoria primeiro.";
+                mensagemErro = "Por favor, selecione uma categoria.";
                 return;
             }
 
@@ -542,10 +498,9 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
             {
                 Descricao = despesaRapidaForm.Descricao,
                 Valor = despesaRapidaForm.Valor,
-                CategoriaId = categoriaOutros.Id,
+                CategoriaId = despesaRapidaForm.CategoriaId,
                 Tipo = "VARIAVEL",
-                UbsId = despesaRapidaForm.UbsId!,
-                Status = "PENDENTE",
+                EsfId = despesaRapidaForm.EsfId!,
                 NumeroNota = despesaRapidaForm.Descricao.Contains("NF") ? despesaRapidaForm.Descricao : null,
                 UsuarioCriacaoId = usuarioId
             };
@@ -572,23 +527,22 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
     private void AbrirModalEditarDespesa(Despesa despesa)
   {
     despesaEditando = despesa;
-  despesaForm = new DespesaFormModel
-        {
-     Descricao = despesa.Descricao,
-     Valor = despesa.Valor,
-  CategoriaId = despesa.CategoriaId,
-    Tipo = despesa.Tipo,
-            UbsId = despesa.UbsId,
-            DataVencimento = despesa.DataVencimento,
-            DataPagamento = despesa.DataPagamento,
-            Status = despesa.Status,
-            NumeroNota = despesa.NumeroNota,
-         NumeroEmpenho = despesa.NumeroEmpenho,
- Observacoes = despesa.Observacoes
- };
-        mensagemErro = null;
- mostrarModal = true;
-    }
+      despesaForm = new DespesaFormModel
+         {
+      Descricao = despesa.Descricao,
+      Valor = despesa.Valor,
+   CategoriaId = despesa.CategoriaId,
+     Tipo = despesa.Tipo,
+             EsfId = despesa.EsfId,
+             DataVencimento = despesa.DataVencimento,
+             DataPagamento = despesa.DataPagamento,
+             NumeroNota = despesa.NumeroNota,
+          NumeroEmpenho = despesa.NumeroEmpenho,
+  Observacoes = despesa.Observacoes
+  };
+         mensagemErro = null;
+  mostrarModal = true;
+     }
 
     private void FecharModal()
     {
@@ -618,17 +572,16 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
         {
     Descricao = despesaForm.Descricao,
 Valor = despesaForm.Valor,
-           CategoriaId = despesaForm.CategoriaId!,
-       Tipo = despesaForm.Tipo!,
-        UbsId = despesaForm.UbsId!,
-        DataVencimento = despesaForm.DataVencimento,
-         DataPagamento = despesaForm.DataPagamento,
-        Status = despesaForm.Status,
-     NumeroNota = despesaForm.NumeroNota,
-          NumeroEmpenho = despesaForm.NumeroEmpenho,
-     Observacoes = despesaForm.Observacoes,
-   UsuarioCriacaoId = usuarioId
-   };
+                   CategoriaId = despesaForm.CategoriaId!,
+               Tipo = despesaForm.Tipo!,
+                EsfId = despesaForm.EsfId!,
+                DataVencimento = despesaForm.DataVencimento,
+                 DataPagamento = despesaForm.DataPagamento,
+             NumeroNota = despesaForm.NumeroNota,
+                  NumeroEmpenho = despesaForm.NumeroEmpenho,
+             Observacoes = despesaForm.Observacoes,
+           UsuarioCriacaoId = usuarioId
+           };
 
      await DespesaService.CreateDespesaAsync(novaDespesa);
    }
@@ -639,10 +592,9 @@ Valor = despesaForm.Valor,
        despesaEditando.Valor = despesaForm.Valor;
       despesaEditando.CategoriaId = despesaForm.CategoriaId!;
   despesaEditando.Tipo = despesaForm.Tipo!;
-             despesaEditando.UbsId = despesaForm.UbsId!;
+             despesaEditando.EsfId = despesaForm.EsfId!;
        despesaEditando.DataVencimento = despesaForm.DataVencimento;
      despesaEditando.DataPagamento = despesaForm.DataPagamento;
-        despesaEditando.Status = despesaForm.Status;
        despesaEditando.NumeroNota = despesaForm.NumeroNota;
               despesaEditando.NumeroEmpenho = despesaForm.NumeroEmpenho;
       despesaEditando.Observacoes = despesaForm.Observacoes;
@@ -669,37 +621,6 @@ Valor = despesaForm.Valor,
     }
   }
 
-    private async Task AprovarDespesa(Despesa despesa)
-    {
-        try
-        {
-      despesa.Status = "APROVADA";
-         despesa.DataAprovacao = DateTime.UtcNow;
-     despesa.UpdatedAt = DateTime.UtcNow;
-  await DespesaService.UpdateDespesaAsync(despesa);
-       await CarregarDados();
-     }
-        catch (Exception ex)
-        {
- mensagemErro = $"Erro ao aprovar despesa: {ex.Message}";
-  }
-    }
-
-    private async Task RejeitarDespesa(Despesa despesa)
-    {
-        try
- {
-          despesa.Status = "REJEITADA";
-         despesa.UpdatedAt = DateTime.UtcNow;
-         await DespesaService.UpdateDespesaAsync(despesa);
-            await CarregarDados();
-      }
-        catch (Exception ex)
-        {
-            mensagemErro = $"Erro ao rejeitar despesa: {ex.Message}";
-        }
-    }
-
     private async Task ExcluirDespesa(Despesa despesa)
   {
         var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Tem certeza que deseja excluir a despesa '{despesa.Descricao}'?");
@@ -717,29 +638,20 @@ Valor = despesaForm.Valor,
         }
     }
 
-    private bool confirm(string message) => true;
+      private bool confirm(string message) => true;
 
-  private string GetStatusBadgeClass(string status) => status switch
-    {
-        "PENDENTE" => "bg-warning",
-    "APROVADA" => "bg-success",
-   "REJEITADA" => "bg-danger",
-        "PAGA" => "bg-info",
+        private string GetCategoriaBadgeClass(string? categoria) => categoria switch
+        {
+            "Medicamentos" => "bg-danger",
+    "Material Médico" => "bg-primary",
+         "Contas Fixas" => "bg-warning",
+            "Pessoal" => "bg-success",
+            "Infraestrutura" => "bg-secondary",
+            "Serviços Terceirizados" => "bg-info",
+     "Material de Expediente" => "bg-dark",
+            "Alimentação" => "bg-orange",
         _ => "bg-secondary"
-    };
-
-    private string GetCategoriaBadgeClass(string? categoria) => categoria switch
-    {
-        "Medicamentos" => "bg-danger",
-"Material Médico" => "bg-primary",
-     "Contas Fixas" => "bg-warning",
-        "Pessoal" => "bg-success",
-        "Infraestrutura" => "bg-secondary",
-        "Serviços Terceirizados" => "bg-info",
- "Material de Expediente" => "bg-dark",
-        "Alimentação" => "bg-orange",
-    _ => "bg-secondary"
-    };
+        };
 
     private string GetCategoriaIcon(string? categoria) => categoria switch
     {
@@ -770,12 +682,11 @@ public decimal Valor { get; set; }
         [Required(ErrorMessage = "Tipo é obrigatório")]
         public string? Tipo { get; set; }
 
-        [Required(ErrorMessage = "UBS é obrigatória")]
-        public string? UbsId { get; set; }
+        [Required(ErrorMessage = "ESF � obrigat�ria")]
+        public string? EsfId { get; set; }
 
         public DateTime? DataVencimento { get; set; }
         public DateTime? DataPagamento { get; set; }
-    public string Status { get; set; } = "PENDENTE";
         public string? NumeroNota { get; set; }
  public string? NumeroEmpenho { get; set; }
         public string? Observacoes { get; set; }
@@ -791,7 +702,12 @@ public decimal Valor { get; set; }
         [Range(0.01, 999999999, ErrorMessage = "Valor deve ser maior que zero")]
         public decimal Valor { get; set; }
 
-        [Required(ErrorMessage = "UBS é obrigatória")]
-        public string? UbsId { get; set; }
+        [Required(ErrorMessage = "Categoria é obrigatória")]
+        public string? CategoriaId { get; set; }
+
+        [Required(ErrorMessage = "ESF � obrigat�ria")]
+        public string? EsfId { get; set; }
     }
 }
+
+

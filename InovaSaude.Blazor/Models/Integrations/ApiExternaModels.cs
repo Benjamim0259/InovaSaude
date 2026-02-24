@@ -99,16 +99,16 @@ public class ApiExterna
     public string? ConfiguracoesJson { get; set; }
 
     /// <summary>
-/// UBS associada (opcional, para configurações por unidade)
+/// ESF associada (opcional, para configurações por unidade)
     /// </summary>
-    [ForeignKey("UBS")]
-    public string? UbsId { get; set; }
+    [ForeignKey("ESF")]
+    public string? EsfId { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
  // Navigation properties
-  public virtual UBS? Ubs { get; set; }
+  public virtual ESF? Esf { get; set; }
     public virtual ICollection<LogIntegracaoApi> Logs { get; set; } = new List<LogIntegracaoApi>();
 }
 
@@ -240,18 +240,41 @@ public class HorusMedicamento
     public int QuantidadeMinima { get; set; } = 0;
 
     /// <summary>
+    /// Custo unitário do medicamento
+    /// </summary>
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal CustoUnitario { get; set; } = 0;
+
+    /// <summary>
+    /// Custo total (QuantidadeEstoque * CustoUnitario)
+    /// </summary>
+    [NotMapped]
+    public decimal CustoTotal => QuantidadeEstoque * CustoUnitario;
+
+    /// <summary>
+    /// Lote do medicamento
+    /// </summary>
+    [StringLength(50)]
+    public string? Lote { get; set; }
+
+    /// <summary>
+    /// Data de validade
+    /// </summary>
+    public DateTime? DataValidade { get; set; }
+
+    /// <summary>
     /// Última atualização do HORUS
     /// </summary>
     public DateTime? UltimaAtualizacaoHorus { get; set; }
 
-    [ForeignKey("UBS")]
-    public string? UbsId { get; set; }
+    [ForeignKey("ESF")]
+    public string? EsfId { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
-    public virtual UBS? Ubs { get; set; }
+    public virtual ESF? Esf { get; set; }
 }
 
 /// <summary>
@@ -311,14 +334,14 @@ public class EsusPecAtendimento
     [StringLength(15)]
     public string? CnsProfissional { get; set; }
 
-    [ForeignKey("UBS")]
-    public string? UbsId { get; set; }
+    [ForeignKey("ESF")]
+    public string? EsfId { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
-    public virtual UBS? Ubs { get; set; }
+    public virtual ESF? Esf { get; set; }
 }
 
 /// <summary>
@@ -370,12 +393,14 @@ public class NemesisIndicador
     /// </summary>
     public decimal? PercentualAlcance { get; set; }
 
-    [ForeignKey("UBS")]
-    public string? UbsId { get; set; }
+    [ForeignKey("ESF")]
+    public string? EsfId { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
-    public virtual UBS? Ubs { get; set; }
+    public virtual ESF? Esf { get; set; }
 }
+
+

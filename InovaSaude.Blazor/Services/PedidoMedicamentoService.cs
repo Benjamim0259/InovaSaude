@@ -34,7 +34,7 @@ public class PedidoMedicamentoService
 var pedido = new PedidoMedicamento
      {
      NumeroPedido = numeroPedido,
-          UbsSolicitanteId = ubsId,
+          EsfSolicitanteId = ubsId,
        UsuarioCriacaoId = usuarioId,
                 DataPedido = DateTime.UtcNow,
         DataNecessidade = dataNecessidade,
@@ -95,7 +95,7 @@ await _context.SaveChangesAsync();
     public async Task<List<PedidoMedicamento>> ObterTodosPedidosAsync(string? ubsId = null, string? status = null)
     {
         var query = _context.Set<PedidoMedicamento>()
-        .Include(p => p.UbsSolicitante)
+        .Include(p => p.EsfSolicitante)
           .Include(p => p.UsuarioCriacao)
   .Include(p => p.UsuarioAprovacao)
          .Include(p => p.Itens)
@@ -103,7 +103,7 @@ await _context.SaveChangesAsync();
 
      if (!string.IsNullOrEmpty(ubsId))
         {
-            query = query.Where(p => p.UbsSolicitanteId == ubsId);
+            query = query.Where(p => p.EsfSolicitanteId == ubsId);
         }
 
         if (!string.IsNullOrEmpty(status))
@@ -120,7 +120,7 @@ await _context.SaveChangesAsync();
     public async Task<PedidoMedicamento?> ObterPedidoPorIdAsync(string id)
     {
         return await _context.Set<PedidoMedicamento>()
-         .Include(p => p.UbsSolicitante)
+         .Include(p => p.EsfSolicitante)
   .Include(p => p.UsuarioCriacao)
       .Include(p => p.UsuarioAprovacao)
             .Include(p => p.UsuarioEntrega)
@@ -231,7 +231,7 @@ await _context.SaveChangesAsync();
              Quantidade = -item.QuantidadeAprovada.Value,
  QuantidadeAnterior = estoque.QuantidadeAtual,
 QuantidadeApos = estoque.QuantidadeAtual - item.QuantidadeAprovada.Value,
-       Motivo = $"Entrega pedido {pedido.NumeroPedido} para {pedido.UbsSolicitante.Nome}",
+       Motivo = $"Entrega pedido {pedido.NumeroPedido} para {pedido.EsfSolicitante.Nome}",
           NumeroDocumento = pedido.NumeroPedido,
     PedidoMedicamentoId = pedido.Id,
     UsuarioId = usuarioId
@@ -282,7 +282,7 @@ estoque.UpdatedAt = DateTime.UtcNow;
 
         if (!string.IsNullOrEmpty(ubsId))
         {
-  query = query.Where(p => p.UbsSolicitanteId == ubsId);
+  query = query.Where(p => p.EsfSolicitanteId == ubsId);
         }
 
     var pedidos = await query.Include(p => p.Itens).ToListAsync();

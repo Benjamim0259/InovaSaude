@@ -17,8 +17,8 @@ public class DashboardService
     {
         var stats = new DashboardStats();
 
-        // Total de UBS ativas
-        stats.TotalUBS = await _context.UBS.CountAsync(u => u.Status == "ATIVA");
+        // Total de ESF ativas
+        stats.TotalESF = await _context.ESF.CountAsync(e => e.Status == "ATIVA");
 
         // Total de despesas no mês atual
         var currentMonth = DateTime.UtcNow.Month;
@@ -26,10 +26,6 @@ public class DashboardService
         stats.TotalDespesasMes = await _context.Despesas
             .Where(d => d.CreatedAt.Month == currentMonth && d.CreatedAt.Year == currentYear)
             .SumAsync(d => d.Valor);
-
-        // Despesas pendentes
-        stats.DespesasPendentes = await _context.Despesas
-            .CountAsync(d => d.Status == "PENDENTE");
 
         // Total de usuários ativos
         stats.TotalUsuarios = await _context.Usuarios
@@ -47,11 +43,11 @@ public class DashboardService
             })
             .ToListAsync();
 
-        // Despesas por UBS (últimos 6 meses)
-        stats.DespesasPorUBS = await _context.Despesas
+        // Despesas por ESF (últimos 6 meses)
+        stats.DespesasPorESF = await _context.Despesas
             .Where(d => d.CreatedAt >= DateTime.UtcNow.AddMonths(-6))
-            .GroupBy(d => d.Ubs.Nome)
-            .Select(g => new UBSStats
+            .GroupBy(d => d.Esf.Nome)
+            .Select(g => new ESFStats
             {
                 Nome = g.Key,
                 Valor = g.Sum(d => d.Valor),
@@ -78,7 +74,7 @@ public class DashboardService
     {
         return await _context.Despesas
             .Include(d => d.Categoria)
-            .Include(d => d.Ubs)
+            .Include(d => d.Esf)
             .Include(d => d.Fornecedor)
             .OrderByDescending(d => d.CreatedAt)
             .Take(limit)
@@ -94,16 +90,16 @@ public class DashboardService
             .ToListAsync();
     }
 
-    public async Task<DashboardData> GetDashboardDataAsync(string? ubsId = null, DateTime? inicio = null, DateTime? fim = null)
+    public async Task<DashboardData> GetDashboardDataAsync(string? esfId = null, DateTime? inicio = null, DateTime? fim = null)
     {
         inicio ??= DateTime.UtcNow.AddMonths(-1);
         fim ??= DateTime.UtcNow;
 
         var query = _context.Despesas.AsQueryable();
 
-        if (!string.IsNullOrEmpty(ubsId))
+        if (!string.IsNullOrEmpty(esfId))
         {
-            query = query.Where(d => d.UbsId == ubsId);
+            query = query.Where(d => d.EsfId == esfId);
         }
 
         query = query.Where(d => d.CreatedAt >= inicio && d.CreatedAt <= fim);
@@ -111,16 +107,6 @@ public class DashboardService
         var despesas = await query
             .Include(d => d.Categoria)
             .ToListAsync();
-
-        var porStatus = despesas
-            .GroupBy(d => d.Status)
-            .Select(g => new StatusData
-            {
-                Status = g.Key,
-                Total = g.Sum(d => d.Valor),
-                Quantidade = g.Count()
-            })
-            .ToList();
 
         var porCategoria = despesas
             .Where(d => d.Categoria != null)
@@ -138,13 +124,6 @@ public class DashboardService
         {
             TotalGeral = despesas.Sum(d => d.Valor),
             TotalDespesas = despesas.Count,
-            TotalPendente = despesas.Where(d => d.Status == "PENDENTE").Sum(d => d.Valor),
-            TotalPendentes = despesas.Count(d => d.Status == "PENDENTE"),
-            TotalAprovado = despesas.Where(d => d.Status == "APROVADA").Sum(d => d.Valor),
-            TotalAprovadas = despesas.Count(d => d.Status == "APROVADA"),
-            TotalPago = despesas.Where(d => d.Status == "PAGA").Sum(d => d.Valor),
-            TotalPagas = despesas.Count(d => d.Status == "PAGA"),
-            DespesasPorStatus = porStatus,
             DespesasPorCategoria = porCategoria
         };
     }
@@ -152,12 +131,11 @@ public class DashboardService
 
 public class DashboardStats
 {
-    public int TotalUBS { get; set; }
+    public int TotalESF { get; set; }
     public decimal TotalDespesasMes { get; set; }
-    public int DespesasPendentes { get; set; }
     public int TotalUsuarios { get; set; }
     public List<CategoriaStats> DespesasPorCategoria { get; set; } = new();
-    public List<UBSStats> DespesasPorUBS { get; set; } = new();
+    public List<ESFStats> DespesasPorESF { get; set; } = new();
     public List<AtividadeRecente> UltimasAtividades { get; set; } = new();
 }
 
@@ -168,7 +146,7 @@ public class CategoriaStats
     public int Quantidade { get; set; }
 }
 
-public class UBSStats
+public class ESFStats
 {
     public string Nome { get; set; } = string.Empty;
     public decimal Valor { get; set; }
@@ -186,21 +164,7 @@ public class DashboardData
 {
     public decimal TotalGeral { get; set; }
     public int TotalDespesas { get; set; }
-    public decimal TotalPendente { get; set; }
-    public int TotalPendentes { get; set; }
-    public decimal TotalAprovado { get; set; }
-    public int TotalAprovadas { get; set; }
-    public decimal TotalPago { get; set; }
-    public int TotalPagas { get; set; }
-    public List<StatusData> DespesasPorStatus { get; set; } = new();
     public List<CategoriaData2> DespesasPorCategoria { get; set; } = new();
-}
-
-public class StatusData
-{
-    public string Status { get; set; } = string.Empty;
-    public decimal Total { get; set; }
-    public int Quantidade { get; set; }
 }
 
 public class CategoriaData2

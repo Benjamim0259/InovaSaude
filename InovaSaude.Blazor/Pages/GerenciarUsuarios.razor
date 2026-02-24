@@ -3,7 +3,7 @@
 @using InovaSaude.Blazor.Models
 @using InovaSaude.Blazor.Services
 @inject UsuarioService UsuarioService
-@inject UBSService UBSService
+@inject ESFService ESFService
 @inject NavigationManager Navigation
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
@@ -74,8 +74,8 @@
          <th>Nome</th>
       <th>Email</th>
          <th>Perfil</th>
-    <th>UBS</th>
-       <th>Status</th>
+         <th>ESF</th>
+            <th>Status</th>
                 <th>Último Acesso</th>
       <th class="text-center">Ações</th>
      </tr>
@@ -97,16 +97,16 @@
        @GetPerfilNome(usuario.Perfil)
             </span>
              </td>
-            <td>
-        @if (usuario.Ubs != null)
-       {
-    <small>@usuario.Ubs.Nome</small>
-      }
-           else
-   {
-           <span class="text-muted">-</span>
-          }
-       </td>
+                     <td>
+                 @if (usuario.Esf != null)
+                {
+             <small>@usuario.Esf.Nome</small>
+               }
+                    else
+            {
+                    <span class="text-muted">-</span>
+                   }
+                </td>
         <td>
  <span class="badge @GetStatusBadgeClass(usuario.Status)">
 @usuario.Status
@@ -246,15 +246,15 @@
      @if (usuarioForm.Perfil == PerfilUsuario.COORDENADOR)
      {
    <div class="col-12">
-     <label class="form-label">UBS Vinculada *</label>
-           <select class="form-select" @bind="usuarioForm.UbsId">
-      <option value="">Selecione uma UBS...</option>
-    @foreach (var ubs in ubsList)
-                {
-     <option value="@ubs.Id">@ubs.Nome - @ubs.Codigo</option>
+     <label class="form-label">ESF Vinculada *</label>
+           <select class="form-select" @bind="usuarioForm.EsfId">
+      <option value="">Selecione uma ESF...</option>
+    @foreach (var esf in esfList)
+               {
+     <option value="@esf.Id">@esf.Nome - @esf.Codigo</option>
      }
        </select>
-          <small class="text-muted">Coordenadores devem estar vinculados a uma UBS</small>
+          <small class="text-muted">Coordenadores devem estar vinculados a uma ESF</small>
            </div>
             }
 
@@ -305,7 +305,7 @@
 
 @code {
     private List<Usuario> usuarios = new();
-    private List<UBS> ubsList = new();
+    private List<ESF> esfList = new();
     private bool carregando = true;
     private bool mostrarModal = false;
     private bool salvando = false;
@@ -327,10 +327,10 @@
     {
    carregando = true;
  try
-      {
-     usuarios = await UsuarioService.GetAllUsuariosAsync();
-            ubsList = await UBSService.GetAllUBSAsync();
-        }
+     {
+    usuarios = await UsuarioService.GetAllUsuariosAsync();
+           esfList = await ESFService.GetAllESFAsync();
+       }
     catch (Exception ex)
         {
    mensagemErro = $"Erro ao carregar dados: {ex.Message}";
@@ -392,7 +392,7 @@
             Email = usuario.Email,
           Telefone = usuario.Telefone,
             Perfil = usuario.Perfil,
-            UbsId = usuario.UbsId,
+            EsfId = usuario.EsfId,
       Status = usuario.Status
         };
         mensagemErro = null;
@@ -422,7 +422,7 @@
            Email = usuarioForm.Email,
          Telefone = usuarioForm.Telefone,
      Perfil = usuarioForm.Perfil ?? PerfilUsuario.OPERADOR,
-          UbsId = usuarioForm.UbsId,
+          EsfId = usuarioForm.EsfId,
               Status = usuarioForm.Status,
        SenhaHash = BCrypt.Net.BCrypt.HashPassword("Senha@123")
  };
@@ -436,7 +436,7 @@
    usuarioEditando.Email = usuarioForm.Email;
             usuarioEditando.Telefone = usuarioForm.Telefone;
             usuarioEditando.Perfil = usuarioForm.Perfil ?? PerfilUsuario.OPERADOR;
-                usuarioEditando.UbsId = usuarioForm.UbsId;
+                usuarioEditando.EsfId = usuarioForm.EsfId;
        usuarioEditando.Status = usuarioForm.Status;
            usuarioEditando.UpdatedAt = DateTime.UtcNow;
 
@@ -551,7 +551,7 @@
       [Required(ErrorMessage = "Perfil é obrigatório")]
         public PerfilUsuario? Perfil { get; set; }
 
-    public string? UbsId { get; set; }
+    public string? EsfId { get; set; }
 
       public string Status { get; set; } = "ATIVO";
     }

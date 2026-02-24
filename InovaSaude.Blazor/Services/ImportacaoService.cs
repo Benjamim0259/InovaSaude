@@ -223,7 +223,7 @@ public class ImportacaoService
                     break;
                 case "ubs_id":
                 case "ubs":
-                    despesa.UbsId = value;
+                    despesa.EsfId = value;
                     break;
                 case "fornecedor":
                     despesa.FornecedorId = await GetOrCreateFornecedorAsync(value);
@@ -240,7 +240,7 @@ public class ImportacaoService
                     despesa.Tipo = value;
                     break;
                 case "status":
-                    despesa.Status = value;
+                    // Status removido;
                     break;
             }
         }
@@ -248,7 +248,7 @@ public class ImportacaoService
         // Validate required fields
         if (despesa.Valor <= 0) throw new InvalidOperationException("Valor da despesa deve ser maior que zero");
         if (string.IsNullOrEmpty(despesa.CategoriaId)) throw new InvalidOperationException("Categoria é obrigatória");
-        if (string.IsNullOrEmpty(despesa.UbsId)) throw new InvalidOperationException("UBS é obrigatória");
+        if (string.IsNullOrEmpty(despesa.EsfId)) throw new InvalidOperationException("UBS é obrigatória");
         if (string.IsNullOrEmpty(despesa.Descricao)) throw new InvalidOperationException("Descrição é obrigatória");
         if (string.IsNullOrEmpty(despesa.Tipo)) throw new InvalidOperationException("Tipo é obrigatório");
 
@@ -399,7 +399,7 @@ public class ImportacaoService
                     usuario.Perfil = Enum.Parse<PerfilUsuario>(value, true);
                     break;
                 case "ubs_id":
-                    usuario.UbsId = value;
+                    usuario.EsfId = value;
                     break;
                 case "ativo":
                 case "active":

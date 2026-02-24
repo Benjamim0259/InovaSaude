@@ -34,14 +34,14 @@ public abstract class ApiExternaServiceBase
     /// <summary>
     /// Obter configuração da API
     /// </summary>
-    protected async Task<ApiExterna?> ObterConfiguracaoAsync(string? ubsId = null)
+    protected async Task<ApiExterna?> ObterConfiguracaoAsync(string? esfId = null)
     {
    var query = _context.Set<ApiExterna>()
     .Where(a => a.Nome == _apiNome && a.Status == "ATIVA");
 
-     if (!string.IsNullOrEmpty(ubsId))
+     if (!string.IsNullOrEmpty(esfId))
      {
-    query = query.Where(a => a.UbsId == ubsId || a.UbsId == null);
+    query = query.Where(a => a.EsfId == esfId || a.EsfId == null);
       }
 
    return await query.FirstOrDefaultAsync();
@@ -281,19 +281,19 @@ public class HorusIntegrationService : ApiExternaServiceBase
     /// <summary>
     /// Sincronizar medicamentos do HORUS (alias)
     /// </summary>
-    public Task<bool> SincronizarMedicamentosAsync(string? ubsId = null, string? usuarioId = null)
+    public Task<bool> SincronizarMedicamentosAsync(string? esfId = null, string? usuarioId = null)
     {
-     return SincronizarEstoqueMedicamentosAsync(ubsId, usuarioId);
+     return SincronizarEstoqueMedicamentosAsync(esfId, usuarioId);
     }
 
     /// <summary>
     /// Sincronizar estoque de medicamentos do HORUS
     /// </summary>
-    public async Task<bool> SincronizarEstoqueMedicamentosAsync(string? ubsId = null, string? usuarioId = null)
+    public async Task<bool> SincronizarEstoqueMedicamentosAsync(string? esfId = null, string? usuarioId = null)
     {
         try
         {
-  var config = await ObterConfiguracaoAsync(ubsId);
+  var config = await ObterConfiguracaoAsync(esfId);
             if (config == null)
       {
      _logger.LogWarning("Configuração do HORUS não encontrada");
@@ -324,7 +324,7 @@ public class HorusIntegrationService : ApiExternaServiceBase
             foreach (var med in medicamentos)
   {
         var existente = await _context.Set<HorusMedicamento>()
-      .FirstOrDefaultAsync(m => m.CodigoHorus == med.Codigo && m.UbsId == ubsId);
+      .FirstOrDefaultAsync(m => m.CodigoHorus == med.Codigo && m.EsfId == esfId);
 
               if (existente != null)
                 {
@@ -335,6 +335,9 @@ public class HorusIntegrationService : ApiExternaServiceBase
     existente.FormaFarmaceutica = med.FormaFarmaceutica;
        existente.QuantidadeEstoque = med.Quantidade;
         existente.QuantidadeMinima = med.QuantidadeMinima;
+        existente.CustoUnitario = med.CustoUnitario;
+        existente.Lote = med.Lote;
+        existente.DataValidade = med.DataValidade;
   existente.UltimaAtualizacaoHorus = DateTime.UtcNow;
            existente.UpdatedAt = DateTime.UtcNow;
           }
@@ -350,7 +353,10 @@ public class HorusIntegrationService : ApiExternaServiceBase
     FormaFarmaceutica = med.FormaFarmaceutica,
           QuantidadeEstoque = med.Quantidade,
  QuantidadeMinima = med.QuantidadeMinima,
-         UbsId = ubsId,
+            CustoUnitario = med.CustoUnitario,
+            Lote = med.Lote,
+            DataValidade = med.DataValidade,
+         EsfId = esfId,
   UltimaAtualizacaoHorus = DateTime.UtcNow
         };
          _context.Set<HorusMedicamento>().Add(novoMed);
@@ -371,17 +377,84 @@ public class HorusIntegrationService : ApiExternaServiceBase
     /// <summary>
     /// Obter medicamentos com estoque baixo
     /// </summary>
-    public async Task<List<HorusMedicamento>> ObterMedicamentosEstoqueBaixoAsync(string? ubsId = null)
+    public async Task<List<HorusMedicamento>> ObterMedicamentosEstoqueBaixoAsync(string? esfId = null)
     {
     var query = _context.Set<HorusMedicamento>()
       .Where(m => m.QuantidadeEstoque <= m.QuantidadeMinima);
 
-    if (!string.IsNullOrEmpty(ubsId))
+    if (!string.IsNullOrEmpty(esfId))
         {
-  query = query.Where(m => m.UbsId == ubsId);
+  query = query.Where(m => m.EsfId == esfId);
  }
 
         return await query.OrderBy(m => m.Nome).ToListAsync();
+    }
+
+    /// <summary>
+    /// Obter todos os medicamentos de uma UBS
+    /// </summary>
+    public async Task<List<HorusMedicamento>> ObterMedicamentosPorUbsAsync(string esfId)
+    {
+        return await _context.Set<HorusMedicamento>()
+            .Where(m => m.EsfId == esfId)
+            .OrderBy(m => m.Nome)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Obter custo total de medicamentos por UBS
+    /// </summary>
+    public async Task<decimal> ObterCustoTotalMedicamentosAsync(string esfId)
+    {
+        var medicamentos = await ObterMedicamentosPorUbsAsync(esfId);
+        return medicamentos.Sum(m => m.CustoTotal);
+    }
+
+    /// <summary>
+    /// Obter resumo de custos de medicamentos por UBS
+    /// </summary>
+    public async Task<HorusCustoResumoDto> ObterResumoCustosAsync(string esfId)
+    {
+        var medicamentos = await ObterMedicamentosPorUbsAsync(esfId);
+
+        return new HorusCustoResumoDto
+        {
+            esfId = esfId,
+            TotalMedicamentos = medicamentos.Count,
+            QuantidadeTotal = medicamentos.Sum(m => m.QuantidadeEstoque),
+            CustoTotal = medicamentos.Sum(m => m.CustoTotal),
+            MedicamentosEstoqueBaixo = medicamentos.Count(m => m.QuantidadeEstoque <= m.QuantidadeMinima),
+            CustoMedicamentosEstoqueBaixo = medicamentos
+                .Where(m => m.QuantidadeEstoque <= m.QuantidadeMinima)
+                .Sum(m => m.CustoTotal),
+            UltimaSincronizacao = medicamentos.Max(m => m.UltimaAtualizacaoHorus)
+        };
+    }
+
+    /// <summary>
+    /// Obter custos de todas as UBS
+    /// </summary>
+    public async Task<List<HorusCustoResumoDto>> ObterCustosPorTodasUbsAsync()
+    {
+        var esfIds = await _context.Set<HorusMedicamento>()
+            .Where(m => m.EsfId != null)
+            .Select(m => m.EsfId!)
+            .Distinct()
+            .ToListAsync();
+
+        var resumos = new List<HorusCustoResumoDto>();
+        foreach (var esfId in esfIds)
+        {
+            var resumo = await ObterResumoCustosAsync(esfId);
+            var ubs = await _context.Set<ESF>().FindAsync(esfId);
+            if (ubs != null)
+            {
+                resumo.NomeUbs = ubs.Nome;
+            }
+            resumos.Add(resumo);
+        }
+
+        return resumos.OrderByDescending(r => r.CustoTotal).ToList();
     }
 }
 
@@ -391,8 +464,23 @@ public class HorusMedicamentoDto
     public string Codigo { get; set; } = string.Empty;
     public string Nome { get; set; } = string.Empty;
     public string? PrincipioAtivo { get; set; }
- public string? Concentracao { get; set; }
+    public string? Concentracao { get; set; }
     public string? FormaFarmaceutica { get; set; }
     public int Quantidade { get; set; }
     public int QuantidadeMinima { get; set; }
+    public decimal CustoUnitario { get; set; } = 0;
+    public string? Lote { get; set; }
+    public DateTime? DataValidade { get; set; }
+}
+
+public class HorusCustoResumoDto
+{
+    public string esfId { get; set; } = string.Empty;
+    public string? NomeUbs { get; set; }
+    public int TotalMedicamentos { get; set; }
+    public int QuantidadeTotal { get; set; }
+    public decimal CustoTotal { get; set; }
+    public int MedicamentosEstoqueBaixo { get; set; }
+    public decimal CustoMedicamentosEstoqueBaixo { get; set; }
+    public DateTime? UltimaSincronizacao { get; set; }
 }

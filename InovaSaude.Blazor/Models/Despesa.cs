@@ -28,12 +28,9 @@ public class Despesa
     [StringLength(50)]
     public string Tipo { get; set; } = string.Empty;
 
-    [StringLength(20)]
-    public string Status { get; set; } = "PENDENTE";
-
     [Required]
-    [ForeignKey("UBS")]
-    public string UbsId { get; set; } = string.Empty;
+    [ForeignKey("ESF")]
+    public string EsfId { get; set; } = string.Empty;
 
     [ForeignKey("Fornecedor")]
     public string? FornecedorId { get; set; }
@@ -41,11 +38,6 @@ public class Despesa
     [Required]
     [ForeignKey("UsuarioCriacao")]
     public string UsuarioCriacaoId { get; set; } = string.Empty;
-
-    [ForeignKey("UsuarioAprovacao")]
-    public string? UsuarioAprovacaoId { get; set; }
-
-    public DateTime? DataAprovacao { get; set; }
 
     [StringLength(1000)]
     public string? Observacoes { get; set; }
@@ -63,13 +55,11 @@ public class Despesa
     // Navigation properties
     public virtual Categoria Categoria { get; set; } = null!;
 
-    public virtual UBS Ubs { get; set; } = null!;
+    public virtual ESF Esf { get; set; } = null!;
 
     public virtual Fornecedor? Fornecedor { get; set; }
 
     public virtual Usuario UsuarioCriacao { get; set; } = null!;
-
-    public virtual Usuario? UsuarioAprovacao { get; set; }
 
     public virtual ICollection<Anexo> Anexos { get; set; } = new List<Anexo>();
 

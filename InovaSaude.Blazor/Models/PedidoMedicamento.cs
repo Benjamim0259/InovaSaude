@@ -22,8 +22,8 @@ public class PedidoMedicamento
     /// UBS que está fazendo o pedido
     /// </summary>
   [Required]
-  [ForeignKey("UbsSolicitante")]
-    public string UbsSolicitanteId { get; set; } = string.Empty;
+  [ForeignKey("EsfSolicitante")]
+    public string EsfSolicitanteId { get; set; } = string.Empty;
 
     /// <summary>
     /// Usuário que criou o pedido
@@ -93,7 +93,7 @@ public class PedidoMedicamento
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
-    public virtual UBS UbsSolicitante { get; set; } = null!;
+    public virtual ESF EsfSolicitante { get; set; } = null!;
     public virtual Usuario UsuarioCriacao { get; set; } = null!;
     public virtual Usuario? UsuarioAprovacao { get; set; }
     public virtual Usuario? UsuarioEntrega { get; set; }
@@ -328,3 +328,4 @@ public class MovimentacaoEstoque
     public virtual PedidoMedicamento? PedidoMedicamento { get; set; }
     public virtual Usuario Usuario { get; set; } = null!;
 }
+

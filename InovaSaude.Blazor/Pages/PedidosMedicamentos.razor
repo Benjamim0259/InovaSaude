@@ -2,7 +2,7 @@
 @using InovaSaude.Blazor.Models
 @using InovaSaude.Blazor.Services
 @inject PedidoMedicamentoService PedidoService
-@inject UBSService UBSService
+@inject ESFService ESFService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
@@ -108,7 +108,7 @@
     <div class="card-body">
          <div class="mb-2">
             <small class="text-muted">UBS:</small><br/>
-   <strong>@pedido.UbsSolicitante.Nome</strong>
+   <strong>@pedido.EsfSolicitante.Nome</strong>
         </div>
     
        <div class="mb-2">
@@ -189,7 +189,7 @@
           <label class="form-label">UBS Destino *</label>
                <select class="form-select" @bind="novoPedido.UbsId" required>
             <option value="">Selecione a UBS...</option>
-   @foreach (var ubs in ubsList ?? new())
+   @foreach (var ubs in esfList ?? new())
            {
    <option value="@ubs.Id">@ubs.Nome</option>
      }
@@ -306,7 +306,7 @@
 
 @code {
     private List<PedidoMedicamento> pedidos = new();
-    private List<UBS>? ubsList;
+    private List<ESF>? esfList;
     private bool carregando = true;
     private bool mostrarModalNovo = false;
     private bool salvando = false;
@@ -330,7 +330,7 @@
         carregando = true;
         try
 {
-         ubsList = await UBSService.GetAllUBSAsync();
+         esfList = await ESFService.GetAllESFAsync();
     pedidos = await PedidoService.ObterTodosPedidosAsync();
         }
       catch (Exception ex)

@@ -64,7 +64,7 @@ public async Task<Categoria?> GetCategoriaByIdAsync(string id)
        .Where(d => d.CategoriaId == categoriaId &&
            d.CreatedAt >= inicio &&
      d.CreatedAt <= fim &&
-              (d.Status == "APROVADA" || d.Status == "PAGA"))
+              true)
             .SumAsync(d => d.Valor);
     }
 

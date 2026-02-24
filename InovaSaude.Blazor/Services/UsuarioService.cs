@@ -17,7 +17,7 @@ public class UsuarioService
     public async Task<List<Usuario>> GetAllUsuariosAsync()
     {
         return await _context.Usuarios
-            .Include(u => u.Ubs)
+            .Include(u => u.Esf)
             .Include(u => u.Permissoes)
             .OrderBy(u => u.Nome)
             .ToListAsync();
@@ -26,16 +26,16 @@ public class UsuarioService
     public async Task<Usuario?> GetUsuarioByIdAsync(string id)
     {
         return await _context.Usuarios
-            .Include(u => u.Ubs)
+            .Include(u => u.Esf)
             .Include(u => u.Permissoes)
-            .Include(u => u.UbsCoordenadas)
+            .Include(u => u.EsfCoordenadas)
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task<Usuario?> GetUsuarioByEmailAsync(string email)
     {
         return await _context.Usuarios
-            .Include(u => u.Ubs)
+            .Include(u => u.Esf)
             .Include(u => u.Permissoes)
             .FirstOrDefaultAsync(u => u.Email == email);
     }
@@ -142,10 +142,10 @@ public class UsuarioService
             .ToListAsync();
     }
 
-    public async Task<List<Usuario>> GetUsuariosByUBSAsync(string ubsId)
+    public async Task<List<Usuario>> GetUsuariosByESFAsync(string esfId)
     {
         return await _context.Usuarios
-            .Where(u => u.UbsId == ubsId)
+            .Where(u => u.EsfId == esfId)
             .OrderBy(u => u.Nome)
             .ToListAsync();
     }

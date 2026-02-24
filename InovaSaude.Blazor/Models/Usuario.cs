@@ -30,8 +30,8 @@ public class Usuario
     [StringLength(20)]
     public string? Telefone { get; set; }
 
-    [ForeignKey("UBS")]
-    public string? UbsId { get; set; }
+    [ForeignKey("ESF")]
+    public string? EsfId { get; set; }
 
     public DateTime? UltimoAcesso { get; set; }
 
@@ -40,13 +40,11 @@ public class Usuario
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
-    public virtual UBS? Ubs { get; set; }
+    public virtual ESF? Esf { get; set; }
 
-    public virtual ICollection<UBS> UbsCoordenadas { get; set; } = new List<UBS>();
+    public virtual ICollection<ESF> EsfCoordenadas { get; set; } = new List<ESF>();
 
     public virtual ICollection<Despesa> DespesasCriadas { get; set; } = new List<Despesa>();
-
-    public virtual ICollection<Despesa> DespesasAprovadas { get; set; } = new List<Despesa>();
 
     public virtual ICollection<LogAuditoria> LogsAuditoria { get; set; } = new List<LogAuditoria>();
 

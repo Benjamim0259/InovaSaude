@@ -17,18 +17,15 @@ public enum Permissao
     USUARIOS_EDITAR,
     USUARIOS_EXCLUIR,
     USUARIOS_BLOQUEAR,
-    UBS_VISUALIZAR,
-    UBS_CRIAR,
-    UBS_EDITAR,
-    UBS_EXCLUIR,
-    UBS_GERENCIAR_COORDENADORES,
+    ESF_VISUALIZAR,
+    ESF_CRIAR,
+    ESF_EDITAR,
+    ESF_EXCLUIR,
+    ESF_GERENCIAR_COORDENADORES,
     DESPESAS_VISUALIZAR,
     DESPESAS_CRIAR,
     DESPESAS_EDITAR,
     DESPESAS_EXCLUIR,
-    DESPESAS_APROVAR,
-    DESPESAS_REJEITAR,
-    DESPESAS_PAGAR,
     RELATORIOS_VISUALIZAR,
     RELATORIOS_EXPORTAR
 }
@@ -95,4 +92,26 @@ public enum ApprovalAction
     REJECT,
     RETURN,
     ESCALATE
+}
+
+public enum CargoFuncionario
+{
+    Medico,
+    Enfermeiro,
+    TecnicoEnfermagem,
+    AgenteComunitario,
+    Dentista,
+    Farmaceutico,
+    Psicologo,
+    Nutricionista,
+    Fisioterapeuta,
+    AssistenteSocial,
+    AdministrativoGeral,
+    Gerente,
+    Coordenador,
+    Recepcionista,
+    Seguranca,
+    Limpeza,
+    Manutencao,
+    Outros
 }

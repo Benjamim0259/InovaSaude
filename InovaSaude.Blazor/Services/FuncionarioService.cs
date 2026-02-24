@@ -16,16 +16,16 @@ public class FuncionarioService
     public async Task<List<Funcionario>> GetAllAsync()
     {
         return await _context.Funcionarios
-            .Include(f => f.Ubs)
+            .Include(f => f.Esf)
             .OrderBy(f => f.Nome)
             .ToListAsync();
     }
 
-    public async Task<List<Funcionario>> GetByUbsIdAsync(string ubsId)
+    public async Task<List<Funcionario>> GetByEsfIdAsync(string esfId)
     {
         return await _context.Funcionarios
-            .Include(f => f.Ubs)
-            .Where(f => f.UbsId == ubsId)
+            .Include(f => f.Esf)
+            .Where(f => f.EsfId == esfId)
             .OrderBy(f => f.Nome)
             .ToListAsync();
     }
@@ -33,7 +33,7 @@ public class FuncionarioService
     public async Task<Funcionario?> GetByIdAsync(string id)
     {
         return await _context.Funcionarios
-            .Include(f => f.Ubs)
+            .Include(f => f.Esf)
             .FirstOrDefaultAsync(f => f.Id == id);
     }
 

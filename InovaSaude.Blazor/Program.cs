@@ -183,7 +183,7 @@ builder.Services.AddSingleton<ToastService>(); // TOAST SERVICE CRÍTICO!
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<UsuarioService>();
-builder.Services.AddScoped<UBSService>();
+builder.Services.AddScoped<ESFService>();
 builder.Services.AddScoped<FuncionarioService>();
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<DespesaService>();

@@ -70,7 +70,7 @@ public class ApplicationDbContext : DbContext
     // Core entities
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<PermissaoUsuario> PermissoesUsuario { get; set; }
-    public DbSet<UBS> UBS { get; set; }
+    public DbSet<ESF> ESF { get; set; }
     public DbSet<Funcionario> Funcionarios { get; set; }
     public DbSet<Fornecedor> Fornecedores { get; set; }
     public DbSet<Categoria> Categorias { get; set; }
@@ -130,8 +130,8 @@ public class ApplicationDbContext : DbContext
             .HasIndex(u => u.Email)
             .IsUnique();
 
-        modelBuilder.Entity<UBS>()
-            .HasIndex(u => u.Codigo)
+        modelBuilder.Entity<ESF>()
+            .HasIndex(e => e.Codigo)
             .IsUnique();
 
         modelBuilder.Entity<Fornecedor>()
@@ -177,9 +177,9 @@ public class ApplicationDbContext : DbContext
 
         // Configure relationships
         modelBuilder.Entity<Usuario>()
-            .HasMany(u => u.UbsCoordenadas)
-            .WithOne(u => u.Coordenador)
-            .HasForeignKey(u => u.CoordenadorId)
+            .HasMany(u => u.EsfCoordenadas)
+            .WithOne(e => e.Coordenador)
+            .HasForeignKey(e => e.CoordenadorId)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Usuario>()
@@ -187,12 +187,6 @@ public class ApplicationDbContext : DbContext
             .WithOne(d => d.UsuarioCriacao)
             .HasForeignKey(d => d.UsuarioCriacaoId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Usuario>()
-            .HasMany(u => u.DespesasAprovadas)
-            .WithOne(d => d.UsuarioAprovacao)
-            .HasForeignKey(d => d.UsuarioAprovacaoId)
-            .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Usuario>()
             .HasMany(u => u.LogsAuditoria)
@@ -215,7 +209,7 @@ public class ApplicationDbContext : DbContext
         // Configure table names
         modelBuilder.Entity<Usuario>().ToTable("usuarios");
         modelBuilder.Entity<PermissaoUsuario>().ToTable("permissoes_usuario");
-        modelBuilder.Entity<UBS>().ToTable("ubs");
+        modelBuilder.Entity<ESF>().ToTable("esf");
         modelBuilder.Entity<Funcionario>().ToTable("funcionarios");
         modelBuilder.Entity<Fornecedor>().ToTable("fornecedores");
         modelBuilder.Entity<Categoria>().ToTable("categorias");
@@ -254,16 +248,13 @@ public class ApplicationDbContext : DbContext
 
         // Configure indexes for performance
         modelBuilder.Entity<Despesa>()
-            .HasIndex(d => d.UbsId);
+            .HasIndex(d => d.EsfId);
 
         modelBuilder.Entity<Despesa>()
             .HasIndex(d => d.CategoriaId);
 
         modelBuilder.Entity<Despesa>()
             .HasIndex(d => d.FornecedorId);
-
-        modelBuilder.Entity<Despesa>()
-            .HasIndex(d => d.Status);
 
         modelBuilder.Entity<Despesa>()
             .HasIndex(d => d.DataVencimento);

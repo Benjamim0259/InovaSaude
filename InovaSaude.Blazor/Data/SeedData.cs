@@ -53,7 +53,7 @@ public static class SeedData
                     ""Id"" text NOT NULL,
                     ""Nome"" character varying(255) NOT NULL,
                     ""Salario"" numeric(18,2) NOT NULL,
-                    ""UbsId"" text NOT NULL,
+                    ""EsfId"" text NOT NULL,
                     ""Cargo"" character varying(50),
                     ""CreatedAt"" timestamp with time zone NOT NULL,
                     ""UpdatedAt"" timestamp with time zone NOT NULL,
@@ -67,17 +67,17 @@ public static class SeedData
                 BEGIN
                     IF NOT EXISTS (
                         SELECT 1 FROM information_schema.table_constraints 
-                        WHERE constraint_name = 'FK_funcionarios_ubs_UbsId'
+                        WHERE constraint_name = 'FK_funcionarios_ubs_EsfId'
                     ) THEN
                         ALTER TABLE funcionarios 
-                        ADD CONSTRAINT ""FK_funcionarios_ubs_UbsId"" 
-                        FOREIGN KEY (""UbsId"") REFERENCES ubs(""Id"") ON DELETE CASCADE;
+                        ADD CONSTRAINT ""FK_funcionarios_ubs_EsfId"" 
+                        FOREIGN KEY (""EsfId"") REFERENCES ubs(""Id"") ON DELETE CASCADE;
                     END IF;
                 END $$;
             ");
 
             await context.Database.ExecuteSqlRawAsync(@"
-                CREATE INDEX IF NOT EXISTS ""IX_funcionarios_UbsId"" ON funcionarios (""UbsId"");
+                CREATE INDEX IF NOT EXISTS ""IX_funcionarios_EsfId"" ON funcionarios (""EsfId"");
             ");
 
             logger.LogInformation("Tabela funcionarios verificada/criada com sucesso!");
@@ -246,9 +246,9 @@ public static class SeedData
         }
 
         // Seed a sample UBS
-        if (!await context.UBS.AnyAsync())
+        if (!await context.ESF.AnyAsync())
         {
-            var ubs = new UBS
+            var ubs = new ESF
             {
                 Nome = "UBS Central",
                 Codigo = "UBS001",
@@ -260,7 +260,7 @@ public static class SeedData
                 UpdatedAt = DateTime.UtcNow
             };
 
-            context.UBS.Add(ubs);
+            context.ESF.Add(ubs);
             await context.SaveChangesAsync();
         }
     }

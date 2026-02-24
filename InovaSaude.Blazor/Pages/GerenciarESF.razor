@@ -1,7 +1,7 @@
-@page "/gerenciar-ubs"
+@page "/gerenciar-esf"
 @using InovaSaude.Blazor.Services
 @using InovaSaude.Blazor.Models
-@inject UBSService UBSService
+@inject ESFService ESFService
 @inject FuncionarioService FuncionarioService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
@@ -10,16 +10,16 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col">
-            <h3>🏥 Gerenciamento de UBS</h3>
+            <h3>🏥 Gerenciamento de ESF</h3>
         </div>
         <div class="col-auto">
-            <button class="btn btn-primary" @onclick="() => ShowModalUBS()">
-                ➕ Nova UBS
+            <button class="btn btn-primary" @onclick="() => ShowModalESF()">
+                ➕ Nova ESF
             </button>
         </div>
     </div>
 
-    @if (ubsList == null)
+    @if (esfList == null)
     {
         <div class="text-center">
             <div class="spinner-border" role="status">
@@ -30,37 +30,37 @@
     else
     {
         <div class="row g-4">
-            @foreach (var ubs in ubsList)
+            @foreach (var esf in esfList)
             {
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm">
                         <div class="text-center pt-3">
-                            <img src="/images/ubs-padrao.jfif" alt="@ubs.Nome" class="rounded" style="width: 100%; max-width: 200px; height: 150px; object-fit: cover;" />
+                            <img src="/images/esf-padrao.jfif" alt="@esf.Nome" class="rounded" style="width: 100%; max-width: 200px; height: 150px; object-fit: cover;" />
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title fw-bold">@ubs.Nome</h5>
+                            <h5 class="card-title fw-bold">@esf.Nome</h5>
                             <p class="text-muted mb-2">
-                                <small>📍 Código: @ubs.Codigo</small>
+                                <small>📍 Código: @esf.Codigo</small>
                             </p>
                             <p class="text-muted mb-2">
-                                <small>👤 Gestor: @(ubs.Coordenador?.Nome ?? "Sem gestor")</small>
+                                <small>👤 Gestor: @(esf.Coordenador?.Nome ?? "Sem gestor")</small>
                             </p>
                             <p class="text-muted mb-2">
-                                <small>📞 @(ubs.Telefone ?? "Sem telefone")</small>
+                                <small>📞 @(esf.Telefone ?? "Sem telefone")</small>
                             </p>
                             <p class="mb-2">
-                                <span class="badge @(ubs.Status == "ATIVA" ? "bg-success" : "bg-danger")">
-                                    @ubs.Status
+                                <span class="badge @(esf.Status == "ATIVA" ? "bg-success" : "bg-danger")">
+                                    @esf.Status
                                 </span>
                             </p>
                             <div class="d-flex gap-2 mt-3">
-                                <button class="btn btn-sm btn-info flex-fill" @onclick="() => ShowModalUBS(ubs)">
+                                <button class="btn btn-sm btn-info flex-fill" @onclick="() => ShowModalESF(esf)">
                                     ✏️ Editar
                                 </button>
-                                <button class="btn btn-sm btn-primary flex-fill" @onclick="() => ShowModalFuncionarios(ubs)">
+                                <button class="btn btn-sm btn-primary flex-fill" @onclick="() => ShowModalFuncionarios(esf)">
                                     👥 Funcionários
                                 </button>
-                                <button class="btn btn-sm btn-danger" @onclick="() => DeleteUBS(ubs.Id)">
+                                <button class="btn btn-sm btn-danger" @onclick="() => DeleteESF(esf.Id)">
                                     🗑️
                                 </button>
                             </div>
@@ -72,48 +72,48 @@
     }
 </div>
 
-@if (showModalUBS)
+@if (showModalESF)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">@(editingUBS?.Id == null ? "Nova UBS" : "Editar UBS")</h5>
-                    <button type="button" class="btn-close" @onclick="CloseModalUBS"></button>
+                    <h5 class="modal-title">@(editingESF?.Id == null ? "Nova ESF" : "Editar ESF")</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModalESF"></button>
                 </div>
                 <div class="modal-body">
-                    <EditForm Model="editingUBS" OnValidSubmit="SaveUBS">
+                    <EditForm Model="editingESF" OnValidSubmit="SaveESF">
                         <DataAnnotationsValidator />
                         <ValidationSummary class="alert alert-danger" />
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Código *</label>
-                                <InputText class="form-control" @bind-Value="editingUBS!.Codigo" />
+                                <InputText class="form-control" @bind-Value="editingESF!.Codigo" />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Nome *</label>
-                                <InputText class="form-control" @bind-Value="editingUBS!.Nome" />
+                                <InputText class="form-control" @bind-Value="editingESF!.Nome" />
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Endereço *</label>
-                            <InputText class="form-control" @bind-Value="editingUBS!.Endereco" />
+                            <InputText class="form-control" @bind-Value="editingESF!.Endereco" />
                         </div>
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Telefone</label>
-                                <InputText class="form-control" @bind-Value="editingUBS!.Telefone" />
+                                <InputText class="form-control" @bind-Value="editingESF!.Telefone" />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Capacidade</label>
-                                <InputNumber class="form-control" @bind-Value="editingUBS!.CapacidadeAtendimento" />
+                                <InputNumber class="form-control" @bind-Value="editingESF!.CapacidadeAtendimento" />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Status</label>
-                                <InputSelect class="form-select" @bind-Value="editingUBS!.Status">
+                                <InputSelect class="form-select" @bind-Value="editingESF!.Status">
                                     <option value="ATIVA">Ativa</option>
                                     <option value="INATIVA">Inativa</option>
                                 </InputSelect>
@@ -122,7 +122,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">Coordenador</label>
-                            <InputSelect class="form-select" @bind-Value="editingUBS!.CoordenadorId">
+                            <InputSelect class="form-select" @bind-Value="editingESF!.CoordenadorId">
                                 <option value="">Selecione...</option>
                                 @if (coordenadores != null)
                                 {
@@ -135,7 +135,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @onclick="CloseModalUBS">Cancelar</button>
+                            <button type="button" class="btn btn-secondary" @onclick="CloseModalESF">Cancelar</button>
                             <button type="submit" class="btn btn-primary">💾 Salvar</button>
                         </div>
                     </EditForm>
@@ -151,7 +151,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">👥 Funcionários - @selectedUBS?.Nome</h5>
+                    <h5 class="modal-title">👥 Funcionários - @selectedESF?.Nome</h5>
                     <button type="button" class="btn-close" @onclick="CloseModalFuncionarios"></button>
                 </div>
                 <div class="modal-body">
@@ -263,13 +263,13 @@
 }
 
 @code {
-    private List<UBS>? ubsList;
+    private List<ESF>? esfList;
     private List<Usuario>? coordenadores;
-    private UBS? editingUBS;
-    private bool showModalUBS = false;
+    private ESF? editingESF;
+    private bool showModalESF = false;
 
     private bool showModalFuncionarios = false;
-    private UBS? selectedUBS;
+    private ESF? selectedESF;
     private List<Funcionario>? funcionariosList;
 
     private bool showModalEditFuncionario = false;
@@ -282,45 +282,45 @@
 
     private async Task LoadData()
     {
-        ubsList = await UBSService.GetAllUBSAsync();
-        coordenadores = await UBSService.GetCoordenadoresDisponiveisAsync();
+        esfList = await ESFService.GetAllESFAsync();
+        coordenadores = await ESFService.GetCoordenadoresDisponiveisAsync();
     }
 
-    private void ShowModalUBS(UBS? ubs = null)
+    private void ShowModalESF(ESF? esf = null)
     {
-        editingUBS = ubs ?? new UBS
+        editingESF = esf ?? new ESF
         {
             Id = Guid.NewGuid().ToString(),
             Status = "ATIVA",
             CapacidadeAtendimento = 100,
             CreatedAt = DateTime.UtcNow
         };
-        showModalUBS = true;
+        showModalESF = true;
     }
 
-    private void CloseModalUBS()
+    private void CloseModalESF()
     {
-        showModalUBS = false;
-        editingUBS = null;
+        showModalESF = false;
+        editingESF = null;
     }
 
-    private async Task SaveUBS()
+    private async Task SaveESF()
     {
-        if (editingUBS == null) return;
+        if (editingESF == null) return;
 
         try
         {
-            if (ubsList?.Any(u => u.Id == editingUBS.Id) == true)
+            if (esfList?.Any(u => u.Id == editingESF.Id) == true)
             {
-                await UBSService.UpdateUBSAsync(editingUBS);
+                await ESFService.UpdateESFAsync(editingESF);
             }
             else
             {
-                await UBSService.CreateUBSAsync(editingUBS);
+                await ESFService.CreateESFAsync(editingESF);
             }
 
             await LoadData();
-            CloseModalUBS();
+            CloseModalESF();
         }
         catch (Exception ex)
         {
@@ -328,14 +328,14 @@
         }
     }
 
-    private async Task DeleteUBS(string id)
+    private async Task DeleteESF(string id)
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Deseja realmente excluir esta UBS?");
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Deseja realmente excluir esta ESF?");
         if (confirmed)
         {
             try
             {
-                await UBSService.DeleteUBSAsync(id);
+                await ESFService.DeleteESFAsync(id);
                 await LoadData();
             }
             catch (Exception ex)
@@ -351,17 +351,17 @@
         }
     }
 
-    private async Task ShowModalFuncionarios(UBS ubs)
+    private async Task ShowModalFuncionarios(ESF esf)
     {
-        selectedUBS = ubs;
-        funcionariosList = await FuncionarioService.GetByUbsIdAsync(ubs.Id);
+        selectedESF = esf;
+        funcionariosList = await FuncionarioService.GetByEsfIdAsync(esf.Id);
         showModalFuncionarios = true;
     }
 
     private void CloseModalFuncionarios()
     {
         showModalFuncionarios = false;
-        selectedUBS = null;
+        selectedESF = null;
         funcionariosList = null;
     }
 
@@ -370,7 +370,7 @@
         editingFuncionario = funcionario ?? new Funcionario
         {
             Id = Guid.NewGuid().ToString(),
-            UbsId = selectedUBS!.Id,
+            EsfId = selectedESF!.Id,
             CreatedAt = DateTime.UtcNow
         };
         showModalEditFuncionario = true;
@@ -397,7 +397,7 @@
                 await FuncionarioService.CreateAsync(editingFuncionario);
             }
 
-            funcionariosList = await FuncionarioService.GetByUbsIdAsync(selectedUBS!.Id);
+            funcionariosList = await FuncionarioService.GetByEsfIdAsync(selectedESF!.Id);
             CloseModalEditFuncionario();
         }
         catch (Exception ex)
@@ -420,7 +420,7 @@
             try
             {
                 await FuncionarioService.DeleteAsync(id);
-                funcionariosList = await FuncionarioService.GetByUbsIdAsync(selectedUBS!.Id);
+                funcionariosList = await FuncionarioService.GetByEsfIdAsync(selectedESF!.Id);
             }
             catch (Exception ex)
             {

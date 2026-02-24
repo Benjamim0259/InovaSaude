@@ -34,7 +34,7 @@
    <thead class="table-light">
       <tr>
      <th>Número</th>
-<th>UBS Solicitante</th>
+<th>ESF Solicitante</th>
     <th>Data Pedido</th>
            <th>Prioridade</th>
    <th>Itens</th>
@@ -46,7 +46,7 @@
    {
          <tr>
        <td><strong>@pedido.NumeroPedido</strong></td>
-      <td>@pedido.UbsSolicitante?.Nome</td>
+      <td>@pedido.EsfSolicitante?.Nome</td>
            <td>@pedido.DataPedido.ToString("dd/MM/yyyy HH:mm")</td>
    <td>
     <span class="badge @GetPrioridadeClass(pedido.Prioridade)">
@@ -93,7 +93,7 @@ else
   {
      <div class="row mb-3">
  <div class="col-md-6">
-         <p><strong>UBS Solicitante:</strong> @pedidoSelecionado.UbsSolicitante?.Nome</p>
+         <p><strong>ESF Solicitante:</strong> @pedidoSelecionado.EsfSolicitante?.Nome</p>
      <p><strong>Data do Pedido:</strong> @pedidoSelecionado.DataPedido.ToString("dd/MM/yyyy HH:mm")</p>
 </div>
   <div class="col-md-6">

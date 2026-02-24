@@ -4,7 +4,7 @@
 @using System.Globalization
 @inject DespesaService DespesaService
 @inject FuncionarioService FuncionarioService
-@inject UBSService UBSService
+@inject ESFService ESFService
 @inject CategoriaService CategoriaService
 @inject IJSRuntime JSRuntime
 @attribute [Authorize]
@@ -54,9 +54,9 @@
                 }
                 <div class="col-md-3">
                     <label class="form-label">UBS</label>
-                    <select class="form-select" @bind="ubsIdFiltro" @bind:after="CarregarDados">
+                    <select class="form-select" @bind="EsfIdFiltro" @bind:after="CarregarDados">
                         <option value="">Todas</option>
-                        @foreach (var ubs in ubsList)
+                        @foreach (var ubs in esfList)
                         {
                             <option value="@ubs.Id">@ubs.Nome</option>
                         }
@@ -77,7 +77,7 @@
     {
         <!-- DASHBOARD EXECUTIVO -->
         <div class="row mb-4">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="card border-primary">
                     <div class="card-body text-center">
                         <h6 class="text-muted mb-2">💰 Total Despesas</h6>
@@ -86,25 +86,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="card border-success">
                     <div class="card-body text-center">
-                        <h6 class="text-muted mb-2">✅ Aprovadas</h6>
-                        <h3 class="text-success mb-0">@totalAprovadas.ToString("C", new CultureInfo("pt-BR"))</h3>
-                        <small class="text-muted">@quantidadeAprovadas despesas</small>
+                        <h6 class="text-muted mb-2">📊 Média por Despesa</h6>
+                        <h3 class="text-success mb-0">@((quantidadeDespesas > 0 ? totalDespesas / quantidadeDespesas : 0).ToString("C", new CultureInfo("pt-BR")))</h3>
+                        <small class="text-muted">Valor médio</small>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="card border-warning">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted mb-2">⏳ Pendentes</h6>
-                        <h3 class="text-warning mb-0">@totalPendentes.ToString("C", new CultureInfo("pt-BR"))</h3>
-                        <small class="text-muted">@quantidadePendentes despesas</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="card border-info">
                     <div class="card-body text-center">
                         <h6 class="text-muted mb-2">👥 Total Salários</h6>
@@ -174,12 +165,12 @@
                     <div class="card-header bg-info text-white">
                         <h5 class="mb-0">🏥 Ranking UBS - Despesas</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-0">
                         @if (despesasPorUBS.Any())
                         {
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
+                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                <table class="table table-hover mb-0">
+                                    <thead class="sticky-top bg-white">
                                         <tr>
                                             <th>#</th>
                                             <th>UBS</th>
@@ -210,7 +201,7 @@
                         }
                         else
                         {
-                            <p class="text-muted">Nenhuma despesa no período.</p>
+                            <p class="text-muted p-3">Nenhuma despesa no período.</p>
                         }
                     </div>
                 </div>
@@ -221,12 +212,12 @@
                     <div class="card-header bg-success text-white">
                         <h5 class="mb-0">👥 Ranking UBS - Salários</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-0">
                         @if (salariosPorUBS.Any())
                         {
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
+                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                <table class="table table-hover mb-0">
+                                    <thead class="sticky-top bg-white">
                                         <tr>
                                             <th>#</th>
                                             <th>UBS</th>
@@ -252,17 +243,102 @@
                         }
                         else
                         {
-                            <p class="text-muted">Nenhum funcionário cadastrado.</p>
+                            <p class="text-muted p-3">Nenhum funcionário cadastrado.</p>
                         }
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Gráfico de Linha por Categoria -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">📈 Evolução Mensal por Categoria</h5>
+                    <select class="form-select w-auto" @bind="categoriaFiltroGrafico" @bind:after="AtualizarGraficoLinha">
+                        <option value="">Todas as Categorias</option>
+                        <option value="SALARIOS">💰 Salários</option>
+                        @foreach (var cat in categorias)
+                        {
+                            <option value="@cat.Id">@cat.Nome</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                @if (evolucaoMensalPorCategoria.Any())
+                {
+                    <div class="chart-container" style="position: relative; height: 300px;">
+                        <svg width="100%" height="300" style="overflow: visible;">
+                            <!-- Eixo Y -->
+                            <line x1="50" y1="20" x2="50" y2="280" stroke="#ccc" stroke-width="2"/>
+                            <!-- Eixo X -->
+                            <line x1="50" y1="280" x2="95%" y2="280" stroke="#ccc" stroke-width="2"/>
+
+                            @{
+                                var maxValorGrafico = evolucaoMensalPorCategoria.Any() ? evolucaoMensalPorCategoria.Max(e => e.Total) : 1;
+                                var totalPontos = evolucaoMensalPorCategoria.Count;
+                                var larguraTotal = 90; // porcentagem
+                                var espacoEntrePontos = totalPontos > 1 ? larguraTotal / (totalPontos - 1) : 0;
+
+                                var pontos = new List<string>();
+                                for (int i = 0; i < evolucaoMensalPorCategoria.Count; i++)
+                                {
+                                    var item = evolucaoMensalPorCategoria[i];
+                                    var x = 50 + (espacoEntrePontos * i * 10); // ajuste de escala
+                                    var y = 280 - ((item.Total / maxValorGrafico) * 240);
+                                    pontos.Add($"{x},{y}");
+                                }
+                                var pathPoints = string.Join(" ", pontos);
+                            }
+
+                            <!-- Linha do gráfico -->
+                            @if (pontos.Count > 1)
+                            {
+                                <polyline points="@pathPoints" 
+                                         fill="none" 
+                                         stroke="#0d6efd" 
+                                         stroke-width="3"/>
+                            }
+
+                            <!-- Pontos e labels -->
+                            @for (int i = 0; i < evolucaoMensalPorCategoria.Count; i++)
+                            {
+                                var item = evolucaoMensalPorCategoria[i];
+                                var x = 50 + (espacoEntrePontos * i * 10);
+                                var y = 280 - ((item.Total / maxValorGrafico) * 240);
+
+                                <circle cx="@x" cy="@y" r="5" fill="#0d6efd"/>
+                                <g>
+                                    <text x="@x" y="295" text-anchor="middle" font-size="10" fill="#666">@item.MesNome</text>
+                                    <text x="@x" y="@(y - 10)" text-anchor="middle" font-size="10" fill="#0d6efd" font-weight="bold">@item.Total.ToString("C0", new CultureInfo("pt-BR"))</text>
+                                </g>
+                            }
+
+                            <!-- Labels do eixo Y -->
+                            @for (int i = 0; i <= 4; i++)
+                            {
+                                var valor = (maxValorGrafico / 4) * i;
+                                var yPos = 280 - (i * 60);
+                                <g>
+                                    <text x="45" y="@yPos" text-anchor="end" font-size="10" fill="#666">@valor.ToString("C0", new CultureInfo("pt-BR"))</text>
+                                </g>
+                                <line x1="48" y1="@yPos" x2="52" y2="@yPos" stroke="#ccc" stroke-width="1"/>
+                            }
+                        </svg>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center py-4">Nenhum dado disponível para a categoria selecionada.</p>
+                }
+            </div>
+        </div>
+
         <!-- Evolução Mensal -->
         <div class="card mb-4">
             <div class="card-header bg-warning text-dark">
-                <h5 class="mb-0">📈 Evolução Mensal de Gastos</h5>
+                <h5 class="mb-0">📊 Evolução Mensal de Gastos (Geral)</h5>
             </div>
             <div class="card-body">
                 @if (evolucaoMensal.Any())
@@ -350,7 +426,6 @@
                                             <th>Descrição</th>
                                             <th>UBS</th>
                                             <th class="text-end">Valor</th>
-                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -359,9 +434,8 @@
                                             <tr>
                                                 <td>@desp.CreatedAt.ToString("dd/MM/yy")</td>
                                                 <td>@desp.Descricao</td>
-                                                <td>@desp.Ubs?.Nome</td>
+                                                <td>@desp.Esf?.Nome</td>
                                                 <td class="text-end">@desp.Valor.ToString("C", new CultureInfo("pt-BR"))</td>
-                                                <td><span class="badge @GetStatusBadge(desp.Status)">@desp.Status</span></td>
                                             </tr>
                                         }
                                     </tbody>
@@ -391,7 +465,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var ubs in ubsList)
+                            @foreach (var ubs in esfList)
                             {
                                 var despUbs = despesasPorUBS.FirstOrDefault(d => d.UbsNome == ubs.Nome);
                                 var salUbs = salariosPorUBS.FirstOrDefault(s => s.UbsNome == ubs.Nome);
@@ -424,7 +498,7 @@
 
 @code {
     private List<Despesa> todasDespesas = new();
-    private List<UBS> ubsList = new();
+    private List<ESF> esfList = new();
     private List<Categoria> categorias = new();
     private List<Funcionario> todosFuncionarios = new();
 
@@ -432,15 +506,11 @@
     private string periodoSelecionado = "mes";
     private DateTime dataInicio = DateTime.UtcNow.AddMonths(-1);
     private DateTime dataFim = DateTime.UtcNow;
-    private string ubsIdFiltro = "";
+    private string EsfIdFiltro = "";
 
     // Métricas
     private decimal totalDespesas = 0;
     private int quantidadeDespesas = 0;
-    private decimal totalAprovadas = 0;
-    private int quantidadeAprovadas = 0;
-    private decimal totalPendentes = 0;
-    private int quantidadePendentes = 0;
     private decimal totalSalarios = 0;
     private int quantidadeFuncionarios = 0;
 
@@ -448,7 +518,9 @@
     private List<DespesaPorUBS> despesasPorUBS = new();
     private List<SalarioPorUBS> salariosPorUBS = new();
     private List<EvolucaoMensal> evolucaoMensal = new();
+    private List<EvolucaoMensal> evolucaoMensalPorCategoria = new();
     private List<AlertaOrcamento> alertasOrcamento = new();
+    private string categoriaFiltroGrafico = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -490,19 +562,19 @@
             }
 
             // Carregar dados
-            ubsList = await UBSService.GetAllUBSAsync() ?? new List<UBS>();
+            esfList = await ESFService.GetAllESFAsync() ?? new List<ESF>();
             categorias = await CategoriaService.GetAllCategoriasAsync() ?? new List<Categoria>();
 
             todasDespesas = await DespesaService.GetDespesasByPeriodoAsync(dataInicio, dataFim) ?? new List<Despesa>();
-            if (!string.IsNullOrEmpty(ubsIdFiltro))
+            if (!string.IsNullOrEmpty(EsfIdFiltro))
             {
-                todasDespesas = todasDespesas.Where(d => d.UbsId == ubsIdFiltro).ToList();
+                todasDespesas = todasDespesas.Where(d => d.EsfId == EsfIdFiltro).ToList();
             }
 
             todosFuncionarios = await FuncionarioService.GetAllAsync() ?? new List<Funcionario>();
-            if (!string.IsNullOrEmpty(ubsIdFiltro))
+            if (!string.IsNullOrEmpty(EsfIdFiltro))
             {
-                todosFuncionarios = todosFuncionarios.Where(f => f.UbsId == ubsIdFiltro).ToList();
+                todosFuncionarios = todosFuncionarios.Where(f => f.EsfId == EsfIdFiltro).ToList();
             }
 
             CalcularMetricas();
@@ -522,13 +594,7 @@
         // Totais gerais
         totalDespesas = todasDespesas.Sum(d => d.Valor);
         quantidadeDespesas = todasDespesas.Count;
-        
-        totalAprovadas = todasDespesas.Where(d => d.Status == "APROVADA" || d.Status == "PAGA").Sum(d => d.Valor);
-        quantidadeAprovadas = todasDespesas.Count(d => d.Status == "APROVADA" || d.Status == "PAGA");
-        
-        totalPendentes = todasDespesas.Where(d => d.Status == "PENDENTE").Sum(d => d.Valor);
-        quantidadePendentes = todasDespesas.Count(d => d.Status == "PENDENTE");
-        
+
         totalSalarios = todosFuncionarios.Sum(f => f.Salario);
         quantidadeFuncionarios = todosFuncionarios.Count;
 
@@ -545,7 +611,7 @@
 
         // Despesas por UBS
         despesasPorUBS = todasDespesas
-            .GroupBy(d => d.Ubs?.Nome ?? "Sem UBS")
+            .GroupBy(d => d.Esf?.Nome ?? "Sem ESF")
             .Select(g => new DespesaPorUBS
             {
                 UbsNome = g.Key,
@@ -556,7 +622,7 @@
 
         // Salários por UBS
         salariosPorUBS = todosFuncionarios
-            .GroupBy(f => f.Ubs?.Nome ?? "Sem UBS")
+            .GroupBy(f => f.Esf?.Nome ?? "Sem ESF")
             .Select(g => new SalarioPorUBS
             {
                 UbsNome = g.Key,
@@ -578,6 +644,9 @@
             })
             .OrderBy(e => e.Ano).ThenBy(e => e.Mes)
             .ToList();
+
+        // Evolução mensal inicial (todas categorias)
+        evolucaoMensalPorCategoria = evolucaoMensal;
 
         // Alertas de orçamento ultrapassado
         alertasOrcamento = despesasPorCategoria
@@ -602,6 +671,48 @@
             .ToList();
     }
 
+    private void AtualizarGraficoLinha()
+    {
+        if (string.IsNullOrEmpty(categoriaFiltroGrafico))
+        {
+            // Todas as categorias
+            evolucaoMensalPorCategoria = evolucaoMensal;
+        }
+        else if (categoriaFiltroGrafico == "SALARIOS")
+        {
+            // Mostrar evolução de salários por mês
+            evolucaoMensalPorCategoria = todosFuncionarios
+                .GroupBy(f => new { f.CreatedAt.Year, f.CreatedAt.Month })
+                .Select(g => new EvolucaoMensal
+                {
+                    Ano = g.Key.Year,
+                    Mes = g.Key.Month,
+                    MesNome = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMM/yy", new CultureInfo("pt-BR")),
+                    Total = g.Sum(f => f.Salario),
+                    Quantidade = g.Count()
+                })
+                .OrderBy(e => e.Ano).ThenBy(e => e.Mes)
+                .ToList();
+        }
+        else
+        {
+            // Categoria específica de despesa
+            evolucaoMensalPorCategoria = todasDespesas
+                .Where(d => d.CategoriaId == categoriaFiltroGrafico)
+                .GroupBy(d => new { d.CreatedAt.Year, d.CreatedAt.Month })
+                .Select(g => new EvolucaoMensal
+                {
+                    Ano = g.Key.Year,
+                    Mes = g.Key.Month,
+                    MesNome = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMM/yy", new CultureInfo("pt-BR")),
+                    Total = g.Sum(d => d.Valor),
+                    Quantidade = g.Count()
+                })
+                .OrderBy(e => e.Ano).ThenBy(e => e.Mes)
+                .ToList();
+        }
+    }
+
     private string GetCategoriaColor(string categoria) => categoria switch
     {
         "Medicamentos" => "bg-danger",
@@ -611,15 +722,6 @@
         "Infraestrutura" => "bg-secondary",
         "Serviços" => "bg-info",
         _ => "bg-dark"
-    };
-
-    private string GetStatusBadge(string status) => status switch
-    {
-        "PENDENTE" => "bg-warning",
-        "APROVADA" => "bg-success",
-        "REJEITADA" => "bg-danger",
-        "PAGA" => "bg-info",
-        _ => "bg-secondary"
     };
 
     private async Task ExportarExcel()
@@ -671,3 +773,4 @@
         public decimal PercentualExcedido { get; set; }
     }
 }
+

@@ -21,7 +21,7 @@
         <!-- Cards de Resumo -->
   <div class="row g-3 mb-4">
    <!-- Total Geral -->
-     <div class="col-md-3">
+     <div class="col-md-4">
          <div class="card border-0 shadow-sm h-100 card-hover">
      <div class="card-body">
 <div class="d-flex justify-content-between align-items-start">
@@ -38,106 +38,55 @@
     </div>
    </div>
 
- <!-- Pendentes -->
-   <div class="col-md-3">
+ <!-- Média por Despesa -->
+   <div class="col-md-4">
     <div class="card border-0 shadow-sm h-100 card-hover">
    <div class="card-body">
         <div class="d-flex justify-content-between align-items-start">
   <div>
-        <h6 class="text-muted mb-2">⏳ Pendentes</h6>
-    <h3 class="mb-0 fw-bold text-warning">@FormatarMoeda(dados?.TotalPendente ?? 0)</h3>
-            <small class="text-muted">@((dados?.TotalPendentes ?? 0)) aguardando</small>
+        <h6 class="text-muted mb-2">📊 Média por Despesa</h6>
+    <h3 class="mb-0 fw-bold text-info">@FormatarMoeda((dados?.TotalDespesas ?? 0) > 0 ? (dados?.TotalGeral ?? 0) / (dados?.TotalDespesas ?? 1) : 0)</h3>
+            <small class="text-muted">valor médio</small>
   </div>
-     <div class="icon-circle bg-warning-subtle">
-      <span class="fs-3">⏰</span>
+     <div class="icon-circle bg-info-subtle">
+      <span class="fs-3">📈</span>
 </div>
             </div>
         </div>
   </div>
         </div>
 
- <!-- Aprovadas -->
-<div class="col-md-3">
+        <!-- Total de Categorias -->
+<div class="col-md-4">
          <div class="card border-0 shadow-sm h-100 card-hover">
     <div class="card-body">
    <div class="d-flex justify-content-between align-items-start">
    <div>
-          <h6 class="text-muted mb-2">✅ Aprovadas</h6>
-      <h3 class="mb-0 fw-bold text-success">@FormatarMoeda(dados?.TotalAprovado ?? 0)</h3>
-     <small class="text-muted">@((dados?.TotalAprovadas ?? 0)) aprovadas</small>
+          <h6 class="text-muted mb-2">📁 Categorias</h6>
+      <h3 class="mb-0 fw-bold text-warning">@((dados?.DespesasPorCategoria?.Count ?? 0))</h3>
+     <small class="text-muted">categorias ativas</small>
    </div>
-         <div class="icon-circle bg-success-subtle">
-        <span class="fs-3">✔️</span>
+         <div class="icon-circle bg-warning-subtle">
+        <span class="fs-3">🗂️</span>
       </div>
  </div>
       </div>
         </div>
         </div>
-
-        <!-- Pagas -->
-   <div class="col-md-3">
-       <div class="card border-0 shadow-sm h-100 card-hover">
- <div class="card-body">
-      <div class="d-flex justify-content-between align-items-start">
-         <div>
-     <h6 class="text-muted mb-2">💳 Pagas</h6>
-    <h3 class="mb-0 fw-bold text-info">@FormatarMoeda(dados?.TotalPago ?? 0)</h3>
-     <small class="text-muted">@((dados?.TotalPagas ?? 0)) finalizadas</small>
-        </div>
-      <div class="icon-circle bg-info-subtle">
-       <span class="fs-3">💸</span>
-     </div>
- </div>
-   </div>
- </div>
-   </div>
         </div>
 
         <!-- Gráficos visuais CSS -->
         <div class="row g-3 mb-4">
-  <div class="col-md-6">
+  <div class="col-md-12">
         <div class="card border-0 shadow-sm h-100">
  <div class="card-header bg-white">
-    <h5 class="mb-0">📊 Despesas por Status</h5>
+    <h5 class="mb-0">📈 Top 10 Categorias</h5>
     </div>
 <div class="card-body">
-     @if (dados?.DespesasPorStatus != null && dados.DespesasPorStatus.Any())
+     @if (dados?.DespesasPorCategoria != null && dados.DespesasPorCategoria.Any())
       {
-     @foreach (var item in dados.DespesasPorStatus)
-     {
-       var percentage = dados.TotalGeral > 0 ? (item.Total / dados.TotalGeral * 100) : 0;
-     <div class="mb-3">
-         <div class="d-flex justify-content-between mb-1">
-   <span class="fw-semibold">@item.Status</span>
-           <span class="text-muted">@FormatarMoeda(item.Total) (@percentage.ToString("F1")%)</span>
-     </div>
-      <div class="progress" style="height: 25px;">
-     <div class="progress-bar @GetStatusColor(item.Status)" 
-    style="width: @percentage%">
-   <span class="px-2">@item.Quantidade</span>
-    </div>
-      </div>
-        </div>
-    }
-  }
-       else
- {
-       <p class="text-muted text-center py-4">Nenhum dado disponível</p>
-  }
-    </div>
-       </div>
-        </div>
-
-            <div class="col-md-6">
-     <div class="card border-0 shadow-sm h-100">
-    <div class="card-header bg-white">
-        <h5 class="mb-0">📈 Top 5 Categorias</h5>
-     </div>
-     <div class="card-body">
-         @if (dados?.DespesasPorCategoria != null && dados.DespesasPorCategoria.Any())
-    {
        var maxValue = dados.DespesasPorCategoria.Max(c => c.Total);
-    @foreach (var item in dados.DespesasPorCategoria.Take(5))
+    @foreach (var item in dados.DespesasPorCategoria.Take(10))
    {
    var percentage = maxValue > 0 ? (item.Total / maxValue * 100) : 0;
    <div class="mb-3">
@@ -258,14 +207,4 @@ carregando = true;
   {
   return valor.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
     }
-
-    private string GetStatusColor(string status) => status switch
-    {
- "PENDENTE" => "bg-warning",
-  "APROVADA" => "bg-success",
-     "PAGA" => "bg-info",
-     "REJEITADA" => "bg-danger",
-  "CANCELADA" => "bg-secondary",
-        _ => "bg-primary"
-    };
 }

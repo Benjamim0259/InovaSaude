@@ -3,7 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InovaSaude.Blazor.Models;
 
-public class UBS
+/// <summary>
+/// ESF - Estratégia Saúde da Família
+/// </summary>
+public class ESF
 {
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();

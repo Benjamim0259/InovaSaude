@@ -23,12 +23,12 @@ IHttpClientFactory httpClientFactory,
     public async Task<bool> SincronizarAtendimentosAsync(
 DateTime dataInicio,
     DateTime dataFim,
-        string? ubsId = null,
+        string? EsfId = null,
         string? usuarioId = null)
     {
         try
         {
-     var config = await ObterConfiguracaoAsync(ubsId);
+     var config = await ObterConfiguracaoAsync(EsfId);
      if (config == null)
    {
           _logger.LogWarning("Configuração do e-SUS PEC não encontrada");
@@ -87,7 +87,7 @@ if (response == null || !response.IsSuccessStatusCode)
            ProcedimentosJson = System.Text.Json.JsonSerializer.Serialize(atend.Procedimentos),
     Cid10 = string.Join(", ", atend.Cid10 ?? new List<string>()),
        CnsProfissional = atend.CnsProfissional,
-           UbsId = ubsId
+           EsfId = EsfId
       };
            _context.Set<EsusPecAtendimento>().Add(novoAtend);
       }
@@ -110,14 +110,14 @@ if (response == null || !response.IsSuccessStatusCode)
 public async Task<List<EsusPecAtendimento>> ObterAtendimentosPorPeriodoAsync(
         DateTime dataInicio,
         DateTime dataFim,
-        string? ubsId = null)
+        string? EsfId = null)
     {
 var query = _context.Set<EsusPecAtendimento>()
      .Where(a => a.DataAtendimento >= dataInicio && a.DataAtendimento <= dataFim);
 
-        if (!string.IsNullOrEmpty(ubsId))
+        if (!string.IsNullOrEmpty(EsfId))
       {
-            query = query.Where(a => a.UbsId == ubsId);
+            query = query.Where(a => a.EsfId == EsfId);
         }
 
   return await query.OrderByDescending(a => a.DataAtendimento).ToListAsync();
@@ -129,14 +129,14 @@ var query = _context.Set<EsusPecAtendimento>()
     public async Task<EsusPecEstatisticasDto> ObterEstatisticasAsync(
    DateTime dataInicio,
   DateTime dataFim,
-        string? ubsId = null)
+        string? EsfId = null)
     {
         var query = _context.Set<EsusPecAtendimento>()
    .Where(a => a.DataAtendimento >= dataInicio && a.DataAtendimento <= dataFim);
 
- if (!string.IsNullOrEmpty(ubsId))
+ if (!string.IsNullOrEmpty(EsfId))
       {
-     query = query.Where(a => a.UbsId == ubsId);
+     query = query.Where(a => a.EsfId == EsfId);
   }
 
         var atendimentos = await query.ToListAsync();
@@ -175,12 +175,12 @@ public class NemesisIntegrationService : ApiExternaServiceBase
  /// </summary>
  public async Task<bool> SincronizarIndicadoresAsync(
         string periodoReferencia, // Ex: "2025-01"
-    string? ubsId = null,
+    string? EsfId = null,
         string? usuarioId = null)
   {
         try
         {
-   var config = await ObterConfiguracaoAsync(ubsId);
+   var config = await ObterConfiguracaoAsync(EsfId);
             if (config == null)
    {
   _logger.LogWarning("Configuração do NEMESIS não encontrada");
@@ -214,7 +214,7 @@ foreach (var ind in indicadores)
      var existente = await _context.Set<NemesisIndicador>()
      .FirstOrDefaultAsync(i => i.CodigoIndicador == ind.Codigo && 
     i.PeriodoReferencia == periodoReferencia &&
-        i.UbsId == ubsId);
+        i.EsfId == EsfId);
 
        if (existente != null)
          {
@@ -242,7 +242,7 @@ foreach (var ind in indicadores)
       PercentualAlcance = ind.Meta.HasValue && ind.ValorNumerico.HasValue
         ? (ind.ValorNumerico.Value / ind.Meta.Value) * 100
     : null,
-            UbsId = ubsId
+            EsfId = EsfId
      };
        _context.Set<NemesisIndicador>().Add(novoInd);
       }
@@ -264,14 +264,14 @@ _logger.LogInformation($"Sincronizados {indicadores.Count} indicadores do NEMESI
     /// </summary>
     public async Task<List<NemesisIndicador>> ObterIndicadoresPorPeriodoAsync(
   string periodoReferencia,
-   string? ubsId = null)
+   string? EsfId = null)
   {
         var query = _context.Set<NemesisIndicador>()
             .Where(i => i.PeriodoReferencia == periodoReferencia);
 
-        if (!string.IsNullOrEmpty(ubsId))
+        if (!string.IsNullOrEmpty(EsfId))
 {
-   query = query.Where(i => i.UbsId == ubsId);
+   query = query.Where(i => i.EsfId == EsfId);
      }
 
         return await query.OrderBy(i => i.Nome).ToListAsync();
@@ -282,7 +282,7 @@ _logger.LogInformation($"Sincronizados {indicadores.Count} indicadores do NEMESI
     /// </summary>
     public async Task<List<NemesisIndicador>> ObterIndicadoresForaDaMetaAsync(
      string periodoReferencia,
-    string? ubsId = null)
+    string? EsfId = null)
     {
     var query = _context.Set<NemesisIndicador>()
             .Where(i => i.PeriodoReferencia == periodoReferencia &&
@@ -290,9 +290,9 @@ _logger.LogInformation($"Sincronizados {indicadores.Count} indicadores do NEMESI
     i.ValorNumerico.HasValue &&
      i.PercentualAlcance < 80); // Menos de 80% da meta
 
- if (!string.IsNullOrEmpty(ubsId))
+ if (!string.IsNullOrEmpty(EsfId))
      {
-          query = query.Where(i => i.UbsId == ubsId);
+          query = query.Where(i => i.EsfId == EsfId);
 }
 
         return await query.OrderBy(i => i.PercentualAlcance).ToListAsync();

@@ -3,7 +3,7 @@
 @using InovaSaude.Blazor.Models
 @using System.Text
 @inject RelatorioService RelatorioService
-@inject UBSService UBSService
+@inject ESFService ESFService
 @inject IJSRuntime JS
 @attribute [Authorize]
 
@@ -26,26 +26,16 @@
                         <InputDate class="form-control" @bind-Value="filtro.DataFim" />
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label class="form-label">UBS</label>
-                        <InputSelect class="form-select" @bind-Value="filtro.UbsId">
+                        <label class="form-label">ESF</label>
+                        <InputSelect class="form-select" @bind-Value="filtro.EsfId">
                             <option value="">Todas</option>
-                            @if (ubsList != null)
+                            @if (esfList != null)
                             {
-                                @foreach (var ubs in ubsList)
+                                @foreach (var esf in esfList)
                                 {
-                                    <option value="@ubs.Id">@ubs.Nome</option>
+                                    <option value="@esf.Id">@esf.Nome</option>
                                 }
                             }
-                        </InputSelect>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">Status</label>
-                        <InputSelect class="form-select" @bind-Value="filtro.Status">
-                            <option value="">Todos</option>
-                            <option value="PENDENTE">Pendente</option>
-                            <option value="APROVADA">Aprovada</option>
-                            <option value="REJEITADA">Rejeitada</option>
-                            <option value="PAGA">Paga</option>
                         </InputSelect>
                     </div>
                 </div>
@@ -112,8 +102,8 @@
             <div class="col-md-3 mb-4">
                 <div class="card bg-info text-white">
                     <div class="card-body">
-                        <h6>UBS Envolvidas</h6>
-                        <h3>@(relatorio.DespesasPorUBS?.Count ?? 0)</h3>
+                        <h6>ESF Envolvidas</h6>
+                        <h3>@(relatorio.DespesasPorESF?.Count ?? 0)</h3>
                         <small>unidades</small>
                     </div>
                 </div>
@@ -189,26 +179,26 @@
             <div class="col-md-6 mb-4">
                 <div class="card">
                     <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">🏥 Despesas por UBS</h5>
+                        <h5 class="mb-0">🏥 Despesas por ESF</h5>
                     </div>
                     <div class="card-body">
-                        @if (relatorio.DespesasPorUBS?.Any() == true)
+                        @if (relatorio.DespesasPorESF?.Any() == true)
                         {
                             <div class="table-responsive">
                                 <table class="table table-sm">
                                     <thead>
                                         <tr>
-                                            <th>UBS</th>
+                                            <th>ESF</th>
                                             <th class="text-end">Valor</th>
                                             <th class="text-end">Qtd</th>
                                             <th class="text-end">%</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in relatorio.DespesasPorUBS.OrderByDescending(x => x.ValorTotal))
+                                        @foreach (var item in relatorio.DespesasPorESF.OrderByDescending(x => x.ValorTotal))
                                         {
                                             <tr>
-                                                <td>@item.UBS</td>
+                                                <td>@item.ESF</td>
                                                 <td class="text-end">@item.ValorTotal.ToString("C")</td>
                                                 <td class="text-end">@item.Quantidade</td>
                                                 <td class="text-end">@item.Percentual.ToString("F1")%</td>
@@ -220,11 +210,11 @@
 
                             @* Gráfico visual simples com barras CSS *@
                             <div class="mt-3">
-                                @foreach (var item in relatorio.DespesasPorUBS.OrderByDescending(x => x.ValorTotal).Take(5))
+                                @foreach (var item in relatorio.DespesasPorESF.OrderByDescending(x => x.ValorTotal).Take(5))
                                 {
                                     <div class="mb-2">
                                         <div class="d-flex justify-content-between">
-                                            <small><strong>@item.UBS</strong></small>
+                                            <small><strong>@item.ESF</strong></small>
                                             <small>@item.Percentual.ToString("F1")%</small>
                                         </div>
                                         <div class="progress">
@@ -254,11 +244,10 @@
                             <tr>
                                 <th>Data</th>
                                 <th>Descrição</th>
-                                <th>UBS</th>
+                                <th>ESF</th>
                                 <th>Categoria</th>
                                 <th>Fornecedor</th>
                                 <th class="text-end">Valor</th>
-                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -267,18 +256,10 @@
                                 <tr>
                                     <td>@despesa.CreatedAt.ToString("dd/MM/yyyy")</td>
                                     <td>@despesa.Descricao</td>
-                                    <td>@despesa.Ubs?.Nome</td>
+                                    <td>@despesa.Esf?.Nome</td>
                                     <td>@despesa.Categoria?.Nome</td>
                                     <td>@(despesa.Fornecedor?.NomeFantasia ?? despesa.Fornecedor?.RazaoSocial ?? "-")</td>
                                     <td class="text-end"><strong>@despesa.Valor.ToString("C")</strong></td>
-                                    <td>
-                                        <span class="badge 
-                                            @(despesa.Status == "APROVADA" ? "bg-success" : 
-                                              despesa.Status == "PAGA" ? "bg-info" : 
-                                              despesa.Status == "REJEITADA" ? "bg-danger" : "bg-warning")">
-                                            @despesa.Status
-                                        </span>
-                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -302,7 +283,7 @@
                 <div class="modal-body">
                     <div class="alert alert-info">
                         <strong>Formato suportado:</strong> CSV, Excel (.xlsx)<br/>
-                        <strong>Colunas esperadas:</strong> Data, Descrição, UBS, Categoria, Fornecedor, Valor, Status
+                        <strong>Colunas esperadas:</strong> Data, Descrição, ESF, Categoria, Fornecedor, Valor
                     </div>
                     
                     <div class="mb-3">
@@ -336,7 +317,7 @@
     };
 
     private RelatorioDespesas? relatorio;
-    private List<UBS>? ubsList;
+    private List<ESF>? esfList;
     private bool isLoading = false;
     private bool showImportModal = false;
     private string? importMessage;
@@ -345,7 +326,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ubsList = await UBSService.GetAllUBSAsync();
+        esfList = await ESFService.GetAllESFAsync();
     }
 
     private async Task GerarRelatorio()
@@ -356,9 +337,8 @@
             relatorio = await RelatorioService.GerarRelatorioDespesasAsync(
                 filtro.DataInicio,
                 filtro.DataFim,
-                filtro.UbsId,
-                filtro.CategoriaId,
-                filtro.Status
+                filtro.EsfId,
+                filtro.CategoriaId
             );
         }
         catch (Exception ex)
@@ -400,19 +380,18 @@
     private string GerarCSV()
     {
         var sb = new StringBuilder();
-        sb.AppendLine("Data,Descrição,UBS,Categoria,Fornecedor,Valor,Status");
-        
+        sb.AppendLine("Data,Descrição,ESF,Categoria,Fornecedor,Valor");
+
         foreach (var despesa in relatorio!.Despesas)
         {
             sb.AppendLine($"{despesa.CreatedAt:dd/MM/yyyy}," +
                          $"\"{despesa.Descricao}\"," +
-                         $"\"{despesa.Ubs?.Nome}\"," +
+                         $"\"{despesa.Esf?.Nome}\"," +
                          $"\"{despesa.Categoria?.Nome}\"," +
                          $"\"{despesa.Fornecedor?.NomeFantasia ?? despesa.Fornecedor?.RazaoSocial}\"," +
-                         $"{despesa.Valor}," +
-                         $"{despesa.Status}");
+                         $"{despesa.Valor}");
         }
-        
+
         return sb.ToString();
     }
 
@@ -447,8 +426,7 @@
     {
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
-        public string? UbsId { get; set; }
+        public string? EsfId { get; set; }
         public string? CategoriaId { get; set; }
-        public string? Status { get; set; }
     }
 }

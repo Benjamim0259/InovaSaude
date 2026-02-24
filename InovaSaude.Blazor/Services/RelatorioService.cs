@@ -16,26 +16,22 @@ public class RelatorioService
     public async Task<RelatorioDespesas> GerarRelatorioDespesasAsync(
         DateTime dataInicio,
         DateTime dataFim,
-        string? ubsId = null,
-        string? categoriaId = null,
-        string? status = null)
+        string? esfId = null,
+        string? categoriaId = null)
     {
         var query = _context.Despesas
             .Include(d => d.Categoria)
-            .Include(d => d.Ubs)
+            .Include(d => d.Esf)
             .Include(d => d.Fornecedor)
             .Include(d => d.UsuarioCriacao)
             .Where(d => d.CreatedAt >= dataInicio && d.CreatedAt <= dataFim)
             .AsQueryable();
 
-        if (!string.IsNullOrEmpty(ubsId))
-            query = query.Where(d => d.UbsId == ubsId);
+        if (!string.IsNullOrEmpty(esfId))
+            query = query.Where(d => d.EsfId == esfId);
 
         if (!string.IsNullOrEmpty(categoriaId))
             query = query.Where(d => d.CategoriaId == categoriaId);
-
-        if (!string.IsNullOrEmpty(status))
-            query = query.Where(d => d.Status == status);
 
         var despesas = await query.ToListAsync();
 
@@ -60,24 +56,12 @@ public class RelatorioService
             })
             .ToList();
 
-        // Agrupar por UBS
-        relatorio.DespesasPorUBS = despesas
-            .GroupBy(d => d.Ubs.Nome)
-            .Select(g => new RelatorioUBS
+        // Agrupar por ESF
+        relatorio.DespesasPorESF = despesas
+            .GroupBy(d => d.Esf.Nome)
+            .Select(g => new RelatorioESF
             {
-                UBS = g.Key,
-                ValorTotal = g.Sum(d => d.Valor),
-                Quantidade = g.Count(),
-                Percentual = 0 // Será calculado depois
-            })
-            .ToList();
-
-        // Agrupar por status
-        relatorio.DespesasPorStatus = despesas
-            .GroupBy(d => d.Status)
-            .Select(g => new RelatorioStatus
-            {
-                Status = g.Key,
+                ESF = g.Key,
                 ValorTotal = g.Sum(d => d.Valor),
                 Quantidade = g.Count(),
                 Percentual = 0 // Será calculado depois
@@ -92,14 +76,7 @@ public class RelatorioService
                 : 0;
         }
 
-        foreach (var item in relatorio.DespesasPorUBS)
-        {
-            item.Percentual = relatorio.TotalDespesas > 0
-                ? (item.ValorTotal / relatorio.TotalDespesas) * 100
-                : 0;
-        }
-
-        foreach (var item in relatorio.DespesasPorStatus)
+        foreach (var item in relatorio.DespesasPorESF)
         {
             item.Percentual = relatorio.TotalDespesas > 0
                 ? (item.ValorTotal / relatorio.TotalDespesas) * 100
@@ -109,36 +86,33 @@ public class RelatorioService
         return relatorio;
     }
 
-    public async Task<RelatorioUBSDetalhado> GerarRelatorioUBSAsync(string ubsId, DateTime dataInicio, DateTime dataFim)
+    public async Task<RelatorioESFDetalhado> GerarRelatorioESFAsync(string esfId, DateTime dataInicio, DateTime dataFim)
     {
-        var ubs = await _context.UBS
-            .Include(u => u.Coordenador)
-            .Include(u => u.Usuarios)
-            .FirstOrDefaultAsync(u => u.Id == ubsId);
+        var esf = await _context.ESF
+            .Include(e => e.Coordenador)
+            .Include(e => e.Usuarios)
+            .FirstOrDefaultAsync(e => e.Id == esfId);
 
-        if (ubs == null) throw new Exception("UBS não encontrada");
+        if (esf == null) throw new Exception("ESF não encontrada");
 
         var despesas = await _context.Despesas
             .Include(d => d.Categoria)
             .Include(d => d.Fornecedor)
             .Include(d => d.UsuarioCriacao)
-            .Where(d => d.UbsId == ubsId &&
+            .Where(d => d.EsfId == esfId &&
                        d.CreatedAt >= dataInicio &&
                        d.CreatedAt <= dataFim)
             .ToListAsync();
 
-        return new RelatorioUBSDetalhado
+        return new RelatorioESFDetalhado
         {
-            UBS = ubs,
+            ESF = esf,
             DataInicio = dataInicio,
             DataFim = dataFim,
             TotalDespesas = despesas.Sum(d => d.Valor),
             QuantidadeDespesas = despesas.Count,
-            DespesasAprovadas = despesas.Count(d => d.Status == "APROVADA"),
-            DespesasPendentes = despesas.Count(d => d.Status == "PENDENTE"),
-            DespesasRejeitadas = despesas.Count(d => d.Status == "REJEITADA"),
             Despesas = despesas,
-            TotalUsuarios = ubs.Usuarios.Count
+            TotalUsuarios = esf.Usuarios.Count
         };
     }
 
@@ -161,9 +135,7 @@ public class RelatorioService
                 Mes = mes,
                 NomeMes = new DateTime(ano, mes, 1).ToString("MMMM"),
                 TotalDespesas = despesas.Sum(d => d.Valor),
-                QuantidadeDespesas = despesas.Count,
-                DespesasAprovadas = despesas.Count(d => d.Status == "APROVADA"),
-                DespesasPendentes = despesas.Count(d => d.Status == "PENDENTE")
+                QuantidadeDespesas = despesas.Count
             });
         }
 
@@ -173,11 +145,11 @@ public class RelatorioService
     public async Task<byte[]> ExportarRelatorioExcelAsync(RelatorioDespesas relatorio)
     {
         // Implementação simplificada - em produção usaria ClosedXML ou similar
-        var csv = "Data,Descrição,Valor,Categoria,UBS,Status\n";
+        var csv = "Data,Descrição,Valor,Categoria,ESF\n";
 
         foreach (var despesa in relatorio.Despesas)
         {
-            csv += $"{despesa.CreatedAt:yyyy-MM-dd},{despesa.Descricao},{despesa.Valor},{despesa.Categoria.Nome},{despesa.Ubs.Nome},{despesa.Status}\n";
+            csv += $"{despesa.CreatedAt:yyyy-MM-dd},{despesa.Descricao},{despesa.Valor},{despesa.Categoria.Nome},{despesa.Esf.Nome}\n";
         }
 
         return System.Text.Encoding.UTF8.GetBytes(csv);
@@ -208,8 +180,7 @@ public class RelatorioDespesas
     public int QuantidadeDespesas { get; set; }
     public List<Despesa> Despesas { get; set; } = new();
     public List<RelatorioCategoria> DespesasPorCategoria { get; set; } = new();
-    public List<RelatorioUBS> DespesasPorUBS { get; set; } = new();
-    public List<RelatorioStatus> DespesasPorStatus { get; set; } = new();
+    public List<RelatorioESF> DespesasPorESF { get; set; } = new();
 }
 
 public class RelatorioCategoria
@@ -220,32 +191,21 @@ public class RelatorioCategoria
     public decimal Percentual { get; set; }
 }
 
-public class RelatorioUBS
+public class RelatorioESF
 {
-    public string UBS { get; set; } = string.Empty;
+    public string ESF { get; set; } = string.Empty;
     public decimal ValorTotal { get; set; }
     public int Quantidade { get; set; }
     public decimal Percentual { get; set; }
 }
 
-public class RelatorioStatus
+public class RelatorioESFDetalhado
 {
-    public string Status { get; set; } = string.Empty;
-    public decimal ValorTotal { get; set; }
-    public int Quantidade { get; set; }
-    public decimal Percentual { get; set; }
-}
-
-public class RelatorioUBSDetalhado
-{
-    public UBS UBS { get; set; } = null!;
+    public ESF ESF { get; set; } = null!;
     public DateTime DataInicio { get; set; }
     public DateTime DataFim { get; set; }
     public decimal TotalDespesas { get; set; }
     public int QuantidadeDespesas { get; set; }
-    public int DespesasAprovadas { get; set; }
-    public int DespesasPendentes { get; set; }
-    public int DespesasRejeitadas { get; set; }
     public List<Despesa> Despesas { get; set; } = new();
     public int TotalUsuarios { get; set; }
 }
@@ -257,6 +217,4 @@ public class RelatorioMensal
     public string NomeMes { get; set; } = string.Empty;
     public decimal TotalDespesas { get; set; }
     public int QuantidadeDespesas { get; set; }
-    public int DespesasAprovadas { get; set; }
-    public int DespesasPendentes { get; set; }
 }
