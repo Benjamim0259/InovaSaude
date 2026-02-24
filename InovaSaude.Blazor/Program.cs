@@ -246,6 +246,27 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Aplicar migrations automaticamente em produção
+if (app.Environment.IsProduction())
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        var logger = services.GetRequiredService<ILogger<Program>>();
+
+        logger.LogInformation("Aplicando migrations automaticamente...");
+        await context.Database.MigrateAsync();
+        logger.LogInformation("Migrations aplicadas com sucesso!");
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Erro ao aplicar migrations automaticamente.");
+    }
+}
+
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 // Map controller routes (AccountController)
