@@ -67,11 +67,11 @@ public static class SeedData
                 BEGIN
                     IF NOT EXISTS (
                         SELECT 1 FROM information_schema.table_constraints 
-                        WHERE constraint_name = 'FK_funcionarios_ubs_EsfId'
+                        WHERE constraint_name = 'FK_funcionarios_esf_EsfId'
                     ) THEN
                         ALTER TABLE funcionarios 
-                        ADD CONSTRAINT ""FK_funcionarios_ubs_EsfId"" 
-                        FOREIGN KEY (""EsfId"") REFERENCES ubs(""Id"") ON DELETE CASCADE;
+                        ADD CONSTRAINT ""FK_funcionarios_esf_EsfId"" 
+                        FOREIGN KEY (""EsfId"") REFERENCES esf(""Id"") ON DELETE CASCADE;
                     END IF;
                 END $$;
             ");
