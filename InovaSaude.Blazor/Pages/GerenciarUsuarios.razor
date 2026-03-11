@@ -2,12 +2,13 @@
 @using System.ComponentModel.DataAnnotations
 @using InovaSaude.Blazor.Models
 @using InovaSaude.Blazor.Services
+@using InovaSaude.Blazor.Helpers
 @inject UsuarioService UsuarioService
 @inject ESFService ESFService
 @inject NavigationManager Navigation
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
-<PageTitle>Gerenciar Usuários - InovaSaúde</PageTitle>
+<PageTitle>Gerenciar Usuarios - InovaSaude</PageTitle>
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -115,7 +116,7 @@
           <td>
      @if (usuario.UltimoAcesso.HasValue)
      {
-           <small>@usuario.UltimoAcesso.Value.ToString("dd/MM/yyyy HH:mm")</small>
+           <small>@usuario.UltimoAcesso.FormatarDataBR()</small>
        }
           else
      {

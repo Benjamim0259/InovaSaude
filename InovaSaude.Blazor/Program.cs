@@ -6,9 +6,16 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using InovaSaude.Blazor.Data;
 using InovaSaude.Blazor.Services;
 using System.Text;
+using System.Globalization;
+
+// Configurar Culture Info para pt-BR
+var culture = new CultureInfo("pt-BR");
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 // Configurar encoding UTF-8 globalmente
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+Console.OutputEncoding = Encoding.UTF8;
 
 // Configuração global do Npgsql para aceitar DateTime sem Kind
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

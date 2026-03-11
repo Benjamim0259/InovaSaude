@@ -1,6 +1,7 @@
 @page "/dashboard"
 @using InovaSaude.Blazor.Services
 @using InovaSaude.Blazor.Models
+@using InovaSaude.Blazor.Helpers
 @using System.Globalization
 @inject DashboardService DashboardService
 @inject DespesaService DespesaService
@@ -10,15 +11,15 @@
 @inject NavigationManager Navigation
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
-<PageTitle>Dashboard - InovaSaúde</PageTitle>
+<PageTitle>Dashboard - InovaSaude</PageTitle>
 
 <LoadingOverlay IsLoading="carregando" Message="Carregando dashboard..." />
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>📊 Dashboard - Resumo Geral</h2>
+        <h2><span class="oi oi-dashboard me-2"></span>Dashboard - Resumo Geral</h2>
         <div>
-            <span class="badge bg-primary">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+            <span class="badge bg-primary">@DateTimeHelper.NowBrasilia().ToString("dd/MM/yyyy HH:mm")</span>
         </div>
     </div>
 
@@ -28,7 +29,7 @@
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100 bg-danger text-white">
                 <div class="card-body text-center">
-                    <h1 class="display-4">💸</h1>
+                    <h1 class="display-4"><span class="oi oi-dollar"></span></h1>
                     <h3 class="mb-0">@totalDespesas.ToString("C", new CultureInfo("pt-BR"))</h3>
                     <p class="mb-0">Total Despesas</p>
                     <small>@quantidadeDespesas despesas</small>
@@ -36,14 +37,14 @@
             </div>
         </div>
 
-        <!-- Total Salários -->
+        <!-- Total Salarios -->
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100 bg-warning text-dark">
                 <div class="card-body text-center">
-                    <h1 class="display-4">👥</h1>
+                    <h1 class="display-4"><span class="oi oi-people"></span></h1>
                     <h3 class="mb-0">@totalSalarios.ToString("C", new CultureInfo("pt-BR"))</h3>
-                    <p class="mb-0">Total Salários</p>
-                    <small>@quantidadeFuncionarios funcionários</small>
+                    <p class="mb-0">Total Salarios</p>
+                    <small>@quantidadeFuncionarios funcionarios</small>
                 </div>
             </div>
         </div>
@@ -52,10 +53,10 @@
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100 bg-primary text-white">
                 <div class="card-body text-center">
-                    <h1 class="display-4">💰</h1>
+                    <h1 class="display-4"><span class="oi oi-bar-chart"></span></h1>
                     <h3 class="mb-0">@((totalDespesas + totalSalarios).ToString("C", new CultureInfo("pt-BR")))</h3>
                     <p class="mb-0">Total Geral</p>
-                    <small>Despesas + Salários</small>
+                    <small>Despesas + Salarios</small>
                 </div>
             </div>
         </div>
@@ -64,21 +65,21 @@
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100 bg-success text-white">
                 <div class="card-body text-center">
-                    <h1 class="display-4">🏥</h1>
+                    <h1 class="display-4"><span class="oi oi-medical-cross"></span></h1>
                     <h3 class="mb-0">@quantidadeESF</h3>
                     <p class="mb-0">ESF Cadastradas</p>
-                    <small>Estratégias Saúde da Família</small>
+                    <small>Estrategias Saude da Familia</small>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Gráficos e Rankings -->
+    <!-- Graficos e Rankings -->
     <div class="row g-3 mb-4">
         <div class="col-md-6">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">📊 Top 5 Categorias (Despesas)</h5>
+                    <h5 class="mb-0"><span class="oi oi-bar-chart me-2"></span>Top 5 Categorias (Despesas)</h5>
                 </div>
                 <div class="card-body">
                     @foreach (var cat in topCategorias)
@@ -103,7 +104,7 @@
         <div class="col-md-6">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">🏥 ESF por Despesas</h5>
+                    <h5 class="mb-0"><span class="oi oi-medical-cross me-2"></span>ESF por Despesas</h5>
                 </div>
                 <div class="card-body">
                     @foreach (var esf in esfPorDespesa)
@@ -126,37 +127,37 @@
         </div>
     </div>
 
-    <!-- Ações Rápidas -->
+    <!-- Acoes Rapidas -->
     <div class="row g-3">
         <div class="col-md-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">⚡ Ações Rápidas</h5>
+                    <h5 class="mb-0"><span class="oi oi-flash me-2"></span>Acoes Rapidas</h5>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-3">
                             <a href="/gerenciar-despesas" class="btn btn-outline-primary w-100 py-3">
-                                <h3>💸</h3>
+                                <h3><span class="oi oi-dollar"></span></h3>
                                 <div>Nova Despesa</div>
                             </a>
                         </div>
                         <div class="col-md-3">
                             <a href="/gerenciar-esf" class="btn btn-outline-success w-100 py-3">
-                                <h3>🏥</h3>
+                                <h3><span class="oi oi-medical-cross"></span></h3>
                                 <div>Gerenciar ESF</div>
                             </a>
                         </div>
                         <div class="col-md-3">
                             <a href="/relatorios-financeiros" class="btn btn-outline-info w-100 py-3">
-                                <h3>📊</h3>
-                                <div>Relatórios</div>
+                                <h3><span class="oi oi-bar-chart"></span></h3>
+                                <div>Relatorios</div>
                             </a>
                         </div>
                         <div class="col-md-3">
                             <a href="/gerenciar-usuarios" class="btn btn-outline-warning w-100 py-3">
-                                <h3>👥</h3>
-                                <div>Usuários</div>
+                                <h3><span class="oi oi-people"></span></h3>
+                                <div>Usuarios</div>
                             </a>
                         </div>
                     </div>
