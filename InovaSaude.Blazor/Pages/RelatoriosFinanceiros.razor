@@ -53,17 +53,32 @@
                         <input type="date" class="form-control" @bind="dataFim" @bind:after="CarregarDados" />
                     </div>
                 }
-                <div class="col-md-3">
-                    <label class="form-label">ESF (Múltipla Seleção)</label>
-                    <select class="form-select" multiple size="5" @onchange="OnEsfSelectionChanged">
-                        @foreach (var esf in esfList)
-                        {
-                            <option value="@esf.Id" selected="@(esfIdsSelecionadas.Contains(esf.Id))">
-                                @esf.Nome
-                            </option>
-                        }
-                    </select>
-                    <small class="text-muted">Use Ctrl+Click para selecionar múltiplas</small>
+                <div class="col-md-6">
+                    <label class="form-label">📍 Filtrar por ESF</label>
+                    <div class="card" style="max-height: 200px; overflow-y: auto;">
+                        <div class="card-body p-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="esfTodas" 
+                                       checked="@(esfIdsSelecionadas.Count == 0 || esfIdsSelecionadas.Count == esfList.Count)"
+                                       @onchange="@(() => SelecionarTodasESF())" />
+                                <label class="form-check-label fw-bold" for="esfTodas">
+                                    📋 Todas as ESF
+                                </label>
+                            </div>
+                            <hr class="my-2" />
+                            @foreach (var esf in esfList.OrderBy(e => e.Nome))
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="esf-@esf.Id" 
+                                           checked="@(esfIdsSelecionadas.Contains(esf.Id))"
+                                           @onchange="@((e) => ToggleESF(esf.Id, e))" />
+                                    <label class="form-check-label" for="esf-@esf.Id">
+                                        <small><strong>@esf.Nome</strong> - CNES: @esf.Cnes</small>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -253,55 +268,115 @@
             </div>
         </div>
 
-        <!-- Gráfico de Linha por Categoria -->
+        <!-- Gráfico de Categoria Mensal com Navegação -->
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">📊 Evolução Mensal por Categoria (Empilhado)</h5>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">📊 Despesas por Categoria</h5>
+                    <div class="d-flex gap-2 align-items-center">
+                        <button class="btn btn-sm btn-light" @onclick="MesAnterior" disabled="@(mesSelecionadoIndex == 0)">
+                            ◀ Anterior
+                        </button>
+                        <select class="form-select form-select-sm" style="width: auto;" @bind="mesSelecionadoIndex" @bind:after="AtualizarGraficoMes">
+                            @for (int i = 0; i < dadosGraficoMensalPorCategoria.Count; i++)
+                            {
+                                var mes = dadosGraficoMensalPorCategoria[i];
+                                <option value="@i">@mes.MesNome</option>
+                            }
+                        </select>
+                        <button class="btn btn-sm btn-light" @onclick="MesProximo" disabled="@(mesSelecionadoIndex >= dadosGraficoMensalPorCategoria.Count - 1)">
+                            Próximo ▶
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
-                @if (dadosGraficoMensalPorCategoria.Any())
+                @if (dadosGraficoMensalPorCategoria.Any() && mesSelecionadoIndex < dadosGraficoMensalPorCategoria.Count)
                 {
-                    <div class="d-flex justify-content-start align-items-end" style="height: 300px; gap: 15px; overflow-x: auto; padding: 10px;">
-                        @foreach (var mes in dadosGraficoMensalPorCategoria.OrderBy(m => m.Mes))
-                        {
-                            var totalMes = mes.Valores.Sum(v => v.Value);
-                            var maxValor = dadosGraficoMensalPorCategoria.Max(m => m.Valores.Sum(v => v.Value));
+                    var mesSelecionado = dadosGraficoMensalPorCategoria[mesSelecionadoIndex];
+                    var totalMes = mesSelecionado.Valores.Sum(v => v.Value);
 
-                            <div class="text-center" style="min-width: 100px;">
-                                <div style="height: 250px; display: flex; flex-direction: column-reverse; justify-content: flex-start; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;">
-                                    @foreach (var categoria in mes.Valores.OrderBy(v => v.Key))
-                                    {
-                                        var alturaSegmento = maxValor > 0 ? (categoria.Value / maxValor) * 250 : 0;
-                                        var cor = ObterCorCategoria(categoria.Key);
-                                        <div style="background-color: @cor; height: @(alturaSegmento)px; width: 100%; transition: all 0.3s;" 
-                                             title="@categoria.Key: @categoria.Value.ToString("C", new CultureInfo("pt-BR"))">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-center mb-3">
+                                <strong>@mesSelecionado.MesNome</strong> - Total: <span class="text-primary">@totalMes.ToString("C", new CultureInfo("pt-BR"))</span>
+                            </h6>
+
+                            <!-- Gráfico de barras horizontais -->
+                            <div class="mb-3">
+                                @foreach (var categoria in mesSelecionado.Valores.OrderByDescending(v => v.Value))
+                                {
+                                    var percentual = totalMes > 0 ? (categoria.Value / totalMes) * 100 : 0;
+                                    var cor = ObterCorCategoria(categoria.Key);
+
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <small><strong>@categoria.Key</strong></small>
+                                            <small class="text-muted">@categoria.Value.ToString("C", new CultureInfo("pt-BR")) (@percentual.ToString("F1")%)</small>
                                         </div>
-                                    }
-                                </div>
-                                <small class="d-block mt-2"><strong>@totalMes.ToString("C0", new CultureInfo("pt-BR"))</strong></small>
-                                <small class="text-muted">@mes.MesNome.Substring(0, 3)</small>
+                                        <div class="progress" style="height: 25px;">
+                                            <div class="progress-bar" 
+                                                 style="width: @percentual%; background-color: @cor; transition: width 0.5s ease-in-out;"
+                                                 role="progressbar">
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             </div>
-                        }
-                    </div>
+                        </div>
 
-                    <!-- Legenda -->
-                    <div class="mt-3 d-flex flex-wrap gap-3 justify-content-center">
-                        @foreach (var categoria in categorias.OrderBy(c => c.Nome))
-                        {
-                            <div class="d-flex align-items-center">
-                                <div style="width: 20px; height: 20px; background-color: @ObterCorCategoria(categoria.Nome); margin-right: 5px; border-radius: 3px;"></div>
-                                <small>@categoria.Nome</small>
+                        <div class="col-md-6">
+                            <h6 class="text-center mb-3">Gráfico Pizza</h6>
+
+                            <!-- Gráfico de Pizza SVG -->
+                            <svg viewBox="0 0 200 200" style="max-width: 300px; margin: 0 auto; display: block;">
+                                @{
+                                    double startAngle = 0;
+                                    var raio = 80;
+                                    var centroX = 100;
+                                    var centroY = 100;
+                                }
+
+                                @foreach (var categoria in mesSelecionado.Valores.OrderByDescending(v => v.Value))
+                                {
+                                    var percentual = totalMes > 0 ? (double)(categoria.Value / totalMes) : 0;
+                                    var angulo = percentual * 360;
+                                    var endAngle = startAngle + angulo;
+
+                                    var x1 = centroX + raio * Math.Cos(startAngle * Math.PI / 180);
+                                    var y1 = centroY + raio * Math.Sin(startAngle * Math.PI / 180);
+                                    var x2 = centroX + raio * Math.Cos(endAngle * Math.PI / 180);
+                                    var y2 = centroY + raio * Math.Sin(endAngle * Math.PI / 180);
+                                    var largeArc = angulo > 180 ? 1 : 0;
+                                    var cor = ObterCorCategoria(categoria.Key);
+
+                                    <path d="M @centroX,@centroY L @x1,@y1 A @raio,@raio 0 @largeArc,1 @x2,@y2 Z"
+                                          fill="@cor" 
+                                          stroke="white" 
+                                          stroke-width="2">
+                                        <title>@categoria.Key: @categoria.Value.ToString("C", new CultureInfo("pt-BR"))</title>
+                                    </path>
+
+                                    startAngle = endAngle;
+                                }
+                            </svg>
+
+                            <!-- Legenda -->
+                            <div class="mt-3 d-flex flex-wrap gap-2 justify-content-center">
+                                @foreach (var categoria in mesSelecionado.Valores.OrderByDescending(v => v.Value))
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <div style="width: 15px; height: 15px; background-color: @ObterCorCategoria(categoria.Key); margin-right: 5px; border-radius: 3px;"></div>
+                                        <small>@categoria.Key</small>
+                                    </div>
+                                }
                             </div>
-                        }
-                        <div class="d-flex align-items-center">
-                            <div style="width: 20px; height: 20px; background-color: @ObterCorCategoria("Salários"); margin-right: 5px; border-radius: 3px;"></div>
-                            <small>Salários</small>
                         </div>
                     </div>
                 }
                 else
                 {
-                    <p class="text-muted text-center py-4">Nenhuma despesa para mostrar evolução por categoria.</p>
+                    <p class="text-muted text-center py-4">Nenhuma despesa para mostrar no mês selecionado.</p>
                 }
             </div>
         </div>
@@ -471,6 +546,30 @@
     private List<Despesa> todasDespesas = new();
     private List<ESF> esfList = new();
     private List<Categoria> categorias = new();
+    private int mesSelecionadoIndex = 0;
+
+    private void MesAnterior()
+    {
+        if (mesSelecionadoIndex > 0)
+        {
+            mesSelecionadoIndex--;
+        }
+    }
+
+    private void MesProximo()
+    {
+        if (mesSelecionadoIndex < dadosGraficoMensalPorCategoria.Count - 1)
+        {
+            mesSelecionadoIndex++;
+        }
+    }
+
+    private void AtualizarGraficoMes()
+    {
+        // Apenas force re-render
+        StateHasChanged();
+    }
+
     private List<Funcionario> todosFuncionarios = new();
 
     private bool carregando = true;
@@ -494,12 +593,35 @@
     private string categoriaFiltroGrafico = "";
     private List<string> esfIdsSelecionadas = new();
 
-    private void OnEsfSelectionChanged(ChangeEventArgs e)
+    private void SelecionarTodasESF()
     {
-        if (e.Value is string[] selectedValues)
+        if (esfIdsSelecionadas.Count == esfList.Count)
         {
-            esfIdsSelecionadas = selectedValues.ToList();
+            esfIdsSelecionadas.Clear();
         }
+        else
+        {
+            esfIdsSelecionadas = esfList.Select(e => e.Id).ToList();
+        }
+        CarregarDados();
+    }
+
+    private void ToggleESF(string esfId, ChangeEventArgs e)
+    {
+        var isChecked = (bool)(e.Value ?? false);
+
+        if (isChecked)
+        {
+            if (!esfIdsSelecionadas.Contains(esfId))
+            {
+                esfIdsSelecionadas.Add(esfId);
+            }
+        }
+        else
+        {
+            esfIdsSelecionadas.Remove(esfId);
+        }
+
         CarregarDados();
     }
 

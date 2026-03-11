@@ -16,8 +16,11 @@ public class ESF
     public string Nome { get; set; } = string.Empty;
 
     [Required]
+    [StringLength(20)]
+    public string Cnes { get; set; } = string.Empty;
+
     [StringLength(50)]
-    public string Codigo { get; set; } = string.Empty;
+    public string? Codigo { get; set; }
 
     [StringLength(500)]
     public string? Endereco { get; set; }

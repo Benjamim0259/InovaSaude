@@ -245,13 +245,14 @@ public static class SeedData
             await context.SaveChangesAsync();
         }
 
-        // Seed a sample UBS
+        // Seed a sample ESF
         if (!await context.ESF.AnyAsync())
         {
-            var ubs = new ESF
+            var esf1 = new ESF
             {
-                Nome = "UBS Central",
-                Codigo = "UBS001",
+                Nome = "ESF Central",
+                Cnes = "2000001",
+                Codigo = "ESF001",
                 Endereco = "Rua Principal, 123",
                 Bairro = "Centro",
                 Cep = "00000-000",
@@ -260,7 +261,21 @@ public static class SeedData
                 UpdatedAt = DateTime.UtcNow
             };
 
-            context.ESF.Add(ubs);
+            var esf2 = new ESF
+            {
+                Nome = "ESF Vila Nova",
+                Cnes = "2000002",
+                Codigo = "ESF002",
+                Endereco = "Av. Secundária, 456",
+                Bairro = "Vila Nova",
+                Cep = "11111-111",
+                Status = "ATIVA",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            context.ESF.Add(esf1);
+            context.ESF.Add(esf2);
             await context.SaveChangesAsync();
         }
     }
