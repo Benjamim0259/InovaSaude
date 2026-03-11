@@ -24,6 +24,14 @@ public static class DateTimeHelper
     }
 
     /// <summary>
+    /// Retorna DateTime UTC para salvar no banco (sempre salvar em UTC)
+    /// </summary>
+    public static DateTime NowUtc()
+    {
+        return DateTime.UtcNow;
+    }
+
+    /// <summary>
     /// Formata data no padrão brasileiro
     /// </summary>
     public static string FormatarDataBR(this DateTime? data)
@@ -32,6 +40,14 @@ public static class DateTimeHelper
             return "-";
 
         return data.Value.ToBrasilia().ToString("dd/MM/yyyy HH:mm");
+    }
+
+    /// <summary>
+    /// Formata data no padrão brasileiro sem nullable
+    /// </summary>
+    public static string FormatarDataBR(this DateTime data)
+    {
+        return data.ToBrasilia().ToString("dd/MM/yyyy HH:mm");
     }
 
     /// <summary>
