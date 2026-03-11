@@ -195,8 +195,9 @@
 
     private async Task CarregarDados()
     {
-        var dataInicio = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
-        var dataFim = DateTime.UtcNow;
+        var dataBrasilia = DateTimeHelper.NowBrasilia();
+        var dataInicio = new DateTime(dataBrasilia.Year, dataBrasilia.Month, 1);
+        var dataFim = dataBrasilia;
 
         var despesas = await DespesaService.GetDespesasByPeriodoAsync(dataInicio, dataFim) ?? new List<Despesa>();
         var funcionarios = await FuncionarioService.GetAllAsync() ?? new List<Funcionario>();

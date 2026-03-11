@@ -100,7 +100,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <div class="display-6 mb-2">💸</div>
+                        <div class="display-6 mb-2"><span class="oi oi-dollar"></span></div>
                         <h3 class="text-danger mb-1">@totalDespesas.ToString("C", new CultureInfo("pt-BR"))</h3>
                         <p class="text-muted mb-0">Despesas</p>
                         <small class="text-muted">@quantidadeDespesas despesas</small>
@@ -110,17 +110,17 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <div class="display-6 mb-2">👥</div>
+                        <div class="display-6 mb-2"><span class="oi oi-people"></span></div>
                         <h3 class="text-warning mb-1">@totalSalarios.ToString("C", new CultureInfo("pt-BR"))</h3>
-                        <p class="text-muted mb-0">Salários</p>
-                        <small class="text-muted">@quantidadeFuncionarios funcionários</small>
+                        <p class="text-muted mb-0">Salarios</p>
+                        <small class="text-muted">@quantidadeFuncionarios funcionarios</small>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <div class="display-6 mb-2">💰</div>
+                        <div class="display-6 mb-2"><span class="oi oi-bar-chart"></span></div>
                         <h3 class="text-primary mb-1">@((totalDespesas + totalSalarios).ToString("C", new CultureInfo("pt-BR")))</h3>
                         <p class="text-muted mb-0">Total Geral</p>
                         <small class="text-muted">@(esfIdsSelecionadas.Any() ? esfIdsSelecionadas.Count + " ESF" : "Todas ESF")</small>
@@ -130,7 +130,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <div class="display-6 mb-2">📊</div>
+                        <div class="display-6 mb-2"><span class="oi oi-list"></span></div>
                         <h3 class="text-info mb-1">@despesasPorCategoria.Count</h3>
                         <p class="text-muted mb-0">Categorias</p>
                         <small class="text-muted">com despesas</small>
@@ -139,34 +139,34 @@
             </div>
         </div>
 
-        <!-- Abas de Navegação -->
+        <!-- Abas de Navegacao -->
         <ul class="nav nav-tabs mb-4" role="tablist">
             <li class="nav-item">
                 <button class="nav-link @(abaAtiva == "categorias" ? "active" : "")" 
                         @onclick='() => abaAtiva = "categorias"'>
-                    📊 Por Categoria
+                    <span class="oi oi-bar-chart me-2"></span>Por Categoria
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link @(abaAtiva == "esf" ? "active" : "")" 
                         @onclick='() => abaAtiva = "esf"'>
-                    🏥 Por ESF
+                    <span class="oi oi-medical-cross me-2"></span>Por ESF
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link @(abaAtiva == "evolucao" ? "active" : "")" 
                         @onclick='() => abaAtiva = "evolucao"'>
-                    📈 Evolução Temporal
+                    <span class="oi oi-graph me-2"></span>Evolucao Temporal
                 </button>
             </li>
         </ul>
 
-        <!-- Conteúdo das Abas -->
+        <!-- Conteudo das Abas -->
         @if (abaAtiva == "categorias")
         {
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">📊 Despesas por Categoria</h5>
+                    <h5 class="mb-0"><span class="oi oi-bar-chart me-2"></span>Despesas por Categoria</h5>
                 </div>
                 <div class="card-body">
                     @foreach (var cat in despesasPorCategoria.OrderByDescending(x => x.Total))
@@ -198,7 +198,7 @@
                 <div class="col-md-6">
                     <div class="card shadow-sm">
                         <div class="card-header bg-success text-white">
-                            <h5 class="mb-0">💸 Despesas por ESF</h5>
+                            <h5 class="mb-0"><span class="oi oi-dollar me-2"></span>Despesas por ESF</h5>
                         </div>
                         <div class="card-body">
                             @foreach (var esf in despesasPorUBS.OrderByDescending(x => x.Total))
@@ -222,7 +222,7 @@
                 <div class="col-md-6">
                     <div class="card shadow-sm">
                         <div class="card-header bg-warning">
-                            <h5 class="mb-0">👥 Salários por ESF</h5>
+                            <h5 class="mb-0"><span class="oi oi-people me-2"></span>Salarios por ESF</h5>
                         </div>
                         <div class="card-body">
                             @foreach (var esf in salariosPorUBS.OrderByDescending(x => x.TotalSalarios))
@@ -235,7 +235,7 @@
                                     </div>
                                     <div class="progress" style="height: 25px;">
                                         <div class="progress-bar bg-warning" style="width: @percentual%">
-                                            @esf.QuantidadeFuncionarios funcionários
+                                            @esf.QuantidadeFuncionarios funcionarios
                                         </div>
                                     </div>
                                 </div>
@@ -249,7 +249,7 @@
         {
             <div class="card shadow-sm">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">📈 Evolução Mensal</h5>
+                    <h5 class="mb-0"><span class="oi oi-graph me-2"></span>Evolucao Mensal</h5>
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-start align-items-end" style="height: 300px; gap: 20px; overflow-x: auto; padding: 20px;">
