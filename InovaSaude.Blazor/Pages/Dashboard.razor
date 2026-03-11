@@ -1,6 +1,11 @@
 @page "/dashboard"
 @using InovaSaude.Blazor.Services
+@using InovaSaude.Blazor.Models
+@using System.Globalization
 @inject DashboardService DashboardService
+@inject DespesaService DespesaService
+@inject FuncionarioService FuncionarioService
+@inject ESFService ESFService
 @inject ToastService ToastService
 @inject NavigationManager Navigation
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
@@ -9,202 +14,235 @@
 
 <LoadingOverlay IsLoading="carregando" Message="Carregando dashboard..." />
 
-<SkeletonLoader IsLoading="carregando" Type="SkeletonLoader.SkeletonType.Card">
-    <div class="container-fluid mt-4">
-   <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>📊 Dashboard Financeiro</h2>
-      <div>
-    <span class="text-muted">Última atualização: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
-  </div>
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📊 Dashboard - Resumo Geral</h2>
+        <div>
+            <span class="badge bg-primary">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
         </div>
-
-        <!-- Cards de Resumo -->
-  <div class="row g-3 mb-4">
-   <!-- Total Geral -->
-     <div class="col-md-4">
-         <div class="card border-0 shadow-sm h-100 card-hover">
-     <div class="card-body">
-<div class="d-flex justify-content-between align-items-start">
-<div>
-     <h6 class="text-muted mb-2">💰 Total Geral</h6>
-       <h3 class="mb-0 fw-bold">@FormatarMoeda(dados?.TotalGeral ?? 0)</h3>
-    <small class="text-success">@((dados?.TotalDespesas ?? 0)) despesas</small>
-     </div>
-    <div class="icon-circle bg-primary-subtle">
-       <span class="fs-3">💵</span>
-</div>
-     </div>
-     </div>
     </div>
-   </div>
 
- <!-- Média por Despesa -->
-   <div class="col-md-4">
-    <div class="card border-0 shadow-sm h-100 card-hover">
-   <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start">
-  <div>
-        <h6 class="text-muted mb-2">📊 Média por Despesa</h6>
-    <h3 class="mb-0 fw-bold text-info">@FormatarMoeda((dados?.TotalDespesas ?? 0) > 0 ? (dados?.TotalGeral ?? 0) / (dados?.TotalDespesas ?? 1) : 0)</h3>
-            <small class="text-muted">valor médio</small>
-  </div>
-     <div class="icon-circle bg-info-subtle">
-      <span class="fs-3">📈</span>
-</div>
+    <!-- Cards de Resumo -->
+    <div class="row g-3 mb-4">
+        <!-- Total Despesas -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-danger text-white">
+                <div class="card-body text-center">
+                    <h1 class="display-4">💸</h1>
+                    <h3 class="mb-0">@totalDespesas.ToString("C", new CultureInfo("pt-BR"))</h3>
+                    <p class="mb-0">Total Despesas</p>
+                    <small>@quantidadeDespesas despesas</small>
+                </div>
             </div>
         </div>
-  </div>
+
+        <!-- Total Salários -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-warning text-dark">
+                <div class="card-body text-center">
+                    <h1 class="display-4">👥</h1>
+                    <h3 class="mb-0">@totalSalarios.ToString("C", new CultureInfo("pt-BR"))</h3>
+                    <p class="mb-0">Total Salários</p>
+                    <small>@quantidadeFuncionarios funcionários</small>
+                </div>
+            </div>
         </div>
 
-        <!-- Total de Categorias -->
-<div class="col-md-4">
-         <div class="card border-0 shadow-sm h-100 card-hover">
-    <div class="card-body">
-   <div class="d-flex justify-content-between align-items-start">
-   <div>
-          <h6 class="text-muted mb-2">📁 Categorias</h6>
-      <h3 class="mb-0 fw-bold text-warning">@((dados?.DespesasPorCategoria?.Count ?? 0))</h3>
-     <small class="text-muted">categorias ativas</small>
-   </div>
-         <div class="icon-circle bg-warning-subtle">
-        <span class="fs-3">🗂️</span>
-      </div>
- </div>
-      </div>
-        </div>
-        </div>
+        <!-- Total Geral -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-primary text-white">
+                <div class="card-body text-center">
+                    <h1 class="display-4">💰</h1>
+                    <h3 class="mb-0">@((totalDespesas + totalSalarios).ToString("C", new CultureInfo("pt-BR")))</h3>
+                    <p class="mb-0">Total Geral</p>
+                    <small>Despesas + Salários</small>
+                </div>
+            </div>
         </div>
 
-        <!-- Gráficos visuais CSS -->
-        <div class="row g-3 mb-4">
-  <div class="col-md-12">
-        <div class="card border-0 shadow-sm h-100">
- <div class="card-header bg-white">
-    <h5 class="mb-0">📈 Top 10 Categorias</h5>
+        <!-- ESF Cadastradas -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-success text-white">
+                <div class="card-body text-center">
+                    <h1 class="display-4">🏥</h1>
+                    <h3 class="mb-0">@quantidadeESF</h3>
+                    <p class="mb-0">ESF Cadastradas</p>
+                    <small>Estratégias Saúde da Família</small>
+                </div>
+            </div>
+        </div>
     </div>
-<div class="card-body">
-     @if (dados?.DespesasPorCategoria != null && dados.DespesasPorCategoria.Any())
-      {
-       var maxValue = dados.DespesasPorCategoria.Max(c => c.Total);
-    @foreach (var item in dados.DespesasPorCategoria.Take(10))
-   {
-   var percentage = maxValue > 0 ? (item.Total / maxValue * 100) : 0;
-   <div class="mb-3">
-       <div class="d-flex justify-content-between mb-1">
-     <span class="fw-semibold">@item.Categoria</span>
-       <span class="text-muted">@FormatarMoeda(item.Total)</span>
-   </div>
-      <div class="progress" style="height: 25px;">
-   <div class="progress-bar bg-primary" 
-   style="width: @percentage%">
-   <span class="px-2">@item.Quantidade despesas</span>
-      </div>
-  </div>
-    </div>
-  }
-   }
-       else
-      {
-    <p class="text-muted text-center py-4">Nenhum dado disponível</p>
- }
-  </div>
-     </div>
-   </div>
+
+    <!-- Gráficos e Rankings -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">📊 Top 5 Categorias (Despesas)</h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var cat in topCategorias)
+                    {
+                        var percentual = totalDespesas > 0 ? (cat.Total / totalDespesas * 100) : 0;
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <strong>@cat.Categoria</strong>
+                                <span>@cat.Total.ToString("C", new CultureInfo("pt-BR"))</span>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar bg-danger" style="width: @percentual%" role="progressbar">
+                                    @cat.Quantidade despesas
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
 
-        <!-- Ações Rápidas -->
- <div class="row g-3">
-   <div class="col-md-12">
-        <div class="card border-0 shadow-sm">
-    <div class="card-header bg-white">
-   <h5 class="mb-0">⚡ Ações Rápidas</h5>
-    </div>
-        <div class="card-body">
-    <div class="row g-3 text-center">
-      <div class="col-md-3">
-    <a href="/gerenciar-despesas" class="btn btn-outline-primary btn-lg w-100 p-4">
- <div class="fs-1 mb-2">💰</div>
-         <div>Gerenciar Despesas</div>
-         </a>
-      </div>
-     <div class="col-md-3">
-      <a href="/relatorios" class="btn btn-outline-success btn-lg w-100 p-4">
-   <div class="fs-1 mb-2">📊</div>
-           <div>Relatórios</div>
-        </a>
-  </div>
-     <div class="col-md-3">
-      <a href="/gerenciar-usuarios" class="btn btn-outline-info btn-lg w-100 p-4">
-   <div class="fs-1 mb-2">👥</div>
-    <div>Gerenciar Usuários</div>
-   </a>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">🏥 ESF por Despesas</h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var esf in esfPorDespesa)
+                    {
+                        var percentual = totalDespesas > 0 ? (esf.Total / totalDespesas * 100) : 0;
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <strong>@esf.Nome</strong>
+                                <span>@esf.Total.ToString("C", new CultureInfo("pt-BR"))</span>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar bg-success" style="width: @percentual%" role="progressbar">
+                                    @esf.Quantidade despesas
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
-   <div class="col-md-3">
-     <a href="/integracoes-externas" class="btn btn-outline-warning btn-lg w-100 p-4">
-        <div class="fs-1 mb-2">🔌</div>
-      <div>Integrações</div>
-     </a>
- </div>
-     </div>
-  </div>
-   </div>
- </div>
-  </div>
     </div>
-</SkeletonLoader>
 
-<style>
-    .card-hover {
-   transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card-hover:hover {
- transform: translateY(-5px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    }
-
-    .icon-circle {
-     width: 60px;
-   height: 60px;
-        border-radius: 50%;
-   display: flex;
- align-items: center;
-        justify-content: center;
-    }
-
-    .progress-bar {
- transition: width 0.6s ease;
- }
-</style>
+    <!-- Ações Rápidas -->
+    <div class="row g-3">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">⚡ Ações Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="/gerenciar-despesas" class="btn btn-outline-primary w-100 py-3">
+                                <h3>💸</h3>
+                                <div>Nova Despesa</div>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/gerenciar-esf" class="btn btn-outline-success w-100 py-3">
+                                <h3>🏥</h3>
+                                <div>Gerenciar ESF</div>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/relatorios-financeiros" class="btn btn-outline-info w-100 py-3">
+                                <h3>📊</h3>
+                                <div>Relatórios</div>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/gerenciar-usuarios" class="btn btn-outline-warning w-100 py-3">
+                                <h3>👥</h3>
+                                <div>Usuários</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
-    private InovaSaude.Blazor.Services.DashboardData? dados;
- private bool carregando = true;
+    private bool carregando = true;
+    private decimal totalDespesas = 0;
+    private decimal totalSalarios = 0;
+    private int quantidadeDespesas = 0;
+    private int quantidadeFuncionarios = 0;
+    private int quantidadeESF = 0;
+    private List<CategoriaResumo> topCategorias = new();
+    private List<ESFResumo> esfPorDespesa = new();
 
     protected override async Task OnInitializedAsync()
-  {
-  await CarregarDados();
+    {
+        try
+        {
+            await CarregarDados();
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Erro ao carregar dashboard: " + ex.Message);
+        }
+        finally
+        {
+            carregando = false;
+        }
     }
 
     private async Task CarregarDados()
- {
-carregando = true;
-  try
-   {
-   dados = await DashboardService.GetDashboardDataAsync();
- }
-  catch (Exception ex)
-     {
-      ToastService.ShowError($"Erro ao carregar dashboard: {ex.Message}");
-   }
- finally
-      {
-  carregando = false;
-  }
+    {
+        var dataInicio = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+        var dataFim = DateTime.UtcNow;
+
+        var despesas = await DespesaService.GetDespesasByPeriodoAsync(dataInicio, dataFim) ?? new List<Despesa>();
+        var funcionarios = await FuncionarioService.GetAllAsync() ?? new List<Funcionario>();
+        var esfs = await ESFService.GetAllESFAsync() ?? new List<ESF>();
+
+        totalDespesas = despesas.Sum(d => d.Valor);
+        quantidadeDespesas = despesas.Count;
+        totalSalarios = funcionarios.Sum(f => f.Salario);
+        quantidadeFuncionarios = funcionarios.Count;
+        quantidadeESF = esfs.Count;
+
+        topCategorias = despesas
+            .GroupBy(d => d.Categoria?.Nome ?? "Sem Categoria")
+            .Select(g => new CategoriaResumo
+            {
+                Categoria = g.Key,
+                Total = g.Sum(d => d.Valor),
+                Quantidade = g.Count()
+            })
+            .OrderByDescending(c => c.Total)
+            .Take(5)
+            .ToList();
+
+        esfPorDespesa = despesas
+            .GroupBy(d => d.Esf?.Nome ?? "Sem ESF")
+            .Select(g => new ESFResumo
+            {
+                Nome = g.Key,
+                Total = g.Sum(d => d.Valor),
+                Quantidade = g.Count()
+            })
+            .OrderByDescending(e => e.Total)
+            .Take(5)
+            .ToList();
     }
 
- private string FormatarMoeda(decimal valor)
-  {
-  return valor.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
+    private class CategoriaResumo
+    {
+        public string Categoria { get; set; } = "";
+        public decimal Total { get; set; }
+        public int Quantidade { get; set; }
+    }
+
+    private class ESFResumo
+    {
+        public string Nome { get; set; } = "";
+        public decimal Total { get; set; }
+        public int Quantidade { get; set; }
     }
 }

@@ -7,6 +7,7 @@
 @inject FuncionarioService FuncionarioService
 @inject ESFService ESFService
 @inject CategoriaService CategoriaService
+@inject PdfService PdfService
 @inject IJSRuntime JSRuntime
 @attribute [Authorize]
 
@@ -961,7 +962,26 @@
 
     private async Task ExportarPDF()
     {
-        await JSRuntime.InvokeVoidAsync("alert", "Exportação PDF em desenvolvimento. Use a opção Excel por enquanto.");
+        try
+        {
+            var pdfBytes = PdfService.GerarRelatorioPDF(
+                todasDespesas,
+                todosFuncionarios,
+                dataInicio,
+                dataFim,
+                totalDespesas,
+                totalSalarios
+            );
+
+            var base64 = Convert.ToBase64String(pdfBytes);
+            var filename = $"relatorio-financeiro-{DateTime.Now:yyyy-MM-dd}.pdf";
+
+            await JSRuntime.InvokeVoidAsync("downloadFile", filename, base64, "application/pdf");
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"Erro ao gerar PDF: {ex.Message}");
+        }
     }
 
     // DTOs

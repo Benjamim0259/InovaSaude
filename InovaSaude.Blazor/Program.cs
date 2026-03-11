@@ -188,6 +188,7 @@ builder.Services.AddScoped<FuncionarioService>();
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<DespesaService>();
 builder.Services.AddScoped<RelatorioService>();
+builder.Services.AddScoped<PdfService>();
 builder.Services.AddScoped<WorkflowService>();
 builder.Services.AddScoped<IntegrationService>();
 builder.Services.AddScoped<AuditService>();
