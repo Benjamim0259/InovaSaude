@@ -35,6 +35,12 @@ public class Usuario
 
     public DateTime? UltimoAcesso { get; set; }
 
+    public int TentativasLoginFalhas { get; set; } = 0;
+
+    public DateTime? DataBloqueio { get; set; }
+
+    public DateTime? DataUltimaTrocaSenha { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
