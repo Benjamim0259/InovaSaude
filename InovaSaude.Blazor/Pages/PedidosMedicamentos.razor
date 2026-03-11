@@ -107,7 +107,7 @@
        </div>
     <div class="card-body">
          <div class="mb-2">
-            <small class="text-muted">UBS:</small><br/>
+            <small class="text-muted">ESF:</small><br/>
    <strong>@pedido.EsfSolicitante.Nome</strong>
         </div>
     
@@ -186,9 +186,9 @@
 <div class="modal-body">
         <div class="row g-3 mb-4">
        <div class="col-md-4">
-          <label class="form-label">UBS Destino *</label>
+          <label class="form-label">ESF Destino *</label>
                <select class="form-select" @bind="novoPedido.UbsId" required>
-            <option value="">Selecione a UBS...</option>
+            <option value="">Selecione a ESF...</option>
    @foreach (var ubs in esfList ?? new())
            {
    <option value="@ubs.Id">@ubs.Nome</option>
@@ -415,7 +415,7 @@ QuantidadeSolicitada = novoItem.QuantidadeSolicitada
 
         if (string.IsNullOrEmpty(novoPedido.UbsId))
         {
-      mensagemErro = "Selecione a UBS destino do pedido.";
+      mensagemErro = "Selecione a ESF destino do pedido.";
         return;
  }
 

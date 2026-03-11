@@ -2,6 +2,7 @@
 @using InovaSaude.Blazor.Services
 @using InovaSaude.Blazor.Models
 @using System.Globalization
+@using System.Text
 @inject DespesaService DespesaService
 @inject FuncionarioService FuncionarioService
 @inject ESFService ESFService
@@ -53,14 +54,16 @@
                     </div>
                 }
                 <div class="col-md-3">
-                    <label class="form-label">UBS</label>
-                    <select class="form-select" @bind="EsfIdFiltro" @bind:after="CarregarDados">
-                        <option value="">Todas</option>
-                        @foreach (var ubs in esfList)
+                    <label class="form-label">ESF (Múltipla Seleção)</label>
+                    <select class="form-select" multiple size="5" @onchange="OnEsfSelectionChanged">
+                        @foreach (var esf in esfList)
                         {
-                            <option value="@ubs.Id">@ubs.Nome</option>
+                            <option value="@esf.Id" selected="@(esfIdsSelecionadas.Contains(esf.Id))">
+                                @esf.Nome
+                            </option>
                         }
                     </select>
+                    <small class="text-muted">Use Ctrl+Click para selecionar múltiplas</small>
                 </div>
             </div>
         </div>
@@ -253,84 +256,52 @@
         <!-- Gráfico de Linha por Categoria -->
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">📈 Evolução Mensal por Categoria</h5>
-                    <select class="form-select w-auto" @bind="categoriaFiltroGrafico" @bind:after="AtualizarGraficoLinha">
-                        <option value="">Todas as Categorias</option>
-                        <option value="SALARIOS">💰 Salários</option>
-                        @foreach (var cat in categorias)
-                        {
-                            <option value="@cat.Id">@cat.Nome</option>
-                        }
-                    </select>
-                </div>
+                <h5 class="mb-0">📊 Evolução Mensal por Categoria (Empilhado)</h5>
             </div>
             <div class="card-body">
-                @if (evolucaoMensalPorCategoria.Any())
+                @if (dadosGraficoMensalPorCategoria.Any())
                 {
-                    <div class="chart-container" style="position: relative; height: 300px;">
-                        <svg width="100%" height="300" style="overflow: visible;">
-                            <!-- Eixo Y -->
-                            <line x1="50" y1="20" x2="50" y2="280" stroke="#ccc" stroke-width="2"/>
-                            <!-- Eixo X -->
-                            <line x1="50" y1="280" x2="95%" y2="280" stroke="#ccc" stroke-width="2"/>
+                    <div class="d-flex justify-content-start align-items-end" style="height: 300px; gap: 15px; overflow-x: auto; padding: 10px;">
+                        @foreach (var mes in dadosGraficoMensalPorCategoria.OrderBy(m => m.Mes))
+                        {
+                            var totalMes = mes.Valores.Sum(v => v.Value);
+                            var maxValor = dadosGraficoMensalPorCategoria.Max(m => m.Valores.Sum(v => v.Value));
 
-                            @{
-                                var maxValorGrafico = evolucaoMensalPorCategoria.Any() ? evolucaoMensalPorCategoria.Max(e => e.Total) : 1;
-                                var totalPontos = evolucaoMensalPorCategoria.Count;
-                                var larguraTotal = 90; // porcentagem
-                                var espacoEntrePontos = totalPontos > 1 ? larguraTotal / (totalPontos - 1) : 0;
+                            <div class="text-center" style="min-width: 100px;">
+                                <div style="height: 250px; display: flex; flex-direction: column-reverse; justify-content: flex-start; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;">
+                                    @foreach (var categoria in mes.Valores.OrderBy(v => v.Key))
+                                    {
+                                        var alturaSegmento = maxValor > 0 ? (categoria.Value / maxValor) * 250 : 0;
+                                        var cor = ObterCorCategoria(categoria.Key);
+                                        <div style="background-color: @cor; height: @(alturaSegmento)px; width: 100%; transition: all 0.3s;" 
+                                             title="@categoria.Key: @categoria.Value.ToString("C", new CultureInfo("pt-BR"))">
+                                        </div>
+                                    }
+                                </div>
+                                <small class="d-block mt-2"><strong>@totalMes.ToString("C0", new CultureInfo("pt-BR"))</strong></small>
+                                <small class="text-muted">@mes.MesNome.Substring(0, 3)</small>
+                            </div>
+                        }
+                    </div>
 
-                                var pontos = new List<string>();
-                                for (int i = 0; i < evolucaoMensalPorCategoria.Count; i++)
-                                {
-                                    var item = evolucaoMensalPorCategoria[i];
-                                    var x = 50 + (espacoEntrePontos * i * 10); // ajuste de escala
-                                    var y = 280 - ((item.Total / maxValorGrafico) * 240);
-                                    pontos.Add($"{x},{y}");
-                                }
-                                var pathPoints = string.Join(" ", pontos);
-                            }
-
-                            <!-- Linha do gráfico -->
-                            @if (pontos.Count > 1)
-                            {
-                                <polyline points="@pathPoints" 
-                                         fill="none" 
-                                         stroke="#0d6efd" 
-                                         stroke-width="3"/>
-                            }
-
-                            <!-- Pontos e labels -->
-                            @for (int i = 0; i < evolucaoMensalPorCategoria.Count; i++)
-                            {
-                                var item = evolucaoMensalPorCategoria[i];
-                                var x = 50 + (espacoEntrePontos * i * 10);
-                                var y = 280 - ((item.Total / maxValorGrafico) * 240);
-
-                                <circle cx="@x" cy="@y" r="5" fill="#0d6efd"/>
-                                <g>
-                                    <text x="@x" y="295" text-anchor="middle" font-size="10" fill="#666">@item.MesNome</text>
-                                    <text x="@x" y="@(y - 10)" text-anchor="middle" font-size="10" fill="#0d6efd" font-weight="bold">@item.Total.ToString("C0", new CultureInfo("pt-BR"))</text>
-                                </g>
-                            }
-
-                            <!-- Labels do eixo Y -->
-                            @for (int i = 0; i <= 4; i++)
-                            {
-                                var valor = (maxValorGrafico / 4) * i;
-                                var yPos = 280 - (i * 60);
-                                <g>
-                                    <text x="45" y="@yPos" text-anchor="end" font-size="10" fill="#666">@valor.ToString("C0", new CultureInfo("pt-BR"))</text>
-                                </g>
-                                <line x1="48" y1="@yPos" x2="52" y2="@yPos" stroke="#ccc" stroke-width="1"/>
-                            }
-                        </svg>
+                    <!-- Legenda -->
+                    <div class="mt-3 d-flex flex-wrap gap-3 justify-content-center">
+                        @foreach (var categoria in categorias.OrderBy(c => c.Nome))
+                        {
+                            <div class="d-flex align-items-center">
+                                <div style="width: 20px; height: 20px; background-color: @ObterCorCategoria(categoria.Nome); margin-right: 5px; border-radius: 3px;"></div>
+                                <small>@categoria.Nome</small>
+                            </div>
+                        }
+                        <div class="d-flex align-items-center">
+                            <div style="width: 20px; height: 20px; background-color: @ObterCorCategoria("Salários"); margin-right: 5px; border-radius: 3px;"></div>
+                            <small>Salários</small>
+                        </div>
                     </div>
                 }
                 else
                 {
-                    <p class="text-muted text-center py-4">Nenhum dado disponível para a categoria selecionada.</p>
+                    <p class="text-muted text-center py-4">Nenhuma despesa para mostrar evolução por categoria.</p>
                 }
             </div>
         </div>
@@ -521,6 +492,16 @@
     private List<EvolucaoMensal> evolucaoMensalPorCategoria = new();
     private List<AlertaOrcamento> alertasOrcamento = new();
     private string categoriaFiltroGrafico = "";
+    private List<string> esfIdsSelecionadas = new();
+
+    private void OnEsfSelectionChanged(ChangeEventArgs e)
+    {
+        if (e.Value is string[] selectedValues)
+        {
+            esfIdsSelecionadas = selectedValues.ToList();
+        }
+        CarregarDados();
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -566,15 +547,15 @@
             categorias = await CategoriaService.GetAllCategoriasAsync() ?? new List<Categoria>();
 
             todasDespesas = await DespesaService.GetDespesasByPeriodoAsync(dataInicio, dataFim) ?? new List<Despesa>();
-            if (!string.IsNullOrEmpty(EsfIdFiltro))
+            if (esfIdsSelecionadas.Any())
             {
-                todasDespesas = todasDespesas.Where(d => d.EsfId == EsfIdFiltro).ToList();
+                todasDespesas = todasDespesas.Where(d => esfIdsSelecionadas.Contains(d.EsfId)).ToList();
             }
 
             todosFuncionarios = await FuncionarioService.GetAllAsync() ?? new List<Funcionario>();
-            if (!string.IsNullOrEmpty(EsfIdFiltro))
+            if (esfIdsSelecionadas.Any())
             {
-                todosFuncionarios = todosFuncionarios.Where(f => f.EsfId == EsfIdFiltro).ToList();
+                todosFuncionarios = todosFuncionarios.Where(f => esfIdsSelecionadas.Contains(f.EsfId)).ToList();
             }
 
             CalcularMetricas();
@@ -711,6 +692,94 @@
                 .OrderBy(e => e.Ano).ThenBy(e => e.Mes)
                 .ToList();
         }
+
+        // Gerar dados do gráfico empilhado
+        GerarDadosGraficoEmpilhado();
+    }
+
+    private List<MesGraficoEmpilhado> dadosGraficoMensalPorCategoria = new();
+
+    private void GerarDadosGraficoEmpilhado()
+    {
+        dadosGraficoMensalPorCategoria = new();
+
+        // Agrupar despesas por mês e categoria
+        var despesasPorMesCategoria = todasDespesas
+            .GroupBy(d => new { d.CreatedAt.Year, d.CreatedAt.Month, CategoriaNome = d.Categoria.Nome })
+            .Select(g => new
+            {
+                g.Key.Year,
+                g.Key.Month,
+                g.Key.CategoriaNome,
+                Total = g.Sum(d => d.Valor)
+            })
+            .ToList();
+
+        // Agrupar salários por mês
+        var salariosPorMes = todosFuncionarios
+            .GroupBy(f => new { f.CreatedAt.Year, f.CreatedAt.Month })
+            .Select(g => new
+            {
+                g.Key.Year,
+                g.Key.Month,
+                Total = g.Sum(f => f.Salario)
+            })
+            .ToList();
+
+        // Obter todos os meses únicos
+        var todosMeses = despesasPorMesCategoria
+            .Select(d => new { d.Year, d.Month })
+            .Union(salariosPorMes.Select(s => new { s.Year, s.Month }))
+            .Distinct()
+            .OrderBy(m => m.Year).ThenBy(m => m.Month)
+            .ToList();
+
+        foreach (var mes in todosMeses)
+        {
+            var valores = new Dictionary<string, decimal>();
+
+            // Adicionar despesas por categoria
+            foreach (var despesa in despesasPorMesCategoria.Where(d => d.Year == mes.Year && d.Month == mes.Month))
+            {
+                valores[despesa.CategoriaNome] = despesa.Total;
+            }
+
+            // Adicionar salários
+            var salarioMes = salariosPorMes.FirstOrDefault(s => s.Year == mes.Year && s.Month == mes.Month);
+            if (salarioMes != null)
+            {
+                valores["Salários"] = salarioMes.Total;
+            }
+
+            dadosGraficoMensalPorCategoria.Add(new MesGraficoEmpilhado
+            {
+                Ano = mes.Year,
+                Mes = mes.Month,
+                MesNome = new DateTime(mes.Year, mes.Month, 1).ToString("MMM/yy", new CultureInfo("pt-BR")),
+                Valores = valores
+            });
+        }
+    }
+
+    private string ObterCorCategoria(string categoria)
+    {
+        // Paleta de cores vibrantes para cada categoria
+        var cores = new Dictionary<string, string>
+        {
+            { "Medicamentos", "#e74c3c" },      // Vermelho
+            { "Material Médico", "#3498db" },   // Azul
+            { "Alimentação", "#2ecc71" },       // Verde
+            { "Contas Fixas", "#f39c12" },      // Laranja
+            { "Pessoal", "#9b59b6" },           // Roxo
+            { "Infraestrutura", "#34495e" },    // Cinza escuro
+            { "Serviços", "#1abc9c" },          // Turquesa
+            { "Salários", "#e67e22" },          // Laranja escuro
+            { "Transporte", "#16a085" },        // Verde água
+            { "Limpeza", "#d35400" },           // Laranja queimado
+            { "Outros", "#7f8c8d" }             // Cinza
+        };
+
+        return cores.ContainsKey(categoria) ? cores[categoria] : "#95a5a6";
     }
 
     private string GetCategoriaColor(string categoria) => categoria switch
@@ -726,12 +795,40 @@
 
     private async Task ExportarExcel()
     {
-        await JSRuntime.InvokeVoidAsync("alert", "Exportação Excel em desenvolvimento");
+        try
+        {
+            var csv = new StringBuilder();
+            csv.AppendLine("Data;Descrição;ESF;Categoria;Fornecedor;Valor");
+
+            foreach (var despesa in todasDespesas.OrderBy(d => d.CreatedAt))
+            {
+                csv.AppendLine($"{despesa.CreatedAt:dd/MM/yyyy};{despesa.Descricao};{despesa.Esf?.Nome};{despesa.Categoria?.Nome};{despesa.Fornecedor?.NomeFantasia ?? despesa.Fornecedor?.RazaoSocial};{despesa.Valor:F2}");
+            }
+
+            // Adicionar salários
+            csv.AppendLine();
+            csv.AppendLine("SALÁRIOS");
+            csv.AppendLine("Nome;ESF;Cargo;Salário");
+            foreach (var func in todosFuncionarios.OrderBy(f => f.Esf?.Nome).ThenBy(f => f.Nome))
+            {
+                csv.AppendLine($"{func.Nome};{func.Esf?.Nome};{func.Cargo};{func.Salario:F2}");
+            }
+
+            var bytes = Encoding.UTF8.GetBytes(csv.ToString());
+            var base64 = Convert.ToBase64String(bytes);
+            var filename = $"relatorio-financeiro-{DateTime.Now:yyyy-MM-dd}.csv";
+
+            await JSRuntime.InvokeVoidAsync("downloadFile", filename, base64, "text/csv");
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"Erro ao exportar: {ex.Message}");
+        }
     }
 
     private async Task ExportarPDF()
     {
-        await JSRuntime.InvokeVoidAsync("alert", "Exportação PDF em desenvolvimento");
+        await JSRuntime.InvokeVoidAsync("alert", "Exportação PDF em desenvolvimento. Use a opção Excel por enquanto.");
     }
 
     // DTOs
@@ -771,6 +868,14 @@
         public decimal OrcamentoMensal { get; set; }
         public decimal TotalGasto { get; set; }
         public decimal PercentualExcedido { get; set; }
+    }
+
+    public class MesGraficoEmpilhado
+    {
+        public int Ano { get; set; }
+        public int Mes { get; set; }
+        public string MesNome { get; set; } = "";
+        public Dictionary<string, decimal> Valores { get; set; } = new();
     }
 }
 

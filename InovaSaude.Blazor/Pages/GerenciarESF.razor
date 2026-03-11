@@ -173,7 +173,7 @@
                     else if (!funcionariosList.Any())
                     {
                         <div class="alert alert-info">
-                            Nenhum funcionário cadastrado para esta UBS.
+                            Nenhum funcionário cadastrado para esta ESF.
                         </div>
                     }
                     else
@@ -324,7 +324,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao salvar UBS: {ex.Message}");
+            Console.WriteLine($"Erro ao salvar ESF: {ex.Message}");
         }
     }
 
@@ -340,7 +340,7 @@
             }
             catch (Exception ex)
             {
-                var errorMsg = $"Erro ao excluir UBS: {ex.Message}";
+                var errorMsg = $"Erro ao excluir ESF: {ex.Message}";
                 if (ex.InnerException != null)
                 {
                     errorMsg += $"\n\nDetalhes: {ex.InnerException.Message}";

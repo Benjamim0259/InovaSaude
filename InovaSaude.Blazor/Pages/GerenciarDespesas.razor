@@ -245,7 +245,7 @@ else
            <ValidationMessage For="@(() => despesaForm.Tipo)" />
                 </div>
    <div class="col-md-4">
-      <label class="form-label">UBS *</label>
+      <label class="form-label">ESF *</label>
          <select class="form-select" @bind="despesaForm.EsfId">
         <option value="">Selecione...</option>
     @foreach (var ubs in esfList)
@@ -344,7 +344,7 @@ else
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">UBS *</label>
+                            <label class="form-label">ESF *</label>
                             <select class="form-select" @bind="despesaRapidaForm.EsfId">
                                 <option value="">Selecione...</option>
                                 @foreach (var ubs in esfList)
