@@ -73,7 +73,7 @@
                                            checked="@(esfIdsSelecionadas.Contains(esf.Id))"
                                            @onchange="@((e) => ToggleESF(esf.Id, e))" />
                                     <label class="form-check-label" for="esf-@esf.Id">
-                                        <small><strong>@esf.Nome</strong> - CNES: @esf.Cnes</small>
+                                        <small><strong>@esf.Nome</strong> - CNES: @esf.Codigo</small>
                                     </label>
                                 </div>
                             }

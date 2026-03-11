@@ -40,10 +40,7 @@
                         <div class="card-body">
                             <h5 class="card-title fw-bold">@esf.Nome</h5>
                             <p class="text-muted mb-2">
-                                <small>🏥 CNES: <strong>@esf.Cnes</strong></small>
-                            </p>
-                            <p class="text-muted mb-2">
-                                <small>📍 Código: @(esf.Codigo ?? "N/A")</small>
+                                <small>🏥 CNES: <strong>@esf.Codigo</strong></small>
                             </p>
                             <p class="text-muted mb-2">
                                 <small>👤 Gestor: @(esf.Coordenador?.Nome ?? "Sem gestor")</small>
@@ -92,14 +89,10 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">CNES *</label>
-                                <InputText class="form-control" @bind-Value="editingESF!.Cnes" placeholder="Ex: 0000000" />
+                                <InputText class="form-control" @bind-Value="editingESF!.Codigo" placeholder="Ex: 0000000" />
                                 <small class="text-muted">Código Nacional de Estabelecimento de Saúde</small>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Código</label>
-                                <InputText class="form-control" @bind-Value="editingESF!.Codigo" />
-                            </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-8 mb-3">
                                 <label class="form-label">Nome *</label>
                                 <InputText class="form-control" @bind-Value="editingESF!.Nome" />
                             </div>
