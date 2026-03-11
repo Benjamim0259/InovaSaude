@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using InovaSaude.Blazor.Data;
 using InovaSaude.Blazor.Services;
+using System.Text;
+
+// Configurar encoding UTF-8 globalmente
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 // Configuração global do Npgsql para aceitar DateTime sem Kind
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

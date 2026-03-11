@@ -71,26 +71,26 @@
    <table class="table table-hover">
             <thead>
            <tr>
-         <th>Nome</th>
-      <th>Email</th>
-         <th>Perfil</th>
-         <th>ESF</th>
-            <th>Status</th>
-                <th>Último Acesso</th>
-      <th class="text-center">Ações</th>
-     </tr>
-    </thead>
-      <tbody>
-  @foreach (var usuario in UsuariosFiltrados)
-     {
-          <tr>
-         <td>
-                 <strong>@usuario.Nome</strong>
-   @if (usuario.Telefone != null)
-       {
-          <br /><small class="text-muted">?? @usuario.Telefone</small>
-     }
-         </td>
+                       <th>Nome</th>
+             <th>Email</th>
+                <th>Perfil</th>
+                <th>ESF</th>
+                   <th>Status</th>
+                       <th>Ultimo Acesso</th>
+             <th class="text-center">Acoes</th>
+            </tr>
+           </thead>
+             <tbody>
+         @foreach (var usuario in UsuariosFiltrados)
+            {
+                 <tr>
+                <td>
+                        <strong>@usuario.Nome</strong>
+          @if (usuario.Telefone != null)
+              {
+                 <br /><small class="text-muted">?? @usuario.Telefone</small>
+            }
+                </td>
       <td>@usuario.Email</td>
           <td>
          <span class="badge @GetPerfilBadgeClass(usuario.Perfil)">

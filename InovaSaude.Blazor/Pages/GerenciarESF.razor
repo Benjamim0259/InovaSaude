@@ -185,8 +185,8 @@
                                     <tr>
                                         <th>Nome</th>
                                         <th>Cargo</th>
-                                        <th class="text-end">Salário</th>
-                                        <th class="text-center">Ações</th>
+                                        <th class="text-end">Salario</th>
+                                        <th class="text-center">Acoes</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -198,10 +198,10 @@
                                             <td class="text-end">@func.Salario.ToString("C")</td>
                                             <td class="text-center">
                                                 <button class="btn btn-sm btn-info" @onclick="() => ShowModalEditFuncionario(func)">
-                                                    ✏️
+                                                    <span class="oi oi-pencil"></span>
                                                 </button>
                                                 <button class="btn btn-sm btn-danger" @onclick="() => DeleteFuncionario(func.Id)">
-                                                    🗑️
+                                                    <span class="oi oi-trash"></span>
                                                 </button>
                                             </td>
                                         </tr>
@@ -209,7 +209,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr class="fw-bold">
-                                        <td colspan="2">Total de Salários</td>
+                                        <td colspan="2">Total de Salarios</td>
                                         <td class="text-end">@funcionariosList.Sum(f => f.Salario).ToString("C")</td>
                                         <td></td>
                                     </tr>
