@@ -20,10 +20,6 @@ public class Funcionario
     public decimal Salario { get; set; }
 
     [Required]
-    [Range(1, 44)]
-    public int CargaHoraria { get; set; } = 40;
-
-    [Required]
     [ForeignKey("ESF")]
     public string EsfId { get; set; } = string.Empty;
 

@@ -423,10 +423,10 @@
             
             csv.AppendLine();
             csv.AppendLine("SALÁRIOS");
-            csv.AppendLine("Nome;ESF;Cargo;Salário;Carga Horária");
+            csv.AppendLine("Nome;ESF;Cargo;Salário");
             foreach (var func in todosFuncionarios.OrderBy(f => f.Esf?.Nome).ThenBy(f => f.Nome))
             {
-                csv.AppendLine($"{func.Nome};{func.Esf?.Nome};{func.Cargo};{func.Salario:F2};{func.CargaHoraria}h");
+                csv.AppendLine($"{func.Nome};{func.Esf?.Nome};{func.Cargo};{func.Salario:F2}");
             }
             
             var bytes = Encoding.UTF8.GetBytes(csv.ToString());

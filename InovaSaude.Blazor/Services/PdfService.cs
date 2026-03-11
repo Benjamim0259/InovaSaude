@@ -113,7 +113,6 @@ public class PdfService
                                 columns.RelativeColumn(3);
                                 columns.RelativeColumn(2);
                                 columns.RelativeColumn(2);
-                                columns.RelativeColumn(1);
                             });
 
                             table.Header(header =>
@@ -121,7 +120,6 @@ public class PdfService
                                 header.Cell().Element(CellStyle).Text("Nome").Bold();
                                 header.Cell().Element(CellStyle).Text("Cargo").Bold();
                                 header.Cell().Element(CellStyle).Text("Salário").Bold();
-                                header.Cell().Element(CellStyle).Text("CH").Bold();
                             });
 
                             foreach (var func in funcionarios.OrderBy(f => f.Nome))
@@ -129,7 +127,6 @@ public class PdfService
                                 table.Cell().Element(CellStyle).Text(func.Nome);
                                 table.Cell().Element(CellStyle).Text(func.Cargo ?? "-");
                                 table.Cell().Element(CellStyle).Text(func.Salario.ToString("C", new CultureInfo("pt-BR")));
-                                table.Cell().Element(CellStyle).Text($"{func.CargaHoraria}h");
                             }
                         });
                     });

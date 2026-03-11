@@ -186,7 +186,6 @@
                                         <th>Nome</th>
                                         <th>Cargo</th>
                                         <th class="text-end">Salário</th>
-                                        <th class="text-center">Carga Horária</th>
                                         <th class="text-center">Ações</th>
                                     </tr>
                                 </thead>
@@ -197,7 +196,6 @@
                                             <td>@func.Nome</td>
                                             <td>@(func.Cargo ?? "-")</td>
                                             <td class="text-end">@func.Salario.ToString("C")</td>
-                                            <td class="text-center">@func.CargaHoraria h/semana</td>
                                             <td class="text-center">
                                                 <button class="btn btn-sm btn-info" @onclick="() => ShowModalEditFuncionario(func)">
                                                     ✏️
@@ -249,15 +247,9 @@
                             <InputText class="form-control" @bind-Value="editingFuncionario!.Cargo" placeholder="Ex: Enfermeiro, Médico, etc." />
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Salário *</label>
-                                <InputNumber class="form-control" @bind-Value="editingFuncionario!.Salario" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Carga Horária (h/semana) *</label>
-                                <InputNumber class="form-control" @bind-Value="editingFuncionario!.CargaHoraria" min="1" max="44" />
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Salário *</label>
+                            <InputNumber class="form-control" @bind-Value="editingFuncionario!.Salario" />
                         </div>
 
                         <div class="modal-footer">
