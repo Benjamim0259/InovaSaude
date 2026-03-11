@@ -33,31 +33,24 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
-                    <label class="form-label">Período</label>
-                    <select class="form-select" @bind="periodoSelecionado" @bind:after="CarregarDados">
-                        <option value="mes">Mês Atual</option>
-                        <option value="trimestre">Último Trimestre</option>
-                        <option value="semestre">Último Semestre</option>
-                        <option value="ano">Ano Atual</option>
-                        <option value="personalizado">Personalizado</option>
-                    </select>
+                    <label class="form-label">Data Início</label>
+                    <input type="date" class="form-control" @bind="dataInicio" @bind:after="CarregarDados" />
                 </div>
-                @if (periodoSelecionado == "personalizado")
-                {
-                    <div class="col-md-3">
-                        <label class="form-label">Data Início</label>
-                        <input type="date" class="form-control" @bind="dataInicio" @bind:after="CarregarDados" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Data Fim</label>
-                        <input type="date" class="form-control" @bind="dataFim" @bind:after="CarregarDados" />
-                    </div>
-                }
+                <div class="col-md-3">
+                    <label class="form-label">Data Fim</label>
+                    <input type="date" class="form-control" @bind="dataFim" @bind:after="CarregarDados" />
+                </div>
                 <div class="col-md-6">
                     <label class="form-label">📍 Filtrar por ESF</label>
-                    <div class="card" style="max-height: 200px; overflow-y: auto;">
-                        <div class="card-body p-2">
-                            <div class="form-check">
+                    <div class="card">
+                        <div class="card-body p-3">
+                            <!-- Pesquisa -->
+                            <div class="mb-3">
+                                <input type="text" class="form-control form-control-sm" placeholder="🔍 Pesquisar ESF..." @bind="pesquisaESF" @bind:after="StateHasChanged" />
+                            </div>
+
+                            <!-- Selecionar todas -->
+                            <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" id="esfTodas" 
                                        checked="@(esfIdsSelecionadas.Count == 0 || esfIdsSelecionadas.Count == esfList.Count)"
                                        @onchange="@(() => SelecionarTodasESF())" />
@@ -66,17 +59,31 @@
                                 </label>
                             </div>
                             <hr class="my-2" />
-                            @foreach (var esf in esfList.OrderBy(e => e.Nome))
-                            {
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="esf-@esf.Id" 
-                                           checked="@(esfIdsSelecionadas.Contains(esf.Id))"
-                                           @onchange="@((e) => ToggleESF(esf.Id, e))" />
-                                    <label class="form-check-label" for="esf-@esf.Id">
-                                        <small><strong>@esf.Nome</strong> - CNES: @esf.Codigo</small>
-                                    </label>
-                                </div>
-                            }
+
+                            <!-- Grid de cards ESF -->
+                            <div class="row g-2" style="max-height: 300px; overflow-y: auto;">
+                                @foreach (var esf in esfList.Where(e => string.IsNullOrEmpty(pesquisaESF) || e.Nome.Contains(pesquisaESF, StringComparison.OrdinalIgnoreCase) || e.Codigo.Contains(pesquisaESF)).OrderBy(e => e.Nome))
+                                {
+                                    <div class="col-6">
+                                        <div class="card @(esfIdsSelecionadas.Contains(esf.Id) ? "border-primary bg-light" : "border-secondary")" 
+                                             style="cursor: pointer; transition: all 0.2s;"
+                                             @onclick="@(() => ToggleESFCard(esf.Id))">
+                                            <div class="card-body p-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="esf-@esf.Id" 
+                                                           checked="@(esfIdsSelecionadas.Contains(esf.Id))"
+                                                           @onclick:stopPropagation="true"
+                                                           @onchange="@((e) => ToggleESF(esf.Id, e))" />
+                                                    <label class="form-check-label d-block" for="esf-@esf.Id" style="cursor: pointer;">
+                                                        <div class="fw-bold text-truncate" title="@esf.Nome">@esf.Nome</div>
+                                                        <small class="text-muted">CNES: @esf.Codigo</small>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,15 +149,19 @@
                                         <span><strong>@item.CategoriaNome</strong></span>
                                         <span>@item.Total.ToString("C", new CultureInfo("pt-BR")) (@percentual.ToString("F1")%)</span>
                                     </div>
-                                    <div class="progress" style="height: 30px;">
-                                        <div class="progress-bar @GetCategoriaColor(item.CategoriaNome)" 
-                                             role="progressbar" 
-                                             style="width: @percentual%"
-                                             aria-valuenow="@percentual" 
-                                             aria-valuemin="0" 
-                                             aria-valuemax="100">
-                                            @item.Quantidade despesas
+                                    <div class="position-relative">
+                                        <div class="progress" style="height: 30px;">
+                                            <div class="progress-bar @GetCategoriaColor(item.CategoriaNome)" 
+                                                 role="progressbar" 
+                                                 style="width: @percentual%"
+                                                 aria-valuenow="@percentual" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">
+                                            </div>
                                         </div>
+                                        <span class="position-absolute top-50 start-50 translate-middle text-dark fw-bold" style="font-size: 0.9rem;">
+                                            @item.Quantidade @(item.Quantidade == 1 ? "despesa" : "despesas")
+                                        </span>
                                     </div>
                                 </div>
                             }
@@ -573,10 +584,8 @@
     private List<Funcionario> todosFuncionarios = new();
 
     private bool carregando = true;
-    private string periodoSelecionado = "mes";
-    private DateTime dataInicio = DateTime.UtcNow.AddMonths(-1);
+    private DateTime dataInicio = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
     private DateTime dataFim = DateTime.UtcNow;
-    private string EsfIdFiltro = "";
 
     // Métricas
     private decimal totalDespesas = 0;
@@ -592,6 +601,20 @@
     private List<AlertaOrcamento> alertasOrcamento = new();
     private string categoriaFiltroGrafico = "";
     private List<string> esfIdsSelecionadas = new();
+    private string pesquisaESF = "";
+
+    private void ToggleESFCard(string esfId)
+    {
+        if (esfIdsSelecionadas.Contains(esfId))
+        {
+            esfIdsSelecionadas.Remove(esfId);
+        }
+        else
+        {
+            esfIdsSelecionadas.Add(esfId);
+        }
+        CarregarDados();
+    }
 
     private void SelecionarTodasESF()
     {
@@ -643,27 +666,6 @@
         carregando = true;
         try
         {
-            // Ajustar datas conforme período
-            switch (periodoSelecionado)
-            {
-                case "mes":
-                    dataInicio = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-                    dataFim = dataInicio.AddMonths(1).AddDays(-1);
-                    break;
-                case "trimestre":
-                    dataInicio = DateTime.UtcNow.AddMonths(-3);
-                    dataFim = DateTime.UtcNow;
-                    break;
-                case "semestre":
-                    dataInicio = DateTime.UtcNow.AddMonths(-6);
-                    dataFim = DateTime.UtcNow;
-                    break;
-                case "ano":
-                    dataInicio = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                    dataFim = new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59, DateTimeKind.Utc);
-                    break;
-            }
-
             // Carregar dados
             esfList = await ESFService.GetAllESFAsync() ?? new List<ESF>();
             categorias = await CategoriaService.GetAllCategoriasAsync() ?? new List<Categoria>();
@@ -772,6 +774,15 @@
             .Cast<AlertaOrcamento>()
             .OrderByDescending(a => a.PercentualExcedido)
             .ToList();
+
+        // Gerar dados do gráfico empilhado
+        GerarDadosGraficoEmpilhado();
+
+        // Definir o mês mais recente como selecionado
+        if (dadosGraficoMensalPorCategoria.Any())
+        {
+            mesSelecionadoIndex = dadosGraficoMensalPorCategoria.Count - 1;
+        }
     }
 
     private void AtualizarGraficoLinha()
