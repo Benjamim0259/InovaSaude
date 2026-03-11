@@ -194,9 +194,8 @@ builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<ImportacaoService>();
 builder.Services.AddScoped<WebhookService>();
 
-// APIs Externas (HORUS, e-SUS PEC, NEMESIS)
+// APIs Externas (e-SUS PEC, NEMESIS)
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<InovaSaude.Blazor.Services.Integrations.HorusIntegrationService>();
 builder.Services.AddScoped<InovaSaude.Blazor.Services.Integrations.EsusPecIntegrationService>();
 builder.Services.AddScoped<InovaSaude.Blazor.Services.Integrations.NemesisIntegrationService>();
 
