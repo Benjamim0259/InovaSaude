@@ -1,7 +1,9 @@
 @page "/gerenciar-despesas"
 @using System.ComponentModel.DataAnnotations
+@using System.Globalization
 @using InovaSaude.Blazor.Services
 @using InovaSaude.Blazor.Models
+@using InovaSaude.Blazor.Helpers
 @inject DespesaService DespesaService
 @inject ESFService ESFService
 @inject CategoriaService CategoriaService
@@ -10,14 +12,14 @@
 @inject IJSRuntime JSRuntime
 @attribute [Authorize]
 
-<PageTitle>Gerenciar Despesas - InovaSaúde</PageTitle>
+<PageTitle>Gerenciar Despesas - InovaSaude</PageTitle>
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>💰 Gerenciar Despesas</h2>
+        <h2><span class="oi oi-dollar me-2"></span>Gerenciar Despesas</h2>
         <div>
             <button class="btn btn-success btn-lg me-2" @onclick="AbrirModalDespesaRapida">
-                <span class="oi oi-flash me-2"></span>Despesa Rápida
+                <span class="oi oi-flash me-2"></span>Despesa Rapida
             </button>
             <button class="btn btn-primary btn-lg" @onclick="AbrirModalNovaDespesa">
                 <span class="oi oi-plus me-2"></span>Nova Despesa
@@ -27,167 +29,149 @@
 
     @if (carregando)
     {
-     <div class="text-center py-5">
+        <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Carregando...</span>
-    </div>
-    <p class="mt-2 text-muted">Carregando despesas...</p>
-  </div>
-    }
-else
-    {
-           <!-- Cards de Resumo -->
-           <div class="row mb-4">
-    <div class="col-md-4">
-    <div class="card border-primary text-center">
-            <div class="card-body">
-            <h6 class="text-muted">Total Gasto</h6>
-               <h3 class="text-primary">@despesas.Sum(d => d.Valor).ToString("C")</h3>
-             </div>
-        </div>
-     </div>
-           <div class="col-md-4">
-        <div class="card border-success text-center">
-    <div class="card-body">
-            <h6 class="text-muted">Total de Despesas</h6>
-        <h3 class="text-success">@despesas.Count</h3>
-      </div>
+                <span class="visually-hidden">Carregando...</span>
             </div>
-       </div>
-     <div class="col-md-4">
-    <div class="card border-info text-center">
-    <div class="card-body">
-            <h6 class="text-muted">Média por Despesa</h6>
-        <h3 class="text-info">@((despesas.Any() ? despesas.Average(d => d.Valor) : 0).ToString("C"))</h3>
-                  </div>
-         </div>
-          </div>
-           </div>
+            <p class="mt-2 text-muted">Carregando despesas...</p>
+        </div>
+    }
+    else
+    {
+        <!-- Cards de Resumo -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-primary text-center">
+                    <div class="card-body">
+                        <h6 class="text-muted">Total Gasto</h6>
+                        <h3 class="text-primary">@despesas.Sum(d => d.Valor).ToString("C")</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-success text-center">
+                    <div class="card-body">
+                        <h6 class="text-muted">Total de Despesas</h6>
+                        <h3 class="text-success">@despesas.Count</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-info text-center">
+                    <div class="card-body">
+                        <h6 class="text-muted">Media por Despesa</h6>
+                        <h3 class="text-info">@((despesas.Any() ? despesas.Average(d => d.Valor) : 0).ToString("C"))</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Filtros -->
-     <div class="card mb-4">
+        <div class="card mb-4">
             <div class="card-body">
-     <div class="row g-3">
-         <div class="col-md-4">
-       <label class="form-label">Pesquisar</label>
-    <input type="text" class="form-control" @bind="filtroDescricao" @bind:event="oninput" placeholder="Descrição..." />
-         </div>
-       <div class="col-md-3">
-  <label class="form-label">Categoria</label>
-       <select class="form-select" @bind="filtroCategoria">
-     <option value="">Todas</option>
-       @foreach (var cat in categorias)
-               {
-       <option value="@cat.Id">@cat.Nome</option>
-      }
-    </select>
-                 </div>
-    <div class="col-md-3">
-      <label class="form-label">ESF - Estrat�gia Sa�de da Fam�lia</label>
-<select class="form-select" @bind="filtroESF">
-        <option value="">Todas</option>
-      @foreach (var esf in esfList)
-                {
-         <option value="@esf.Id">@esf.Nome</option>
-        }
-   </select>
-    </div>
-         <div class="col-md-2 d-flex align-items-end">
- <button class="btn btn-secondary w-100" @onclick="LimparFiltros">
-               <span class="oi oi-x me-2"></span>Limpar Filtros
-       </button>
-    </div>
- </div>
-       </div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Pesquisar</label>
+                        <input type="text" class="form-control" @bind="filtroDescricao" @bind:event="oninput" placeholder="Descricao..." />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Categoria</label>
+                        <select class="form-select" @bind="filtroCategoria">
+                            <option value="">Todas</option>
+                            @foreach (var cat in categorias)
+                            {
+                                <option value="@cat.Id">@cat.Nome</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">ESF</label>
+                        <select class="form-select" @bind="filtroESF">
+                            <option value="">Todas</option>
+                            @foreach (var esf in esfList)
+                            {
+                                <option value="@esf.Id">@esf.Nome</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-secondary w-100" @onclick="LimparFiltros">
+                            <span class="oi oi-x me-2"></span>Limpar
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Tabela de Despesas -->
         <div class="card">
             <div class="card-body">
-     <div class="table-responsive">
-   <table class="table table-hover">
-                <thead>
-       <tr>
-     <th>Data</th>
-   <th>Descrição</th>
-  <th>Categoria</th>
-        <th>Tipo</th>
-  <th>ESF</th>
-       <th class="text-end">Valor</th>
-          <th>Vencimento</th>
-        <th class="text-center">Ações</th>
-         </tr>
-         </thead>
-          <tbody>
-          @foreach (var despesa in DespesasFiltradas)
-              {
-       <tr>
-     <td>
-       <small>@despesa.CreatedAt.ToString("dd/MM/yyyy")</small>
-     </td>
-            <td>
-             <strong>@despesa.Descricao</strong>
-    @if (!string.IsNullOrEmpty(despesa.NumeroNota))
-     {
-     <br/><small class="text-muted">NF: @despesa.NumeroNota</small>
-        }
-         </td>
-            <td>
-                 <span class="badge @GetCategoriaBadgeClass(despesa.Categoria?.Nome)">
-      @GetCategoriaIcon(despesa.Categoria?.Nome) @(despesa.Categoria?.Nome ?? "-")
-             </span>
-       </td>
-   <td>
-                    <small class="text-muted">@despesa.Tipo</small>
-    </td>
-        <td>
-       <small>@(despesa.Esf?.Nome ?? "-")</small>
-         </td>
-           <td class="text-end">
-   <strong class="@(despesa.Valor > 5000 ? "text-danger" : "text-success")">
-          @despesa.Valor.ToString("C")
-           </strong>
-             </td>
-    <td>
-        @if (despesa.DataVencimento.HasValue)
-    {
-    var diasRestantes = (despesa.DataVencimento.Value - DateTime.UtcNow).Days;
-             <small class="@(diasRestantes < 5 ? "text-danger fw-bold" : "text-muted")">
-                  @despesa.DataVencimento.Value.ToString("dd/MM/yyyy")
-       @if (diasRestantes < 5 && diasRestantes >= 0)
-   {
-      <br/><span class="badge bg-danger">@diasRestantes dias</span>
-           }
-         </small>
-     }
-   else
-      {
-   <span class="text-muted">-</span>
-        }
-   </td>
-         <td class="text-center">
-   <div class="btn-group btn-group-sm">
-      <button class="btn btn-outline-info" @onclick="() => AbrirModalEditarDespesa(despesa)" title="Editar">
-    <span class="oi oi-pencil"></span>
-   </button>
-             <button class="btn btn-outline-danger" @onclick="() => ExcluirDespesa(despesa)" title="Excluir">
-       <span class="oi oi-trash"></span>
-             </button>
-            </div>
-             </td>
-           </tr>
-      }
-      </tbody>
-       </table>
-  </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mes</th>
+                                <th>Descricao</th>
+                                <th>Categoria</th>
+                                <th>Tipo</th>
+                                <th>ESF</th>
+                                <th class="text-end">Valor</th>
+                                <th class="text-center">Acoes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var despesa in DespesasFiltradas)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-primary">@despesa.MesReferencia.ToString("MMM/yyyy")</span>
+                                    </td>
+                                    <td>
+                                        <strong>@despesa.Descricao</strong>
+                                        @if (!string.IsNullOrEmpty(despesa.NumeroNota))
+                                        {
+                                            <br/><small class="text-muted">NF: @despesa.NumeroNota</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge @GetCategoriaBadgeClass(despesa.Categoria?.Nome)">
+                                            @(despesa.Categoria?.Nome ?? "-")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">@despesa.Tipo</small>
+                                    </td>
+                                    <td>
+                                        <small>@(despesa.Esf?.Nome ?? "-")</small>
+                                    </td>
+                                    <td class="text-end">
+                                        <strong class="@(despesa.Valor > 5000 ? "text-danger" : "text-success")">
+                                            @despesa.Valor.ToString("C")
+                                        </strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-info" @onclick="() => AbrirModalEditarDespesa(despesa)" title="Editar">
+                                                <span class="oi oi-pencil"></span>
+                                            </button>
+                                            <button class="btn btn-outline-danger" @onclick="() => ExcluirDespesa(despesa)" title="Excluir">
+                                                <span class="oi oi-trash"></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
 
                 @if (!DespesasFiltradas.Any())
-     {
-          <div class="alert alert-info text-center">
-         <span class="oi oi-info me-2"></span>
-              Nenhuma despesa encontrada com os filtros aplicados.
-   </div>
-   }
+                {
+                    <div class="alert alert-info text-center">
+                        <span class="oi oi-info me-2"></span>
+                        Nenhuma despesa encontrada.
+                    </div>
+                }
             </div>
         </div>
     }
@@ -197,139 +181,140 @@ else
 @if (mostrarModal)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
- <div class="modal-dialog modal-xl">
-      <div class="modal-content">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
                 <div class="modal-header">
-        <h5 class="modal-title">
-      @(despesaEditando == null ? "➕ Nova Despesa" : "✏️ Editar Despesa")
-        </h5>
-         <button type="button" class="btn-close" @onclick="FecharModal"></button>
-        </div>
-                <EditForm Model="despesaForm" OnValidSubmit="SalvarDespesa">
-             <DataAnnotationsValidator />
-               <div class="modal-body">
-<div class="row g-3">
-                    <!-- Linha 1 -->
-     <div class="col-md-8">
-         <label class="form-label">Descrição *</label>
-     <InputText class="form-control" @bind-Value="despesaForm.Descricao" placeholder="Ex: Compra de medicamentos para pressão alta" />
-          <ValidationMessage For="@(() => despesaForm.Descricao)" />
-         </div>
-    <div class="col-md-4">
-              <label class="form-label">Valor *</label>
-          <InputNumber class="form-control" @bind-Value="despesaForm.Valor" placeholder="0,00" />
-    <ValidationMessage For="@(() => despesaForm.Valor)" />
-         </div>
-
-                <!-- Linha 2 -->
-              <div class="col-md-4">
-        <label class="form-label">Categoria *</label>
-            <select class="form-select" @bind="despesaForm.CategoriaId">
-         <option value="">Selecione...</option>
-      @foreach (var categoria in categorias)
-       {
-         <option value="@categoria.Id">@GetCategoriaIcon(categoria.Nome) @categoria.Nome</option>
-       }
-           </select>
-    <ValidationMessage For="@(() => despesaForm.CategoriaId)" />
-     </div>
-     <div class="col-md-4">
-         <label class="form-label">Tipo *</label>
-       <select class="form-select" @bind="despesaForm.Tipo">
-      <option value="">Selecione...</option>
-    <option value="FIXA">💼 Fixa (Recorrente)</option>
-    <option value="VARIAVEL">📊 Variável</option>
-       <option value="EXTRAORDINARIA">⚠️ Extraordinária</option>
-          <option value="INVESTIMENTO">📈 Investimento</option>
-          </select>
-           <ValidationMessage For="@(() => despesaForm.Tipo)" />
+                    <h5 class="modal-title">
+                        @(despesaEditando == null ? "Nova Despesa" : "Editar Despesa")
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="FecharModal"></button>
                 </div>
-   <div class="col-md-4">
-      <label class="form-label">ESF *</label>
-         <select class="form-select" @bind="despesaForm.EsfId">
-        <option value="">Selecione...</option>
-    @foreach (var ubs in esfList)
-     {
-        <option value="@ubs.Id">@ubs.Nome</option>
-   }
-               </select>
-   <ValidationMessage For="@(() => despesaForm.EsfId)" />
- </div>
+                <EditForm Model="despesaForm" OnValidSubmit="SalvarDespesa">
+                    <DataAnnotationsValidator />
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <!-- Descricao e Valor -->
+                            <div class="col-md-8">
+                                <label class="form-label">Descricao *</label>
+                                <InputText class="form-control" @bind-Value="despesaForm.Descricao" placeholder="Ex: Compra de medicamentos" />
+                                <ValidationMessage For="@(() => despesaForm.Descricao)" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Valor *</label>
+                                <InputNumber class="form-control" @bind-Value="despesaForm.Valor" />
+                                <ValidationMessage For="@(() => despesaForm.Valor)" />
+                            </div>
 
-               <!-- Linha 3 -->
-            <div class="col-md-6">
-        <label class="form-label">Data Vencimento</label>
-         <InputDate class="form-control" @bind-Value="despesaForm.DataVencimento" />
-   </div>
-     <div class="col-md-6">
-          <label class="form-label">Data Pagamento</label>
- <InputDate class="form-control" @bind-Value="despesaForm.DataPagamento" />
-     </div>
+                            <!-- Mes Referencia -->
+                            <div class="col-md-4">
+                                <label class="form-label">Mes de Referencia *</label>
+                                <select class="form-select" @bind="mesSelecionado">
+                                    @for (int i = -6; i <= 6; i++)
+                                    {
+                                        var mes = DateTime.Now.AddMonths(i);
+                                        var valor = mes.ToString("yyyy-MM");
+                                        <option value="@valor">@mes.ToString("MMMM/yyyy")</option>
+                                    }
+                                </select>
+                            </div>
 
-              <!-- Linha 4 - Documentos -->
-        <div class="col-md-6">
-           <label class="form-label">Número da Nota Fiscal</label>
-         <InputText class="form-control" @bind-Value="despesaForm.NumeroNota" placeholder="000123" />
+                            <!-- Categoria -->
+                            <div class="col-md-4">
+                                <label class="form-label">Categoria *</label>
+                                <select class="form-select" @bind="despesaForm.CategoriaId">
+                                    <option value="">Selecione...</option>
+                                    @foreach (var categoria in categorias)
+                                    {
+                                        <option value="@categoria.Id">@categoria.Nome</option>
+                                    }
+                                </select>
+                                <ValidationMessage For="@(() => despesaForm.CategoriaId)" />
+                            </div>
+
+                            <!-- Tipo -->
+                            <div class="col-md-4">
+                                <label class="form-label">Tipo *</label>
+                                <select class="form-select" @bind="despesaForm.Tipo">
+                                    <option value="">Selecione...</option>
+                                    <option value="FIXA">Fixa (Recorrente)</option>
+                                    <option value="VARIAVEL">Variavel</option>
+                                    <option value="EXTRAORDINARIA">Extraordinaria</option>
+                                    <option value="INVESTIMENTO">Investimento</option>
+                                </select>
+                                <ValidationMessage For="@(() => despesaForm.Tipo)" />
+                            </div>
+
+                            <!-- ESF -->
+                            <div class="col-md-6">
+                                <label class="form-label">ESF *</label>
+                                <select class="form-select" @bind="despesaForm.EsfId">
+                                    <option value="">Selecione...</option>
+                                    @foreach (var ubs in esfList)
+                                    {
+                                        <option value="@ubs.Id">@ubs.Nome</option>
+                                    }
+                                </select>
+                                <ValidationMessage For="@(() => despesaForm.EsfId)" />
+                            </div>
+
+                            <!-- Numero Nota -->
+                            <div class="col-md-6">
+                                <label class="form-label">Numero da Nota Fiscal</label>
+                                <InputText class="form-control" @bind-Value="despesaForm.NumeroNota" placeholder="000123" />
+                            </div>
+
+                            <!-- Observacoes -->
+                            <div class="col-12">
+                                <label class="form-label">Observacoes</label>
+                                <InputTextArea class="form-control" rows="2" @bind-Value="despesaForm.Observacoes" />
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(mensagemErro))
+                        {
+                            <div class="alert alert-danger mt-3">@mensagemErro</div>
+                        }
                     </div>
-             <div class="col-md-6">
-     <label class="form-label">Número do Empenho</label>
-      <InputText class="form-control" @bind-Value="despesaForm.NumeroEmpenho" placeholder="2024/0001" />
-          </div>
-
-       <!-- Observações -->
-     <div class="col-12">
-         <label class="form-label">Observações</label>
-       <InputTextArea class="form-control" rows="3" @bind-Value="despesaForm.Observacoes" placeholder="Observações adicionais..." />
-        </div>
-         </div>
-
-         @if (!string.IsNullOrEmpty(mensagemErro))
-         {
-  <div class="alert alert-danger mt-3">
-          <span class="oi oi-warning me-2"></span>
-   @mensagemErro
-    </div>
-       }
-     </div>
-       <div class="modal-footer">
-         <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
-              <button type="submit" class="btn btn-primary" disabled="@salvando">
-                    @if (salvando)
-          {
-             <span class="spinner-border spinner-border-sm me-2"></span>
-   }
-      @(despesaEditando == null ? "Criar Despesa" : "Salvar Alterações")
-  </button>
-          </div>
-          </EditForm>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" disabled="@salvando">
+                            @if (salvando) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                            @(despesaEditando == null ? "Criar Despesa" : "Salvar")
+                        </button>
+                    </div>
+                </EditForm>
             </div>
         </div>
     </div>
 }
 
-<!-- Modal Despesa Rápida -->
+<!-- Modal Despesa Rapida -->
 @if (mostrarModalRapida)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">⚡ Despesa Rápida</h5>
+                    <h5 class="modal-title"><span class="oi oi-flash me-2"></span>Despesa Rapida</h5>
                     <button type="button" class="btn-close btn-close-white" @onclick="FecharModalRapida"></button>
                 </div>
                 <div class="modal-body">
+                    <p class="text-muted mb-3">
+                        <span class="oi oi-info me-2"></span>
+                        A despesa sera registrada no mes atual: <strong>@DateTime.Now.ToString("MMMM/yyyy")</strong>
+                    </p>
                     <EditForm Model="despesaRapidaForm" OnValidSubmit="SalvarDespesaRapida">
                         <DataAnnotationsValidator />
                         <ValidationSummary class="alert alert-danger" />
 
                         <div class="mb-3">
-                            <label class="form-label">Descrição ou Nota Fiscal *</label>
-                            <InputText class="form-control" @bind-Value="despesaRapidaForm.Descricao" placeholder="Ex: Compra de material ou NF 123456" />
+                            <label class="form-label">Descricao *</label>
+                            <InputText class="form-control" @bind-Value="despesaRapidaForm.Descricao" placeholder="Ex: Compra de material" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Valor *</label>
-                            <InputNumber class="form-control" @bind-Value="despesaRapidaForm.Valor" placeholder="0,00" />
+                            <InputNumber class="form-control" @bind-Value="despesaRapidaForm.Valor" />
                         </div>
 
                         <div class="mb-3">
@@ -338,7 +323,7 @@ else
                                 <option value="">Selecione...</option>
                                 @foreach (var categoria in categorias)
                                 {
-                                    <option value="@categoria.Id">@GetCategoriaIcon(categoria.Nome) @categoria.Nome</option>
+                                    <option value="@categoria.Id">@categoria.Nome</option>
                                 }
                             </select>
                         </div>
@@ -356,20 +341,13 @@ else
 
                         @if (!string.IsNullOrEmpty(mensagemErro))
                         {
-                            <div class="alert alert-danger">
-                                <span class="oi oi-warning me-2"></span>
-                                @mensagemErro
-                            </div>
+                            <div class="alert alert-danger">@mensagemErro</div>
                         }
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @onclick="FecharModalRapida">Cancelar</button>
-                            <button type="submit" class="btn btn-success" disabled="@salvando">
-                                @if (salvando)
-                                {
-                                    <span class="spinner-border spinner-border-sm me-2"></span>
-                                }
-                                ⚡ Adicionar Rápido
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg" disabled="@salvando">
+                                @if (salvando) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                                Salvar Despesa Rapida
                             </button>
                         </div>
                     </EditForm>
@@ -387,10 +365,11 @@ else
     private bool mostrarModal = false;
     private bool mostrarModalRapida = false;
     private bool salvando = false;
-    private Despesa? despesaEditando = null;
+    private string? mensagemErro;
+    private Despesa? despesaEditando;
     private DespesaFormModel despesaForm = new();
     private DespesaRapidaFormModel despesaRapidaForm = new();
-    private string? mensagemErro;
+    private string mesSelecionado = DateTime.Now.ToString("yyyy-MM");
 
     // Filtros
     private string filtroDescricao = "";
@@ -405,20 +384,20 @@ else
     private async Task CarregarDados()
     {
         carregando = true;
-      try
+        try
         {
-     despesas = await DespesaService.GetAllDespesasAsync();
+            despesas = await DespesaService.GetAllDespesasAsync();
             esfList = await ESFService.GetAllESFAsync();
             categorias = await CategoriaService.GetAllCategoriasAsync();
         }
         catch (Exception ex)
-   {
-       mensagemErro = $"Erro ao carregar dados: {ex.Message}";
+        {
+            mensagemErro = $"Erro ao carregar dados: {ex.Message}";
         }
-   finally
-    {
-         carregando = false;
-    }
+        finally
+        {
+            carregando = false;
+        }
     }
 
     private IEnumerable<Despesa> DespesasFiltradas
@@ -427,24 +406,18 @@ else
         {
             var query = despesas.AsEnumerable();
 
-if (!string.IsNullOrWhiteSpace(filtroDescricao))
-       {
-    query = query.Where(d => d.Descricao.Contains(filtroDescricao, StringComparison.OrdinalIgnoreCase));
-   }
+            if (!string.IsNullOrWhiteSpace(filtroDescricao))
+                query = query.Where(d => d.Descricao.Contains(filtroDescricao, StringComparison.OrdinalIgnoreCase));
 
- if (!string.IsNullOrWhiteSpace(filtroCategoria))
-     {
-    query = query.Where(d => d.CategoriaId == filtroCategoria);
-            }
+            if (!string.IsNullOrWhiteSpace(filtroCategoria))
+                query = query.Where(d => d.CategoriaId == filtroCategoria);
 
-     if (!string.IsNullOrWhiteSpace(filtroESF))
-             {
-            query = query.Where(d => d.EsfId == filtroESF);
-           }
+            if (!string.IsNullOrWhiteSpace(filtroESF))
+                query = query.Where(d => d.EsfId == filtroESF);
 
-        return query.OrderByDescending(d => d.CreatedAt);
-      }
-  }
+            return query.OrderByDescending(d => d.MesReferencia);
+        }
+    }
 
     private void LimparFiltros()
     {
@@ -455,10 +428,11 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
 
     private void AbrirModalNovaDespesa()
     {
-    despesaEditando = null;
-    despesaForm = new DespesaFormModel();
+        despesaEditando = null;
+        despesaForm = new DespesaFormModel();
+        mesSelecionado = DateTime.Now.ToString("yyyy-MM");
         mensagemErro = null;
- mostrarModal = true;
+        mostrarModal = true;
     }
 
     private void AbrirModalDespesaRapida()
@@ -468,87 +442,35 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
         mostrarModalRapida = true;
     }
 
+    private void FecharModal()
+    {
+        mostrarModal = false;
+        despesaEditando = null;
+        mensagemErro = null;
+    }
+
     private void FecharModalRapida()
     {
         mostrarModalRapida = false;
         mensagemErro = null;
     }
 
-    private async Task SalvarDespesaRapida()
-    {
-        salvando = true;
-        mensagemErro = null;
-
-        try
-        {
-            var usuarioId = await AuthService.GetCurrentUserIdAsync();
-            if (string.IsNullOrEmpty(usuarioId))
-            {
-                mensagemErro = "Usuário não autenticado";
-                return;
-            }
-
-            if (string.IsNullOrEmpty(despesaRapidaForm.CategoriaId))
-            {
-                mensagemErro = "Por favor, selecione uma categoria.";
-                return;
-            }
-
-            var novaDespesa = new Despesa
-            {
-                Descricao = despesaRapidaForm.Descricao,
-                Valor = despesaRapidaForm.Valor,
-                CategoriaId = despesaRapidaForm.CategoriaId,
-                Tipo = "VARIAVEL",
-                EsfId = despesaRapidaForm.EsfId!,
-                NumeroNota = despesaRapidaForm.Descricao.Contains("NF") ? despesaRapidaForm.Descricao : null,
-                UsuarioCriacaoId = usuarioId
-            };
-
-            await DespesaService.CreateDespesaAsync(novaDespesa);
-            await CarregarDados();
-            FecharModalRapida();
-        }
-        catch (Exception ex)
-        {
-            mensagemErro = $"Erro ao salvar despesa rápida: {ex.Message}";
-            if (ex.InnerException != null)
-            {
-                mensagemErro += $"\n\nDetalhes: {ex.InnerException.Message}";
-            }
-            await JSRuntime.InvokeVoidAsync("console.error", "Erro completo:", ex.ToString());
-        }
-        finally
-        {
-            salvando = false;
-        }
-    }
-
     private void AbrirModalEditarDespesa(Despesa despesa)
-  {
-    despesaEditando = despesa;
-      despesaForm = new DespesaFormModel
-         {
-      Descricao = despesa.Descricao,
-      Valor = despesa.Valor,
-   CategoriaId = despesa.CategoriaId,
-     Tipo = despesa.Tipo,
-             EsfId = despesa.EsfId,
-             DataVencimento = despesa.DataVencimento,
-             DataPagamento = despesa.DataPagamento,
-             NumeroNota = despesa.NumeroNota,
-          NumeroEmpenho = despesa.NumeroEmpenho,
-  Observacoes = despesa.Observacoes
-  };
-         mensagemErro = null;
-  mostrarModal = true;
-     }
-
-    private void FecharModal()
     {
-  mostrarModal = false;
-        despesaEditando = null;
+        despesaEditando = despesa;
+        despesaForm = new DespesaFormModel
+        {
+            Descricao = despesa.Descricao,
+            Valor = despesa.Valor,
+            CategoriaId = despesa.CategoriaId,
+            Tipo = despesa.Tipo,
+            EsfId = despesa.EsfId,
+            NumeroNota = despesa.NumeroNota,
+            Observacoes = despesa.Observacoes
+        };
+        mesSelecionado = despesa.MesReferencia.ToString("yyyy-MM");
         mensagemErro = null;
+        mostrarModal = true;
     }
 
     private async Task SalvarDespesa()
@@ -561,153 +483,175 @@ if (!string.IsNullOrWhiteSpace(filtroDescricao))
             var usuarioId = await AuthService.GetCurrentUserIdAsync();
             if (string.IsNullOrEmpty(usuarioId))
             {
-                mensagemErro = "Usuário não autenticado";
+                mensagemErro = "Usuario nao autenticado";
                 return;
             }
 
+            // Converter mes selecionado para DateTime (primeiro dia do mes)
+            var mesRef = DateTime.ParseExact(mesSelecionado + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
             if (despesaEditando == null)
             {
-         // Criar nova despesa
-          var novaDespesa = new Despesa
-        {
-    Descricao = despesaForm.Descricao,
-Valor = despesaForm.Valor,
-                   CategoriaId = despesaForm.CategoriaId!,
-               Tipo = despesaForm.Tipo!,
-                EsfId = despesaForm.EsfId!,
-                DataVencimento = despesaForm.DataVencimento,
-                 DataPagamento = despesaForm.DataPagamento,
-             NumeroNota = despesaForm.NumeroNota,
-                  NumeroEmpenho = despesaForm.NumeroEmpenho,
-             Observacoes = despesaForm.Observacoes,
-           UsuarioCriacaoId = usuarioId
-           };
+                var novaDespesa = new Despesa
+                {
+                    Descricao = despesaForm.Descricao,
+                    Valor = despesaForm.Valor,
+                    MesReferencia = mesRef,
+                    CategoriaId = despesaForm.CategoriaId!,
+                    Tipo = despesaForm.Tipo!,
+                    EsfId = despesaForm.EsfId!,
+                    NumeroNota = despesaForm.NumeroNota,
+                    Observacoes = despesaForm.Observacoes,
+                    UsuarioCriacaoId = usuarioId
+                };
 
-     await DespesaService.CreateDespesaAsync(novaDespesa);
-   }
-       else
-    {
-        // Editar despesa existente
- despesaEditando.Descricao = despesaForm.Descricao;
-       despesaEditando.Valor = despesaForm.Valor;
-      despesaEditando.CategoriaId = despesaForm.CategoriaId!;
-  despesaEditando.Tipo = despesaForm.Tipo!;
-             despesaEditando.EsfId = despesaForm.EsfId!;
-       despesaEditando.DataVencimento = despesaForm.DataVencimento;
-     despesaEditando.DataPagamento = despesaForm.DataPagamento;
-       despesaEditando.NumeroNota = despesaForm.NumeroNota;
-              despesaEditando.NumeroEmpenho = despesaForm.NumeroEmpenho;
-      despesaEditando.Observacoes = despesaForm.Observacoes;
-     despesaEditando.UpdatedAt = DateTime.UtcNow;
+                await DespesaService.CreateDespesaAsync(novaDespesa);
+            }
+            else
+            {
+                despesaEditando.Descricao = despesaForm.Descricao;
+                despesaEditando.Valor = despesaForm.Valor;
+                despesaEditando.MesReferencia = mesRef;
+                despesaEditando.CategoriaId = despesaForm.CategoriaId!;
+                despesaEditando.Tipo = despesaForm.Tipo!;
+                despesaEditando.EsfId = despesaForm.EsfId!;
+                despesaEditando.NumeroNota = despesaForm.NumeroNota;
+                despesaEditando.Observacoes = despesaForm.Observacoes;
+                despesaEditando.UpdatedAt = DateTime.UtcNow;
 
-    await DespesaService.UpdateDespesaAsync(despesaEditando);
+                await DespesaService.UpdateDespesaAsync(despesaEditando);
             }
 
-       await CarregarDados();
+            await CarregarDados();
             FecharModal();
         }
         catch (Exception ex)
         {
             mensagemErro = $"Erro ao salvar despesa: {ex.Message}";
-            if (ex.InnerException != null)
-            {
-                mensagemErro += $"\n\nDetalhes: {ex.InnerException.Message}";
-            }
-            await JSRuntime.InvokeVoidAsync("console.error", "Erro completo:", ex.ToString());
-    }
+        }
         finally
-   {
-            salvando = false;
-    }
-  }
-
-    private async Task ExcluirDespesa(Despesa despesa)
-  {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Tem certeza que deseja excluir a despesa '{despesa.Descricao}'?");
-        if (confirmed)
         {
-      try
-  {
-                await DespesaService.DeleteDespesaAsync(despesa.Id);
- await CarregarDados();
-     }
-        catch (Exception ex)
-            {
-     mensagemErro = $"Erro ao excluir despesa: {ex.Message}";
-            }
+            salvando = false;
         }
     }
 
-      private bool confirm(string message) => true;
+    private async Task SalvarDespesaRapida()
+    {
+        salvando = true;
+        mensagemErro = null;
 
-        private string GetCategoriaBadgeClass(string? categoria) => categoria switch
+        try
+        {
+            var usuarioId = await AuthService.GetCurrentUserIdAsync();
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                mensagemErro = "Usuario nao autenticado";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(despesaRapidaForm.CategoriaId))
+            {
+                mensagemErro = "Selecione uma categoria";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(despesaRapidaForm.EsfId))
+            {
+                mensagemErro = "Selecione uma ESF";
+                return;
+            }
+
+            // Mes atual automatico
+            var mesAtual = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+
+            var novaDespesa = new Despesa
+            {
+                Descricao = despesaRapidaForm.Descricao,
+                Valor = despesaRapidaForm.Valor,
+                MesReferencia = mesAtual,
+                CategoriaId = despesaRapidaForm.CategoriaId,
+                Tipo = "VARIAVEL",
+                EsfId = despesaRapidaForm.EsfId,
+                UsuarioCriacaoId = usuarioId
+            };
+
+            await DespesaService.CreateDespesaAsync(novaDespesa);
+            await CarregarDados();
+            FecharModalRapida();
+        }
+        catch (Exception ex)
+        {
+            mensagemErro = $"Erro ao salvar: {ex.Message}";
+        }
+        finally
+        {
+            salvando = false;
+        }
+    }
+
+    private async Task ExcluirDespesa(Despesa despesa)
+    {
+        try
+        {
+            await DespesaService.DeleteDespesaAsync(despesa.Id);
+            await CarregarDados();
+        }
+        catch (Exception ex)
+        {
+            mensagemErro = $"Erro ao excluir: {ex.Message}";
+        }
+    }
+
+    private string GetCategoriaBadgeClass(string? categoria)
+    {
+        return categoria switch
         {
             "Medicamentos" => "bg-danger",
-    "Material Médico" => "bg-primary",
-         "Contas Fixas" => "bg-warning",
-            "Pessoal" => "bg-success",
-            "Infraestrutura" => "bg-secondary",
-            "Serviços Terceirizados" => "bg-info",
-     "Material de Expediente" => "bg-dark",
-            "Alimentação" => "bg-orange",
-        _ => "bg-secondary"
+            "Material Medico" => "bg-warning text-dark",
+            "Infraestrutura" => "bg-info",
+            "Alimentacao" => "bg-success",
+            "Contas Fixas" => "bg-secondary",
+            _ => "bg-primary"
         };
+    }
 
-    private string GetCategoriaIcon(string? categoria) => categoria switch
-    {
-        "Medicamentos" => "💊",
-    "Material Médico" => "🩺",
-        "Contas Fixas" => "💡",
-        "Pessoal" => "👥",
-        "Infraestrutura" => "🏗️",
-        "Serviços Terceirizados" => "🚑",
-        "Material de Expediente" => "📚",
-        "Alimentação" => "🍽️",
-  _ => "📋"
-    };
-
+    // Models
     public class DespesaFormModel
     {
-        [Required(ErrorMessage = "Descrição é obrigatória")]
-[StringLength(1000, ErrorMessage = "Descrição deve ter no máximo 1000 caracteres")]
-      public string Descricao { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Descricao obrigatoria")]
+        [StringLength(1000)]
+        public string Descricao { get; set; } = "";
 
-    [Required(ErrorMessage = "Valor é obrigatório")]
-        [Range(0.01, 999999999, ErrorMessage = "Valor deve ser maior que zero")]
-public decimal Valor { get; set; }
+        [Required(ErrorMessage = "Valor obrigatorio")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Valor deve ser maior que zero")]
+        public decimal Valor { get; set; }
 
-        [Required(ErrorMessage = "Categoria é obrigatória")]
-   public string? CategoriaId { get; set; }
+        [Required(ErrorMessage = "Categoria obrigatoria")]
+        public string? CategoriaId { get; set; }
 
-        [Required(ErrorMessage = "Tipo é obrigatório")]
+        [Required(ErrorMessage = "Tipo obrigatorio")]
         public string? Tipo { get; set; }
 
-        [Required(ErrorMessage = "ESF � obrigat�ria")]
+        [Required(ErrorMessage = "ESF obrigatoria")]
         public string? EsfId { get; set; }
 
-        public DateTime? DataVencimento { get; set; }
-        public DateTime? DataPagamento { get; set; }
         public string? NumeroNota { get; set; }
- public string? NumeroEmpenho { get; set; }
         public string? Observacoes { get; set; }
     }
 
     public class DespesaRapidaFormModel
     {
-        [Required(ErrorMessage = "Descrição ou Nota Fiscal é obrigatória")]
-        [StringLength(1000)]
-        public string Descricao { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Descricao obrigatoria")]
+        public string Descricao { get; set; } = "";
 
-        [Required(ErrorMessage = "Valor é obrigatório")]
-        [Range(0.01, 999999999, ErrorMessage = "Valor deve ser maior que zero")]
+        [Required(ErrorMessage = "Valor obrigatorio")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Valor deve ser maior que zero")]
         public decimal Valor { get; set; }
 
-        [Required(ErrorMessage = "Categoria é obrigatória")]
+        [Required(ErrorMessage = "Categoria obrigatoria")]
         public string? CategoriaId { get; set; }
 
-        [Required(ErrorMessage = "ESF � obrigat�ria")]
+        [Required(ErrorMessage = "ESF obrigatoria")]
         public string? EsfId { get; set; }
     }
 }
-
-

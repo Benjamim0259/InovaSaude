@@ -257,7 +257,7 @@ public class ApplicationDbContext : DbContext
             .HasIndex(d => d.FornecedorId);
 
         modelBuilder.Entity<Despesa>()
-            .HasIndex(d => d.DataVencimento);
+            .HasIndex(d => d.MesReferencia);
 
         modelBuilder.Entity<Anexo>()
             .HasIndex(a => a.DespesaId);

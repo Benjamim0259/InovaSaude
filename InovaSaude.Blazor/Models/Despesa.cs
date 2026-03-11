@@ -16,9 +16,11 @@ public class Despesa
     [Range(0.01, double.MaxValue)]
     public decimal Valor { get; set; }
 
-    public DateTime? DataVencimento { get; set; }
-
-    public DateTime? DataPagamento { get; set; }
+    /// <summary>
+    /// Mes de referencia da despesa (primeiro dia do mes)
+    /// </summary>
+    [Required]
+    public DateTime MesReferencia { get; set; } = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
 
     [Required]
     [ForeignKey("Categoria")]

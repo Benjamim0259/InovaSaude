@@ -200,7 +200,8 @@ public class ImportacaoService
         var despesa = new Despesa
         {
             UsuarioCriacaoId = criadoPor,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            MesReferencia = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1)
         };
 
         for (int i = 0; i < header.Length && i < values.Length; i++)
@@ -212,7 +213,9 @@ public class ImportacaoService
             {
                 case "data":
                 case "data_despesa":
-                    despesa.DataVencimento = DateTime.Parse(value, CultureInfo.InvariantCulture);
+                case "mes":
+                    var dataParser = DateTime.Parse(value, CultureInfo.InvariantCulture);
+                    despesa.MesReferencia = new DateTime(dataParser.Year, dataParser.Month, 1);
                     break;
                 case "valor":
                 case "valor_total":

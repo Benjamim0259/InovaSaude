@@ -50,12 +50,12 @@ public class DespesaService
     public async Task<List<Despesa>> GetDespesasByPeriodoAsync(DateTime inicio, DateTime fim)
     {
         return await _context.Despesas
-            .Where(d => d.CreatedAt >= inicio && d.CreatedAt <= fim)
+            .Where(d => d.MesReferencia >= inicio && d.MesReferencia <= fim)
             .Include(d => d.Categoria)
             .Include(d => d.Esf)
             .Include(d => d.Fornecedor)
             .Include(d => d.UsuarioCriacao)
-            .OrderByDescending(d => d.CreatedAt)
+            .OrderByDescending(d => d.MesReferencia)
             .ToListAsync();
     }
 
