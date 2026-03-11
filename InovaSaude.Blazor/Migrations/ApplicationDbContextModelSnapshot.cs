@@ -703,6 +703,9 @@ namespace InovaSaude.Blazor.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("CargaHoraria")
+                        .HasColumnType("int");
+
                     b.Property<string>("Cargo")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1755,12 +1758,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DataBloqueio")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataUltimaTrocaSenha")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -1790,9 +1787,6 @@ namespace InovaSaude.Blazor.Migrations
                     b.Property<string>("Telefone")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("TentativasLoginFalhas")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UltimoAcesso")
                         .HasColumnType("datetime2");

@@ -15,44 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-// Session Configuration
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
-
-// Rate Limiting Configuration
-builder.Services.AddMemoryCache();
-builder.Services.Configure<AspNetCoreRateLimit.IpRateLimitOptions>(options =>
-{
-    options.EnableEndpointRateLimiting = true;
-    options.StackBlockedRequests = false;
-    options.HttpStatusCode = 429;
-    options.RealIpHeader = "X-Real-IP";
-    options.GeneralRules = new List<AspNetCoreRateLimit.RateLimitRule>
-    {
-        new AspNetCoreRateLimit.RateLimitRule
-        {
-            Endpoint = "*/login",
-            Period = "1m",
-            Limit = 5 // 5 tentativas por minuto
-        },
-        new AspNetCoreRateLimit.RateLimitRule
-        {
-            Endpoint = "*",
-            Period = "1m",
-            Limit = 100 // 100 requisições por minuto
-        }
-    };
-});
-builder.Services.AddSingleton<AspNetCoreRateLimit.IIpPolicyStore, AspNetCoreRateLimit.MemoryCacheIpPolicyStore>();
-builder.Services.AddSingleton<AspNetCoreRateLimit.IRateLimitCounterStore, AspNetCoreRateLimit.MemoryCacheRateLimitCounterStore>();
-builder.Services.AddSingleton<AspNetCoreRateLimit.IRateLimitConfiguration, AspNetCoreRateLimit.RateLimitConfiguration>();
-builder.Services.AddSingleton<AspNetCoreRateLimit.IProcessingStrategy, AspNetCoreRateLimit.AsyncKeyLockProcessingStrategy>();
-
 // Configurar Data Protection baseado no ambiente
 if (builder.Environment.IsProduction())
 {
@@ -203,54 +165,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/login";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.Strict;
+      
+        // Configurações de cookie compatíveis com proxy reverso (Render)
+        // O proxy lida com SSL externamente, internamente é HTTP
+  options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+   options.Cookie.HttpOnly = true;
+      options.Cookie.IsEssential = true;
     });
-
-// Policies de Autorização por Perfil
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => 
-        policy.RequireClaim("Perfil", "ADMIN"));
-
-    options.AddPolicy("GestorOuAdmin", policy => 
-        policy.RequireAssertion(context =>
-            context.User.HasClaim(c => c.Type == "Perfil" && 
-                (c.Value == "ADMIN" || c.Value == "GESTOR"))));
-
-    options.AddPolicy("CoordenadorOuSuperior", policy => 
-        policy.RequireAssertion(context =>
-            context.User.HasClaim(c => c.Type == "Perfil" && 
-                (c.Value == "ADMIN" || c.Value == "GESTOR" || c.Value == "COORDENADOR"))));
-
-    options.AddPolicy("TodosAutenticados", policy => 
-        policy.RequireAuthenticatedUser());
-});
-
-// CORS Configuration
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("Production", policy =>
-    {
-        if (builder.Environment.IsProduction())
-        {
-            policy.WithOrigins("https://inovasaude-blazor.onrender.com")
-                  .AllowCredentials()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-        }
-        else
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-        }
-    });
-});
-
 builder.Services.AddAuthorization();
 
 // Add custom services
@@ -291,23 +215,10 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // HSTS em produção
     app.UseHsts();
 }
 
-// Headers de Segurança
-app.Use(async (context, next) =>
-{
-    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-    context.Response.Headers.Add("X-Frame-Options", "DENY");
-    context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
-    context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
-    context.Response.Headers.Add("Content-Security-Policy", 
-        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;");
-    await next();
-});
-
-// HTTPS Redirect (exceto no Render que já usa proxy)
+// Não usar UseHttpsRedirection no Render (causa loop de redirecionamento)
 if (!app.Environment.IsProduction())
 {
     app.UseHttpsRedirection();
@@ -315,19 +226,7 @@ if (!app.Environment.IsProduction())
 
 app.UseStaticFiles();
 
-// Rate Limiting Middleware
-app.UseMiddleware<AspNetCoreRateLimit.IpRateLimitMiddleware>();
-
-// Session
-app.UseSession();
-
-// Audit Middleware
-app.UseMiddleware<InovaSaude.Blazor.Middleware.AuditMiddleware>();
-
 app.UseRouting();
-
-// CORS
-app.UseCors("Production");
 
 app.UseAuthentication();
 app.UseAuthorization();
