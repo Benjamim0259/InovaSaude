@@ -91,7 +91,7 @@
                                 <span>@cat.Total.ToString("C", new CultureInfo("pt-BR"))</span>
                             </div>
                             <div class="progress" style="height: 25px;">
-                                <div class="progress-bar bg-danger" style="width: @percentual%" role="progressbar">
+                                <div class="progress-bar bg-danger" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
                                     @cat.Quantidade item@(cat.Quantidade != 1 ? "s" : "")
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
                                 <span>@esf.Total.ToString("C", new CultureInfo("pt-BR"))</span>
                             </div>
                             <div class="progress" style="height: 25px;">
-                                <div class="progress-bar bg-success" style="width: @percentual%" role="progressbar">
+                                <div class="progress-bar bg-success" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
                                     @esf.Quantidade item@(esf.Quantidade != 1 ? "s" : "")
                                 </div>
                             </div>

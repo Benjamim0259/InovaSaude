@@ -180,7 +180,7 @@
                             <div class="position-relative">
                                 <div class="progress" style="height: 30px;">
                                     <div class="progress-bar @GetCategoriaColor(cat.CategoriaNome)" 
-                                         style="width: @percentual%">
+                                         style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%">
                                     </div>
                                 </div>
                                 <span class="position-absolute top-50 start-50 translate-middle text-dark fw-bold">
@@ -210,7 +210,7 @@
                                         <span>@esf.Total.ToString("C", new CultureInfo("pt-BR"))</span>
                                     </div>
                                     <div class="progress" style="height: 25px;">
-                                        <div class="progress-bar bg-success" style="width: @percentual%">
+                                        <div class="progress-bar bg-success" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%">
                                             @esf.Quantidade item@(esf.Quantidade != 1 ? "s" : "")
                                         </div>
                                     </div>
@@ -234,7 +234,7 @@
                                         <span>@esf.TotalSalarios.ToString("C", new CultureInfo("pt-BR"))</span>
                                     </div>
                                     <div class="progress" style="height: 25px;">
-                                        <div class="progress-bar bg-warning" style="width: @percentual%">
+                                        <div class="progress-bar bg-warning" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%">
                                             @esf.QuantidadeFuncionarios pessoa@(esf.QuantidadeFuncionarios != 1 ? "s" : "")
                                         </div>
                                     </div>
