@@ -10,11 +10,11 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col">
-            <h3>🏥 Gerenciamento de ESF</h3>
+            <h3><span class="oi oi-medical-cross me-2"></span>Gerenciamento de ESF</h3>
         </div>
         <div class="col-auto">
             <button class="btn btn-primary" @onclick="() => ShowModalESF()">
-                ➕ Nova ESF
+                <span class="oi oi-plus me-1"></span>Nova ESF
             </button>
         </div>
     </div>
@@ -40,13 +40,13 @@
                         <div class="card-body">
                             <h5 class="card-title fw-bold">@esf.Nome</h5>
                             <p class="text-muted mb-2">
-                                <small>🏥 CNES: <strong>@esf.Codigo</strong></small>
+                                <small><span class="oi oi-medical-cross me-1"></span>CNES: <strong>@esf.Codigo</strong></small>
                             </p>
                             <p class="text-muted mb-2">
-                                <small>👤 Gestor: @(esf.Coordenador?.Nome ?? "Sem gestor")</small>
+                                <small><span class="oi oi-person me-1"></span>Gestor: @(esf.Coordenador?.Nome ?? "Sem gestor")</small>
                             </p>
                             <p class="text-muted mb-2">
-                                <small>📞 @(esf.Telefone ?? "Sem telefone")</small>
+                                <small><span class="oi oi-phone me-1"></span>@(esf.Telefone ?? "Sem telefone")</small>
                             </p>
                             <p class="mb-2">
                                 <span class="badge @(esf.Status == "ATIVA" ? "bg-success" : "bg-danger")">
@@ -55,13 +55,13 @@
                             </p>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-sm btn-info flex-fill" @onclick="() => ShowModalESF(esf)">
-                                    ✏️ Editar
+                                    <span class="oi oi-pencil me-1"></span>Editar
                                 </button>
                                 <button class="btn btn-sm btn-primary flex-fill" @onclick="() => ShowModalFuncionarios(esf)">
-                                    👥 Funcionários
+                                    <span class="oi oi-people me-1"></span>Funcionarios
                                 </button>
                                 <button class="btn btn-sm btn-danger" @onclick="() => DeleteESF(esf.Id)">
-                                    🗑️
+                                    <span class="oi oi-trash"></span>
                                 </button>
                             </div>
                         </div>
@@ -152,14 +152,14 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">👥 Funcionários - @selectedESF?.Nome</h5>
+                    <h5 class="modal-title"><span class="oi oi-people me-2"></span>Funcionarios - @selectedESF?.Nome</h5>
                     <button type="button" class="btn-close" @onclick="CloseModalFuncionarios"></button>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-between mb-3">
                         <h6>Lista de Funcionários</h6>
                         <button class="btn btn-sm btn-primary" @onclick="() => ShowModalEditFuncionario()">
-                            ➕ Adicionar Funcionário
+                            <span class="oi oi-plus me-1"></span>Adicionar Funcionario
                         </button>
                     </div>
 
@@ -229,7 +229,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">@(editingFuncionario?.Id == null ? "Novo Funcionário" : "Editar Funcionário")</h5>
+                    <h5 class="modal-title">@(editingFuncionario?.Id == null ? "Novo Funcionario" : "Editar Funcionario")</h5>
                     <button type="button" class="btn-close" @onclick="CloseModalEditFuncionario"></button>
                 </div>
                 <div class="modal-body">
@@ -254,7 +254,7 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="CloseModalEditFuncionario">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                            <button type="submit" class="btn btn-primary"><span class="oi oi-check me-1"></span>Salvar</button>
                         </div>
                     </EditForm>
                 </div>

@@ -12,7 +12,7 @@
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>?? Gerenciar Usuários</h2>
+        <h2><span class="oi oi-people me-2"></span>Gerenciar Usuarios</h2>
   <button class="btn btn-primary" @onclick="AbrirModalNovoUsuario">
     <span class="oi oi-plus me-2"></span>Novo Usuário
    </button>
@@ -89,7 +89,7 @@
                         <strong>@usuario.Nome</strong>
           @if (usuario.Telefone != null)
               {
-                 <br /><small class="text-muted">?? @usuario.Telefone</small>
+                 <br /><small class="text-muted"><span class="oi oi-phone me-1"></span>@usuario.Telefone</small>
             }
                 </td>
       <td>@usuario.Email</td>
@@ -210,7 +210,7 @@
   <div class="modal-content">
      <div class="modal-header">
          <h5 class="modal-title">
-         @(usuarioEditando == null ? "? Novo Usuário" : "?? Editar Usuário")
+         @(usuarioEditando == null ? "Novo Usuario" : "Editar Usuario")
         </h5>
           <button type="button" class="btn-close" @onclick="FecharModal"></button>
                 </div>

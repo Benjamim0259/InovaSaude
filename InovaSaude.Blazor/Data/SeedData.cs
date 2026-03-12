@@ -35,7 +35,43 @@ public static class SeedData
             logger.LogError(ex, "Erro ao aplicar migrations. Continuando...");
         }
 
-        // Criar tabela funcionarios se não existir (workaround para migrations)
+        // Verificar/criar coluna MesReferencia na tabela despesas (workaround PostgreSQL)
+        try
+        {
+            logger.LogInformation("Verificando coluna MesReferencia na tabela despesas...");
+            await context.Database.ExecuteSqlRawAsync(@"
+                DO $$ 
+                BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1 FROM information_schema.columns 
+                        WHERE table_name = 'despesas' AND column_name = 'MesReferencia'
+                    ) THEN
+                        ALTER TABLE despesas ADD COLUMN ""MesReferencia"" timestamp with time zone NOT NULL DEFAULT NOW();
+                        CREATE INDEX IF NOT EXISTS ""IX_despesas_MesReferencia"" ON despesas (""MesReferencia"");
+                    END IF;
+                END $$;
+            ");
+
+            // Remover colunas antigas se existirem
+            await context.Database.ExecuteSqlRawAsync(@"
+                DO $$ 
+                BEGIN
+                    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'despesas' AND column_name = 'DataVencimento') THEN
+                        ALTER TABLE despesas DROP COLUMN ""DataVencimento"";
+                    END IF;
+                    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'despesas' AND column_name = 'DataPagamento') THEN
+                        ALTER TABLE despesas DROP COLUMN ""DataPagamento"";
+                    END IF;
+                END $$;
+            ");
+            logger.LogInformation("Coluna MesReferencia verificada/criada com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Erro ao verificar coluna MesReferencia");
+        }
+
+        // Criar tabela funcionarios se nao existir (workaround para migrations)
         try
         {
             logger.LogInformation("Verificando tabela funcionarios...");
@@ -87,6 +123,24 @@ public static class SeedData
             logger.LogError(ex, "Erro ao criar tabela funcionarios");
         }
 
+        // Atualizar categoria Medicamentos para Farmacia (se existir)
+        try
+        {
+            logger.LogInformation("Atualizando categoria Medicamentos para Farmacia...");
+            await context.Database.ExecuteSqlRawAsync(@"
+                UPDATE categorias 
+                SET ""Nome"" = 'Farmacia', 
+                    ""Descricao"" = 'Medicamentos, vacinas e insumos farmaceuticos',
+                    ""Icone"" = 'oi-heart'
+                WHERE ""Nome"" = 'Medicamentos';
+            ");
+            logger.LogInformation("Categoria atualizada com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Erro ao atualizar categoria (pode nao existir)");
+        }
+
         // Seed Admin user
         if (!await context.Usuarios.AnyAsync(u => u.Perfil == PerfilUsuario.ADMIN))
         {
@@ -112,23 +166,23 @@ public static class SeedData
             {
                 new Categoria
                 {
-                    Nome = "Medicamentos",
+                    Nome = "Farmacia",
                     Tipo = "DESPESA",
-                    Descricao = "Medicamentos, vacinas e insumos farmacêuticos",
+                    Descricao = "Medicamentos, vacinas e insumos farmaceuticos",
                     OrcamentoMensal = 35000,
                     Cor = "#dc3545",
-                    Icone = "💊",
+                    Icone = "oi-heart",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 },
                 new Categoria
                 {
-                    Nome = "Material Médico",
+                    Nome = "Material Medico",
                     Tipo = "DESPESA",
-                    Descricao = "Equipamentos médicos, luvas, seringas, etc",
+                    Descricao = "Equipamentos medicos, luvas, seringas, etc",
                     OrcamentoMensal = 20000,
                     Cor = "#0d6efd",
-                    Icone = "🩺",
+                    Icone = "oi-medical-cross",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 },
@@ -136,10 +190,10 @@ public static class SeedData
                 {
                     Nome = "Contas Fixas",
                     Tipo = "DESPESA",
-                    Descricao = "Água, luz, telefone, internet",
+                    Descricao = "Agua, luz, telefone, internet",
                     OrcamentoMensal = 8000,
                     Cor = "#ffc107",
-                    Icone = "💡",
+                    Icone = "oi-bolt",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 },
@@ -147,10 +201,10 @@ public static class SeedData
                 {
                     Nome = "Pessoal",
                     Tipo = "DESPESA",
-                    Descricao = "Salários, encargos e benefícios",
+                    Descricao = "Salarios, encargos e beneficios",
                     OrcamentoMensal = 120000,
                     Cor = "#198754",
-                    Icone = "👥",
+                    Icone = "oi-people",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 },
@@ -158,21 +212,21 @@ public static class SeedData
                 {
                     Nome = "Infraestrutura",
                     Tipo = "DESPESA",
-                    Descricao = "Manutenção predial, reformas e melhorias",
+                    Descricao = "Manutencao predial, reformas e melhorias",
                     OrcamentoMensal = 25000,
                     Cor = "#6c757d",
-                    Icone = "🏗️",
+                    Icone = "oi-wrench",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 },
                 new Categoria
                 {
-                    Nome = "Serviços Terceirizados",
+                    Nome = "Servicos Terceirizados",
                     Tipo = "DESPESA",
-                    Descricao = "Limpeza, segurança, jardinagem, ambulância",
+                    Descricao = "Limpeza, seguranca, jardinagem, ambulancia",
                     OrcamentoMensal = 18000,
                     Cor = "#0dcaf0",
-                    Icone = "🚑",
+                    Icone = "oi-briefcase",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 },
@@ -180,21 +234,21 @@ public static class SeedData
                 {
                     Nome = "Material de Expediente",
                     Tipo = "DESPESA",
-                    Descricao = "Papelaria, impressão, materiais de escritório",
+                    Descricao = "Papelaria, impressao, materiais de escritorio",
                     OrcamentoMensal = 3000,
                     Cor = "#212529",
-                    Icone = "📚",
+                    Icone = "oi-clipboard",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 },
                 new Categoria
                 {
-                    Nome = "Alimentação",
+                    Nome = "Alimentacao",
                     Tipo = "DESPESA",
-                    Descricao = "Cozinha, refeitório e alimentação de pacientes",
+                    Descricao = "Cozinha, refeitorio e alimentacao de pacientes",
                     OrcamentoMensal = 12000,
                     Cor = "#fd7e14",
-                    Icone = "🍽️",
+                    Icone = "oi-basket",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 }

@@ -17,7 +17,7 @@
 <div class="container-fluid mt-4">
     <!-- Cabeçalho -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>📊 Relatórios Financeiros</h2>
+        <h2><span class="oi oi-bar-chart me-2"></span>Relatorios Financeiros</h2>
         <div>
             <button class="btn btn-success me-1" @onclick="ExportarExcel" disabled="@carregando">
                 <span class="oi oi-data-transfer-download me-2"></span>Excel
@@ -33,16 +33,16 @@
         <div class="card-body">
             <div class="row align-items-end g-3">
                 <div class="col-md-3">
-                    <label class="form-label fw-bold">📅 Data Início</label>
+                    <label class="form-label fw-bold"><span class="oi oi-calendar me-1"></span>Data Inicio</label>
                     <input type="date" class="form-control" @bind="dataInicio" @bind:after="CarregarDados" />
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-bold">📅 Data Fim</label>
+                    <label class="form-label fw-bold"><span class="oi oi-calendar me-1"></span>Data Fim</label>
                     <input type="date" class="form-control" @bind="dataFim" @bind:after="CarregarDados" />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label fw-bold">🏥 Filtrar ESF</label>
-                    <input type="text" class="form-control" placeholder="🔍 Pesquisar ESF..." 
+                    <label class="form-label fw-bold"><span class="oi oi-medical-cross me-1"></span>Filtrar ESF</label>
+                    <input type="text" class="form-control" placeholder="Pesquisar ESF..." 
                            @bind="pesquisaESF" @bind:after="StateHasChanged" />
                 </div>
                 <div class="col-md-2">
@@ -56,7 +56,7 @@
             {
                 <div class="mt-3 p-3 bg-light rounded" style="max-height: 300px; overflow-y: auto;">
                     <button class="btn btn-sm btn-outline-primary w-100 mb-3" @onclick="SelecionarTodasESF">
-                        @(esfIdsSelecionadas.Count == esfList.Count ? "❌ Desmarcar Todas" : "✅ Selecionar Todas")
+                        @(esfIdsSelecionadas.Count == esfList.Count ? "Desmarcar Todas" : "Selecionar Todas")
                     </button>
                     <div class="row g-2">
                         @foreach (var esf in esfList.Where(e => string.IsNullOrEmpty(pesquisaESF) || 
@@ -90,7 +90,7 @@
     {
         <div class="text-center py-5">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
-            <p class="mt-3">Carregando relatórios...</p>
+            <p class="mt-3">Carregando relatorios...</p>
         </div>
     }
     else
@@ -399,13 +399,13 @@
 
     private string GetCategoriaColor(string categoria) => categoria switch
     {
-        "Medicamentos" => "bg-danger",
-        "Material Médico" => "bg-primary",
+        "Farmacia" => "bg-danger",
+        "Material Medico" => "bg-primary",
         "Contas Fixas" => "bg-warning",
         "Pessoal" => "bg-success",
         "Infraestrutura" => "bg-secondary",
-        "Serviços Terceirizados" => "bg-info",
-        "Alimentação" => "bg-success",
+        "Servicos Terceirizados" => "bg-info",
+        "Alimentacao" => "bg-success",
         _ => "bg-dark"
     };
 
