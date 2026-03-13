@@ -149,4 +149,10 @@ public class UsuarioService
             .OrderBy(u => u.Nome)
             .ToListAsync();
     }
+
+    public async Task UpdateUsuarioInfoAsync(Usuario usuario)
+    {
+        _context.Usuarios.Update(usuario);
+        await _context.SaveChangesAsync();
+    }
 }

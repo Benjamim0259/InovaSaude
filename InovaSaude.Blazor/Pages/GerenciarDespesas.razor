@@ -8,6 +8,7 @@
 @inject ESFService ESFService
 @inject CategoriaService CategoriaService
 @inject AuthService AuthService
+@inject UsuarioService UsuarioService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 @attribute [Authorize]
@@ -70,11 +71,11 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Pesquisar</label>
                         <input type="text" class="form-control" @bind="filtroDescricao" @bind:event="oninput" placeholder="Descricao..." />
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label class="form-label">Categoria</label>
                         <select class="form-select" @bind="filtroCategoria">
                             <option value="">Todas</option>
@@ -84,19 +85,30 @@
                             }
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">ESF</label>
-                        <select class="form-select" @bind="filtroESF">
-                            <option value="">Todas</option>
-                            @foreach (var esf in esfList)
-                            {
-                                <option value="@esf.Id">@esf.Nome</option>
-                            }
-                        </select>
+                    @if (!isCoordenador)
+                    {
+                        <div class="col-md-2">
+                            <label class="form-label">ESF</label>
+                            <select class="form-select" @bind="filtroESF">
+                                <option value="">Todas</option>
+                                @foreach (var esf in esfList)
+                                {
+                                    <option value="@esf.Id">@esf.Nome</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                    <div class="col-md-2">
+                        <label class="form-label">Valor Min</label>
+                        <input type="number" class="form-control" @bind="filtroValorMin" @bind:event="oninput" placeholder="0,00" step="0.01" />
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button class="btn btn-secondary w-100" @onclick="LimparFiltros">
-                            <span class="oi oi-x me-2"></span>Limpar
+                    <div class="col-md-2">
+                        <label class="form-label">Valor Max</label>
+                        <input type="number" class="form-control" @bind="filtroValorMax" @bind:event="oninput" placeholder="999999" step="0.01" />
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button class="btn btn-secondary w-100" @onclick="LimparFiltros" title="Limpar filtros">
+                            <span class="oi oi-x"></span>
                         </button>
                     </div>
                 </div>
@@ -247,13 +259,20 @@
                             <!-- ESF -->
                             <div class="col-md-6">
                                 <label class="form-label">ESF *</label>
-                                <select class="form-select" @bind="despesaForm.EsfId">
-                                    <option value="">Selecione...</option>
-                                    @foreach (var ubs in esfList)
-                                    {
-                                        <option value="@ubs.Id">@ubs.Nome</option>
-                                    }
-                                </select>
+                                @if (isCoordenador && coordenadorEsf != null)
+                                {
+                                    <input class="form-control" value="@coordenadorEsf.Nome" disabled />
+                                }
+                                else
+                                {
+                                    <select class="form-select" @bind="despesaForm.EsfId">
+                                        <option value="">Selecione...</option>
+                                        @foreach (var ubs in esfList)
+                                        {
+                                            <option value="@ubs.Id">@ubs.Nome</option>
+                                        }
+                                    </select>
+                                }
                                 <ValidationMessage For="@(() => despesaForm.EsfId)" />
                             </div>
 
@@ -330,13 +349,20 @@
 
                         <div class="mb-3">
                             <label class="form-label">ESF *</label>
-                            <select class="form-select" @bind="despesaRapidaForm.EsfId">
-                                <option value="">Selecione...</option>
-                                @foreach (var ubs in esfList)
-                                {
-                                    <option value="@ubs.Id">@ubs.Nome</option>
-                                }
-                            </select>
+                            @if (isCoordenador && coordenadorEsf != null)
+                            {
+                                <input class="form-control" value="@coordenadorEsf.Nome" disabled />
+                            }
+                            else
+                            {
+                                <select class="form-select" @bind="despesaRapidaForm.EsfId">
+                                    <option value="">Selecione...</option>
+                                    @foreach (var ubs in esfList)
+                                    {
+                                        <option value="@ubs.Id">@ubs.Nome</option>
+                                    }
+                                </select>
+                            }
                         </div>
 
                         @if (!string.IsNullOrEmpty(mensagemErro))
@@ -375,6 +401,12 @@
     private string filtroDescricao = "";
     private string filtroCategoria = "";
     private string filtroESF = "";
+    private decimal? filtroValorMin;
+    private decimal? filtroValorMax;
+
+    // Coordenador: so ve/cria despesas da sua ESF
+    private bool isCoordenador;
+    private ESF? coordenadorEsf;
 
     protected override async Task OnInitializedAsync()
     {
@@ -386,9 +418,39 @@
         carregando = true;
         try
         {
-            despesas = await DespesaService.GetAllDespesasAsync();
             esfList = await ESFService.GetAllESFAsync();
             categorias = await CategoriaService.GetAllCategoriasAsync();
+
+            // Verificar se usuario e COORDENADOR e restringir a sua ESF
+            var perfil = await AuthService.GetCurrentUserPerfilAsync();
+            var userId = await AuthService.GetCurrentUserIdAsync();
+            isCoordenador = perfil == "COORDENADOR";
+
+            if (isCoordenador && !string.IsNullOrEmpty(userId))
+            {
+                var usuario = await UsuarioService.GetUsuarioByIdAsync(userId);
+                if (usuario?.EsfId != null)
+                {
+                    coordenadorEsf = esfList.FirstOrDefault(e => e.Id == usuario.EsfId);
+                    // Coordenador so ve a sua ESF
+                    esfList = coordenadorEsf != null ? new List<ESF> { coordenadorEsf } : new();
+                }
+                else
+                {
+                    // Coordenador tambem pode ser CoordenadorId na ESF
+                    coordenadorEsf = esfList.FirstOrDefault(e => e.CoordenadorId == userId);
+                    if (coordenadorEsf != null)
+                        esfList = new List<ESF> { coordenadorEsf };
+                }
+            }
+
+            var todasDespesas = await DespesaService.GetAllDespesasAsync();
+
+            // Coordenador so ve despesas da sua ESF
+            if (isCoordenador && coordenadorEsf != null)
+                despesas = todasDespesas.Where(d => d.EsfId == coordenadorEsf.Id).ToList();
+            else
+                despesas = todasDespesas;
         }
         catch (Exception ex)
         {
@@ -415,6 +477,12 @@
             if (!string.IsNullOrWhiteSpace(filtroESF))
                 query = query.Where(d => d.EsfId == filtroESF);
 
+            if (filtroValorMin.HasValue)
+                query = query.Where(d => d.Valor >= filtroValorMin.Value);
+
+            if (filtroValorMax.HasValue)
+                query = query.Where(d => d.Valor <= filtroValorMax.Value);
+
             return query.OrderByDescending(d => d.MesReferencia);
         }
     }
@@ -424,12 +492,16 @@
         filtroDescricao = "";
         filtroCategoria = "";
         filtroESF = "";
+        filtroValorMin = null;
+        filtroValorMax = null;
     }
 
     private void AbrirModalNovaDespesa()
     {
         despesaEditando = null;
         despesaForm = new DespesaFormModel();
+        if (isCoordenador && coordenadorEsf != null)
+            despesaForm.EsfId = coordenadorEsf.Id;
         mesSelecionado = DateTime.Now.ToString("yyyy-MM");
         mensagemErro = null;
         mostrarModal = true;
@@ -438,6 +510,8 @@
     private void AbrirModalDespesaRapida()
     {
         despesaRapidaForm = new DespesaRapidaFormModel();
+        if (isCoordenador && coordenadorEsf != null)
+            despesaRapidaForm.EsfId = coordenadorEsf.Id;
         mensagemErro = null;
         mostrarModalRapida = true;
     }

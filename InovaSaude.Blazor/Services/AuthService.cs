@@ -56,4 +56,17 @@ public class AuthService
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         return authState.User?.Identity?.IsAuthenticated == true;
     }
+
+    public async Task<string?> GetCurrentUserPerfilAsync()
+    {
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user?.Identity?.IsAuthenticated == true)
+        {
+            return user.FindFirst("perfil")?.Value;
+        }
+
+        return null;
+    }
 }

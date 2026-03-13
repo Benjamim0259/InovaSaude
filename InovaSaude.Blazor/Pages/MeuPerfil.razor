@@ -1,0 +1,278 @@
+@page "/meu-perfil"
+@using System.ComponentModel.DataAnnotations
+@using InovaSaude.Blazor.Services
+@using InovaSaude.Blazor.Models
+@inject AuthService AuthService
+@inject UsuarioService UsuarioService
+@inject NavigationManager Navigation
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+<PageTitle>Meu Perfil - InovaSaude</PageTitle>
+
+<div class="container mt-4" style="max-width: 800px;">
+    <h2 class="mb-4"><span class="oi oi-person me-2"></span>Meu Perfil</h2>
+
+    @if (carregando)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+        </div>
+    }
+    else if (usuario == null)
+    {
+        <div class="alert alert-danger">
+            <span class="oi oi-warning me-2"></span>Erro ao carregar perfil.
+        </div>
+    }
+    else
+    {
+        <!-- Info do perfil -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><span class="oi oi-person me-2"></span>Informacoes Pessoais</h5>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(mensagemSucessoInfo))
+                {
+                    <div class="alert alert-success">
+                        <span class="oi oi-check me-2"></span>@mensagemSucessoInfo
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(mensagemErroInfo))
+                {
+                    <div class="alert alert-danger">@mensagemErroInfo</div>
+                }
+
+                <EditForm Model="perfilForm" OnValidSubmit="SalvarPerfil">
+                    <DataAnnotationsValidator />
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nome *</label>
+                            <InputText class="form-control" @bind-Value="perfilForm.Nome" />
+                            <ValidationMessage For="@(() => perfilForm.Nome)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input class="form-control" value="@usuario.Email" disabled />
+                            <small class="text-muted">O email nao pode ser alterado.</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Telefone</label>
+                            <InputText class="form-control" @bind-Value="perfilForm.Telefone" placeholder="(00) 00000-0000" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Perfil</label>
+                            <input class="form-control" value="@usuario.Perfil.ToString()" disabled />
+                        </div>
+
+                        @if (usuario.Esf != null)
+                        {
+                            <div class="col-md-6">
+                                <label class="form-label">ESF Vinculada</label>
+                                <input class="form-control" value="@usuario.Esf.Nome" disabled />
+                            </div>
+                        }
+
+                        <div class="col-md-6">
+                            <label class="form-label">Status</label>
+                            <input class="form-control" value="@usuario.Status" disabled />
+                        </div>
+                    </div>
+
+                    <div class="mt-3 text-end">
+                        <button type="submit" class="btn btn-primary" disabled="@salvandoInfo">
+                            @if (salvandoInfo) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                            <span class="oi oi-check me-2"></span>Salvar Alteracoes
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+
+        <!-- Alterar senha -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0"><span class="oi oi-lock-locked me-2"></span>Alterar Senha</h5>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(mensagemSucessoSenha))
+                {
+                    <div class="alert alert-success">
+                        <span class="oi oi-check me-2"></span>@mensagemSucessoSenha
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(mensagemErroSenha))
+                {
+                    <div class="alert alert-danger">@mensagemErroSenha</div>
+                }
+
+                <EditForm Model="senhaForm" OnValidSubmit="AlterarSenha">
+                    <DataAnnotationsValidator />
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Senha Atual *</label>
+                            <InputText type="password" class="form-control" @bind-Value="senhaForm.SenhaAtual" />
+                            <ValidationMessage For="@(() => senhaForm.SenhaAtual)" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Nova Senha *</label>
+                            <InputText type="password" class="form-control" @bind-Value="senhaForm.NovaSenha" />
+                            <ValidationMessage For="@(() => senhaForm.NovaSenha)" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Confirmar Nova Senha *</label>
+                            <InputText type="password" class="form-control" @bind-Value="senhaForm.ConfirmarSenha" />
+                            <ValidationMessage For="@(() => senhaForm.ConfirmarSenha)" />
+                        </div>
+                    </div>
+
+                    <div class="mt-3 text-end">
+                        <button type="submit" class="btn btn-warning" disabled="@salvandoSenha">
+                            @if (salvandoSenha) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                            <span class="oi oi-lock-locked me-2"></span>Alterar Senha
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private Usuario? usuario;
+    private bool carregando = true;
+
+    private PerfilFormModel perfilForm = new();
+    private SenhaFormModel senhaForm = new();
+
+    private bool salvandoInfo;
+    private bool salvandoSenha;
+    private string? mensagemSucessoInfo;
+    private string? mensagemErroInfo;
+    private string? mensagemSucessoSenha;
+    private string? mensagemErroSenha;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var userId = await AuthService.GetCurrentUserIdAsync();
+            if (string.IsNullOrEmpty(userId))
+            {
+                Navigation.NavigateTo("/login");
+                return;
+            }
+
+            usuario = await UsuarioService.GetUsuarioByIdAsync(userId);
+            if (usuario != null)
+            {
+                perfilForm.Nome = usuario.Nome;
+                perfilForm.Telefone = usuario.Telefone;
+            }
+        }
+        catch
+        {
+            mensagemErroInfo = "Erro ao carregar perfil.";
+        }
+        finally
+        {
+            carregando = false;
+        }
+    }
+
+    private async Task SalvarPerfil()
+    {
+        if (usuario == null) return;
+        salvandoInfo = true;
+        mensagemSucessoInfo = null;
+        mensagemErroInfo = null;
+
+        try
+        {
+            usuario.Nome = perfilForm.Nome;
+            usuario.Telefone = perfilForm.Telefone;
+            usuario.UpdatedAt = DateTime.UtcNow;
+
+            await UsuarioService.UpdateUsuarioInfoAsync(usuario);
+            mensagemSucessoInfo = "Informacoes atualizadas com sucesso!";
+        }
+        catch (Exception ex)
+        {
+            mensagemErroInfo = $"Erro ao salvar: {ex.Message}";
+        }
+        finally
+        {
+            salvandoInfo = false;
+        }
+    }
+
+    private async Task AlterarSenha()
+    {
+        if (usuario == null) return;
+        salvandoSenha = true;
+        mensagemSucessoSenha = null;
+        mensagemErroSenha = null;
+
+        try
+        {
+            if (senhaForm.NovaSenha != senhaForm.ConfirmarSenha)
+            {
+                mensagemErroSenha = "As senhas nao coincidem.";
+                return;
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(senhaForm.SenhaAtual, usuario.SenhaHash))
+            {
+                mensagemErroSenha = "Senha atual incorreta.";
+                return;
+            }
+
+            usuario.SenhaHash = BCrypt.Net.BCrypt.HashPassword(senhaForm.NovaSenha);
+            usuario.UpdatedAt = DateTime.UtcNow;
+
+            await UsuarioService.UpdateUsuarioInfoAsync(usuario);
+            mensagemSucessoSenha = "Senha alterada com sucesso!";
+            senhaForm = new SenhaFormModel();
+        }
+        catch (Exception ex)
+        {
+            mensagemErroSenha = $"Erro ao alterar senha: {ex.Message}";
+        }
+        finally
+        {
+            salvandoSenha = false;
+        }
+    }
+
+    public class PerfilFormModel
+    {
+        [Required(ErrorMessage = "Nome obrigatorio")]
+        [StringLength(255)]
+        public string Nome { get; set; } = "";
+
+        [StringLength(20)]
+        public string? Telefone { get; set; }
+    }
+
+    public class SenhaFormModel
+    {
+        [Required(ErrorMessage = "Senha atual obrigatoria")]
+        public string SenhaAtual { get; set; } = "";
+
+        [Required(ErrorMessage = "Nova senha obrigatoria")]
+        [MinLength(6, ErrorMessage = "Minimo 6 caracteres")]
+        public string NovaSenha { get; set; } = "";
+
+        [Required(ErrorMessage = "Confirme a nova senha")]
+        public string ConfirmarSenha { get; set; } = "";
+    }
+}
