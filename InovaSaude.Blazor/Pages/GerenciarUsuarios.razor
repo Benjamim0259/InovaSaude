@@ -6,7 +6,7 @@
 @inject UsuarioService UsuarioService
 @inject ESFService ESFService
 @inject NavigationManager Navigation
-@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "ADMIN")]
 
 <PageTitle>Gerenciar Usuarios - InovaSaude</PageTitle>
 

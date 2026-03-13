@@ -141,23 +141,34 @@ public static class SeedData
             logger.LogError(ex, "Erro ao atualizar categoria (pode nao existir)");
         }
 
-        // Seed Admin user
-        if (!await context.Usuarios.AnyAsync(u => u.Perfil == PerfilUsuario.ADMIN))
+        // Seed usuarios de teste (um por perfil)
+        var usuariosTeste = new[]
         {
-            var admin = new Usuario
-            {
-                Nome = "Administrador",
-                Email = "admin@inovasaude.com.br",
-                SenhaHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
-                Perfil = PerfilUsuario.ADMIN,
-                Status = "ATIVO",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
+            new { Email = "admin@inovasaude.com.br",        Senha = "Admin@123",  Nome = "Administrador",     Perfil = PerfilUsuario.ADMIN },
+            new { Email = "coordenador@inovasaude.com.br",  Senha = "Coord@123",  Nome = "Coordenador Teste", Perfil = PerfilUsuario.COORDENADOR },
+            new { Email = "gestor@inovasaude.com.br",       Senha = "Gestor@123", Nome = "Gestor Teste",      Perfil = PerfilUsuario.GESTOR },
+            new { Email = "auditor@inovasaude.com.br",      Senha = "Audit@123",  Nome = "Auditor Teste",     Perfil = PerfilUsuario.AUDITOR },
+            new { Email = "operador@inovasaude.com.br",     Senha = "Oper@123",   Nome = "Operador Teste",    Perfil = PerfilUsuario.OPERADOR },
+            new { Email = "visualizador@inovasaude.com.br", Senha = "Visual@123", Nome = "Visualizador Teste",Perfil = PerfilUsuario.VISUALIZADOR },
+        };
 
-            context.Usuarios.Add(admin);
-            await context.SaveChangesAsync();
+        foreach (var u in usuariosTeste)
+        {
+            if (!await context.Usuarios.AnyAsync(x => x.Email == u.Email))
+            {
+                context.Usuarios.Add(new Usuario
+                {
+                    Nome = u.Nome,
+                    Email = u.Email,
+                    SenhaHash = BCrypt.Net.BCrypt.HashPassword(u.Senha),
+                    Perfil = u.Perfil,
+                    Status = "ATIVO",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                });
+            }
         }
+        await context.SaveChangesAsync();
 
         // Seed default categories
         if (!await context.Categorias.AnyAsync())
