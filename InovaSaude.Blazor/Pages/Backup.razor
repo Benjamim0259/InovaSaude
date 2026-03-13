@@ -1,0 +1,201 @@
+@page "/backup"
+@using InovaSaude.Blazor.Services
+@inject BackupService BackupService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "ADMIN")]
+
+<PageTitle>Backup e Restauracao - InovaSaude</PageTitle>
+
+<div class="container mt-4" style="max-width: 900px;">
+    <h2 class="mb-4"><span class="oi oi-data-transfer-download me-2"></span>Backup e Restauracao</h2>
+
+    <div class="alert alert-info">
+        <span class="oi oi-info me-2"></span>
+        O backup exporta todos os dados principais (usuarios, ESFs, funcionarios, categorias, fornecedores e despesas) em um arquivo JSON.
+        Use para migrar entre servidores ou manter uma copia de seguranca local.
+    </div>
+
+    <!-- Exportar -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><span class="oi oi-data-transfer-download me-2"></span>Exportar Backup</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Gera um arquivo JSON com todos os dados do sistema. Salve em local seguro.</p>
+
+            @if (exportando)
+            {
+                <div class="text-center py-3">
+                    <div class="spinner-border text-success" role="status"></div>
+                    <p class="mt-2">Gerando backup...</p>
+                </div>
+            }
+            else
+            {
+                @if (!string.IsNullOrEmpty(mensagemExportar))
+                {
+                    <div class="alert alert-success">
+                        <span class="oi oi-check me-2"></span>@mensagemExportar
+                    </div>
+                }
+
+                <button class="btn btn-success btn-lg" @onclick="ExportarBackup">
+                    <span class="oi oi-data-transfer-download me-2"></span>Gerar e Baixar Backup
+                </button>
+            }
+        </div>
+    </div>
+
+    <!-- Importar -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning">
+            <h5 class="mb-0"><span class="oi oi-data-transfer-upload me-2"></span>Restaurar Backup</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning mb-3">
+                <span class="oi oi-warning me-2"></span>
+                <strong>Atencao:</strong> A importacao adiciona registros que nao existem no banco atual.
+                Registros com o mesmo ID serao ignorados (nao sobrescreve dados existentes).
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Selecione o arquivo de backup (.json)</label>
+                <InputFile class="form-control" OnChange="ArquivoSelecionado" accept=".json" />
+            </div>
+
+            @if (importando)
+            {
+                <div class="text-center py-3">
+                    <div class="spinner-border text-warning" role="status"></div>
+                    <p class="mt-2">Importando dados...</p>
+                </div>
+            }
+
+            @if (resultado != null)
+            {
+                <div class="alert @(resultado.Sucesso ? "alert-success" : "alert-danger") mt-3">
+                    @if (resultado.Sucesso)
+                    {
+                        <h6><span class="oi oi-check me-2"></span>Importacao concluida!</h6>
+                        <table class="table table-sm table-bordered mt-2 mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Entidade</th>
+                                    <th class="text-center">Importados</th>
+                                    <th class="text-center">Ja existiam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Usuarios</td>
+                                    <td class="text-center text-success">@resultado.UsuariosImportados</td>
+                                    <td class="text-center text-muted">@resultado.UsuariosIgnorados</td>
+                                </tr>
+                                <tr>
+                                    <td>ESFs</td>
+                                    <td class="text-center text-success">@resultado.ESFsImportadas</td>
+                                    <td class="text-center text-muted">@resultado.ESFsIgnoradas</td>
+                                </tr>
+                                <tr>
+                                    <td>Funcionarios</td>
+                                    <td class="text-center text-success">@resultado.FuncionariosImportados</td>
+                                    <td class="text-center text-muted">@resultado.FuncionariosIgnorados</td>
+                                </tr>
+                                <tr>
+                                    <td>Categorias</td>
+                                    <td class="text-center text-success">@resultado.CategoriasImportadas</td>
+                                    <td class="text-center text-muted">@resultado.CategoriasIgnoradas</td>
+                                </tr>
+                                <tr>
+                                    <td>Fornecedores</td>
+                                    <td class="text-center text-success">@resultado.FornecedoresImportados</td>
+                                    <td class="text-center text-muted">@resultado.FornecedoresIgnorados</td>
+                                </tr>
+                                <tr>
+                                    <td>Despesas</td>
+                                    <td class="text-center text-success">@resultado.DespesasImportadas</td>
+                                    <td class="text-center text-muted">@resultado.DespesasIgnoradas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p><span class="oi oi-warning me-2"></span><strong>Erro:</strong> @(resultado.Erro)</p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool exportando;
+    private bool importando;
+    private string? mensagemExportar;
+    private BackupResult? resultado;
+
+    private async Task ExportarBackup()
+    {
+        exportando = true;
+        mensagemExportar = null;
+
+        try
+        {
+            var backup = await BackupService.ExportarAsync();
+            var json = BackupService.SerializarBackup(backup);
+            var bytes = System.Text.Encoding.UTF8.GetBytes(json);
+            var fileName = $"inovasaude_backup_{DateTime.UtcNow:yyyyMMdd_HHmmss}.json";
+
+            // Download via JS interop
+            await JSRuntime.InvokeVoidAsync("downloadFileFromBytes", fileName, Convert.ToBase64String(bytes));
+            mensagemExportar = $"Backup gerado com sucesso! ({backup.Usuarios.Count} usuarios, {backup.ESFs.Count} ESFs, {backup.Funcionarios.Count} funcionarios, {backup.Categorias.Count} categorias, {backup.Despesas.Count} despesas)";
+        }
+        catch (Exception ex)
+        {
+            mensagemExportar = $"Erro: {ex.Message}";
+        }
+        finally
+        {
+            exportando = false;
+        }
+    }
+
+    private async Task ArquivoSelecionado(InputFileChangeEventArgs e)
+    {
+        importando = true;
+        resultado = null;
+
+        try
+        {
+            var arquivo = e.File;
+            if (arquivo.Size > 50_000_000)
+            {
+                resultado = new BackupResult { Sucesso = false, Erro = "Arquivo muito grande (max 50MB)" };
+                return;
+            }
+
+            using var stream = arquivo.OpenReadStream(50_000_000);
+            using var reader = new StreamReader(stream);
+            var json = await reader.ReadToEndAsync();
+
+            var backup = BackupService.DesserializarBackup(json);
+            if (backup == null)
+            {
+                resultado = new BackupResult { Sucesso = false, Erro = "Arquivo de backup invalido ou corrompido" };
+                return;
+            }
+
+            resultado = await BackupService.ImportarAsync(backup);
+        }
+        catch (Exception ex)
+        {
+            resultado = new BackupResult { Sucesso = false, Erro = ex.Message };
+        }
+        finally
+        {
+            importando = false;
+        }
+    }
+}

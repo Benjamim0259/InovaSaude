@@ -30,3 +30,7 @@ function base64toBlob(base64Data, contentType) {
     }
     return new Blob(byteArrays, { type: contentType });
 }
+
+window.downloadFileFromBytes = (filename, base64Data) => {
+    window.downloadFile(filename, base64Data, 'application/json');
+};

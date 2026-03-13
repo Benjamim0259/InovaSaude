@@ -1,0 +1,403 @@
+@page "/gerenciar-funcionarios"
+@using System.ComponentModel.DataAnnotations
+@using System.Globalization
+@using InovaSaude.Blazor.Services
+@using InovaSaude.Blazor.Models
+@inject FuncionarioService FuncionarioService
+@inject ESFService ESFService
+@inject NavigationManager Navigation
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "ADMIN,COORDENADOR,GESTOR")]
+
+<PageTitle>Gerenciar Funcionarios - InovaSaude</PageTitle>
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><span class="oi oi-people me-2"></span>Gerenciar Funcionarios</h2>
+        <button class="btn btn-primary btn-lg" @onclick="AbrirModalNovo">
+            <span class="oi oi-plus me-2"></span>Novo Funcionario
+        </button>
+    </div>
+
+    @if (carregando)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p class="mt-2 text-muted">Carregando funcionarios...</p>
+        </div>
+    }
+    else
+    {
+        <!-- Cards Resumo -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-primary text-center">
+                    <div class="card-body">
+                        <h6 class="text-muted">Total Funcionarios</h6>
+                        <h3 class="text-primary">@funcionarios.Count</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-success text-center">
+                    <div class="card-body">
+                        <h6 class="text-muted">Folha Salarial</h6>
+                        <h3 class="text-success">@funcionarios.Sum(f => f.Salario).ToString("C", new CultureInfo("pt-BR"))</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-info text-center">
+                    <div class="card-body">
+                        <h6 class="text-muted">Media Salarial</h6>
+                        <h3 class="text-info">@((funcionarios.Any() ? funcionarios.Average(f => f.Salario) : 0).ToString("C", new CultureInfo("pt-BR")))</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Pesquisar</label>
+                        <input type="text" class="form-control" @bind="filtroNome" @bind:event="oninput" placeholder="Nome..." />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Cargo</label>
+                        <select class="form-select" @bind="filtroCargo">
+                            <option value="">Todos</option>
+                            @foreach (var cargo in cargosDisponiveis)
+                            {
+                                <option value="@cargo">@cargo</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">ESF</label>
+                        <select class="form-select" @bind="filtroESF">
+                            <option value="">Todas</option>
+                            @foreach (var esf in esfList)
+                            {
+                                <option value="@esf.Id">@esf.Nome</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-secondary w-100" @onclick="LimparFiltros">
+                            <span class="oi oi-x me-2"></span>Limpar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cargo</th>
+                                <th>ESF</th>
+                                <th class="text-end">Salario</th>
+                                <th class="text-center">Acoes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var func in FuncionariosFiltrados)
+                            {
+                                <tr>
+                                    <td><strong>@func.Nome</strong></td>
+                                    <td><span class="badge bg-info">@func.Cargo</span></td>
+                                    <td><small>@(func.Esf?.Nome ?? "-")</small></td>
+                                    <td class="text-end">
+                                        <strong>@func.Salario.ToString("C", new CultureInfo("pt-BR"))</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-info" @onclick="() => AbrirModalEditar(func)" title="Editar">
+                                                <span class="oi oi-pencil"></span>
+                                            </button>
+                                            <button class="btn btn-outline-danger" @onclick="() => Excluir(func)" title="Excluir">
+                                                <span class="oi oi-trash"></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (!FuncionariosFiltrados.Any())
+                {
+                    <div class="alert alert-info text-center">
+                        <span class="oi oi-info me-2"></span>Nenhum funcionario encontrado.
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Modal Criar/Editar -->
+@if (mostrarModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @(editando == null ? "Novo Funcionario" : "Editar Funcionario")
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="FecharModal"></button>
+                </div>
+                <EditForm Model="form" OnValidSubmit="Salvar">
+                    <DataAnnotationsValidator />
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Nome *</label>
+                            <InputText class="form-control" @bind-Value="form.Nome" placeholder="Nome completo" />
+                            <ValidationMessage For="@(() => form.Nome)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Cargo *</label>
+                            <select class="form-select" @bind="form.Cargo">
+                                <option value="">Selecione...</option>
+                                <option value="Medico">Medico</option>
+                                <option value="Enfermeiro">Enfermeiro</option>
+                                <option value="Tecnico de Enfermagem">Tecnico de Enfermagem</option>
+                                <option value="Dentista">Dentista</option>
+                                <option value="Agente Comunitario">Agente Comunitario</option>
+                                <option value="Farmaceutico">Farmaceutico</option>
+                                <option value="Administrativo">Administrativo</option>
+                                <option value="Motorista">Motorista</option>
+                                <option value="Servicos Gerais">Servicos Gerais</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                            <ValidationMessage For="@(() => form.Cargo)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Salario *</label>
+                            <InputNumber class="form-control" @bind-Value="form.Salario" />
+                            <ValidationMessage For="@(() => form.Salario)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">ESF *</label>
+                            <select class="form-select" @bind="form.EsfId">
+                                <option value="">Selecione...</option>
+                                @foreach (var esf in esfList)
+                                {
+                                    <option value="@esf.Id">@esf.Nome</option>
+                                }
+                            </select>
+                            <ValidationMessage For="@(() => form.EsfId)" />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(mensagemErro))
+                        {
+                            <div class="alert alert-danger">@mensagemErro</div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" disabled="@salvando">
+                            @if (salvando) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                            @(editando == null ? "Criar" : "Salvar")
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Funcionario> funcionarios = new();
+    private List<ESF> esfList = new();
+    private bool carregando = true;
+    private bool mostrarModal;
+    private bool salvando;
+    private string? mensagemErro;
+    private Funcionario? editando;
+    private FuncFormModel form = new();
+
+    // Filtros
+    private string filtroNome = "";
+    private string filtroCargo = "";
+    private string filtroESF = "";
+
+    private string[] cargosDisponiveis = new[]
+    {
+        "Medico", "Enfermeiro", "Tecnico de Enfermagem", "Dentista",
+        "Agente Comunitario", "Farmaceutico", "Administrativo",
+        "Motorista", "Servicos Gerais", "Outros"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarDados();
+    }
+
+    private async Task CarregarDados()
+    {
+        carregando = true;
+        try
+        {
+            funcionarios = await FuncionarioService.GetAllAsync();
+            esfList = await ESFService.GetAllESFAsync();
+        }
+        catch (Exception ex)
+        {
+            mensagemErro = $"Erro ao carregar: {ex.Message}";
+        }
+        finally
+        {
+            carregando = false;
+        }
+    }
+
+    private IEnumerable<Funcionario> FuncionariosFiltrados
+    {
+        get
+        {
+            var query = funcionarios.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(filtroNome))
+                query = query.Where(f => f.Nome.Contains(filtroNome, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrWhiteSpace(filtroCargo))
+                query = query.Where(f => f.Cargo == filtroCargo);
+
+            if (!string.IsNullOrWhiteSpace(filtroESF))
+                query = query.Where(f => f.EsfId == filtroESF);
+
+            return query.OrderBy(f => f.Nome);
+        }
+    }
+
+    private void LimparFiltros()
+    {
+        filtroNome = "";
+        filtroCargo = "";
+        filtroESF = "";
+    }
+
+    private void AbrirModalNovo()
+    {
+        editando = null;
+        form = new FuncFormModel();
+        mensagemErro = null;
+        mostrarModal = true;
+    }
+
+    private void AbrirModalEditar(Funcionario func)
+    {
+        editando = func;
+        form = new FuncFormModel
+        {
+            Nome = func.Nome,
+            Cargo = func.Cargo,
+            Salario = func.Salario,
+            EsfId = func.EsfId
+        };
+        mensagemErro = null;
+        mostrarModal = true;
+    }
+
+    private void FecharModal()
+    {
+        mostrarModal = false;
+        editando = null;
+        mensagemErro = null;
+    }
+
+    private async Task Salvar()
+    {
+        salvando = true;
+        mensagemErro = null;
+
+        try
+        {
+            if (string.IsNullOrEmpty(form.Cargo))
+            {
+                mensagemErro = "Selecione um cargo";
+                return;
+            }
+            if (string.IsNullOrEmpty(form.EsfId))
+            {
+                mensagemErro = "Selecione uma ESF";
+                return;
+            }
+
+            if (editando == null)
+            {
+                var novo = new Funcionario
+                {
+                    Nome = form.Nome,
+                    Cargo = form.Cargo,
+                    Salario = form.Salario,
+                    EsfId = form.EsfId
+                };
+                await FuncionarioService.CreateAsync(novo);
+            }
+            else
+            {
+                editando.Nome = form.Nome;
+                editando.Cargo = form.Cargo;
+                editando.Salario = form.Salario;
+                editando.EsfId = form.EsfId;
+                await FuncionarioService.UpdateAsync(editando);
+            }
+
+            await CarregarDados();
+            FecharModal();
+        }
+        catch (Exception ex)
+        {
+            mensagemErro = $"Erro ao salvar: {ex.Message}";
+        }
+        finally
+        {
+            salvando = false;
+        }
+    }
+
+    private async Task Excluir(Funcionario func)
+    {
+        try
+        {
+            await FuncionarioService.DeleteAsync(func.Id);
+            await CarregarDados();
+        }
+        catch (Exception ex)
+        {
+            mensagemErro = $"Erro ao excluir: {ex.Message}";
+        }
+    }
+
+    public class FuncFormModel
+    {
+        [Required(ErrorMessage = "Nome obrigatorio")]
+        [StringLength(255)]
+        public string Nome { get; set; } = "";
+
+        [Required(ErrorMessage = "Cargo obrigatorio")]
+        public string Cargo { get; set; } = "";
+
+        [Required(ErrorMessage = "Salario obrigatorio")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Salario deve ser maior que zero")]
+        public decimal Salario { get; set; }
+
+        [Required(ErrorMessage = "ESF obrigatoria")]
+        public string EsfId { get; set; } = "";
+    }
+}

@@ -46,6 +46,17 @@
                     </Authorized>
                 </AuthorizeView>
 
+                <!-- Funcionarios: ADMIN, COORDENADOR, GESTOR -->
+                <AuthorizeView Roles="ADMIN,COORDENADOR,GESTOR" Context="funcCtx">
+                    <Authorized>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="gerenciar-funcionarios">
+                                <span class="oi oi-briefcase" aria-hidden="true"></span> Funcionarios
+                            </NavLink>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+
                 <!-- Relatorios: ADMIN, COORDENADOR, GESTOR, AUDITOR, VISUALIZADOR -->
                 <AuthorizeView Roles="ADMIN,COORDENADOR,GESTOR,AUDITOR,VISUALIZADOR" Context="relCtx">
                     <Authorized>
@@ -63,6 +74,11 @@
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="gerenciar-usuarios">
                                 <span class="oi oi-people" aria-hidden="true"></span> Usuarios
+                            </NavLink>
+                        </div>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="backup">
+                                <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Backup
                             </NavLink>
                         </div>
                     </Authorized>
