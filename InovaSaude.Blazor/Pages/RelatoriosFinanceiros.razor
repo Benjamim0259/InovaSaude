@@ -33,12 +33,26 @@
         <div class="card-body">
             <div class="row align-items-end g-3">
                 <div class="col-md-3">
-                    <label class="form-label fw-bold"><span class="oi oi-calendar me-1"></span>Data Inicio</label>
-                    <input type="date" class="form-control" @bind="dataInicio" @bind:after="CarregarDados" />
+                    <label class="form-label fw-bold"><span class="oi oi-calendar me-1"></span>Mes Inicial</label>
+                    <select class="form-select" @bind="mesInicio" @bind:after="CarregarDados">
+                        @for (int i = -23; i <= 0; i++)
+                        {
+                            var mes = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(i);
+                            var valor = mes.ToString("yyyy-MM");
+                            <option value="@valor">@mes.ToString("MMMM/yyyy", new System.Globalization.CultureInfo("pt-BR"))</option>
+                        }
+                    </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-bold"><span class="oi oi-calendar me-1"></span>Data Fim</label>
-                    <input type="date" class="form-control" @bind="dataFim" @bind:after="CarregarDados" />
+                    <label class="form-label fw-bold"><span class="oi oi-calendar me-1"></span>Mes Final</label>
+                    <select class="form-select" @bind="mesFim" @bind:after="CarregarDados">
+                        @for (int i = -23; i <= 0; i++)
+                        {
+                            var mes = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(i);
+                            var valor = mes.ToString("yyyy-MM");
+                            <option value="@valor">@mes.ToString("MMMM/yyyy", new System.Globalization.CultureInfo("pt-BR"))</option>
+                        }
+                    </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fw-bold"><span class="oi oi-medical-cross me-1"></span>Filtrar ESF</label>
@@ -285,9 +299,17 @@
     private string abaAtiva = "categorias";
     private string pesquisaESF = "";
     private List<string> esfIdsSelecionadas = new();
-    
-    private DateTime dataInicio = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
-    private DateTime dataFim = DateTime.UtcNow;
+
+    private string mesInicio = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(-2).ToString("yyyy-MM");
+    private string mesFim = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).ToString("yyyy-MM");
+
+    private DateTime DataInicioParsed => DateTime.TryParseExact(mesInicio + "-01", "yyyy-MM-dd",
+        System.Globalization.CultureInfo.InvariantCulture,
+        System.Globalization.DateTimeStyles.None, out var d) ? DateTime.SpecifyKind(d, DateTimeKind.Utc) : DateTime.UtcNow.AddMonths(-2);
+
+    private DateTime DataFimParsed => DateTime.TryParseExact(mesFim + "-01", "yyyy-MM-dd",
+        System.Globalization.CultureInfo.InvariantCulture,
+        System.Globalization.DateTimeStyles.None, out var d) ? DateTime.SpecifyKind(d.AddMonths(1).AddSeconds(-1), DateTimeKind.Utc) : DateTime.UtcNow;
 
     private decimal totalDespesas = 0;
     private int quantidadeDespesas = 0;
@@ -330,7 +352,7 @@
             esfList = await ESFService.GetAllESFAsync() ?? new List<ESF>();
             categorias = await CategoriaService.GetAllCategoriasAsync() ?? new List<Categoria>();
 
-            todasDespesas = await DespesaService.GetDespesasByPeriodoAsync(dataInicio, dataFim) ?? new List<Despesa>();
+            todasDespesas = await DespesaService.GetDespesasByPeriodoAsync(DataInicioParsed, DataFimParsed) ?? new List<Despesa>();
             if (esfIdsSelecionadas.Any())
                 todasDespesas = todasDespesas.Where(d => esfIdsSelecionadas.Contains(d.EsfId)).ToList();
 
@@ -384,7 +406,7 @@
             .ToList();
 
         evolucaoMensal = todasDespesas
-            .GroupBy(d => new { d.CreatedAt.Year, d.CreatedAt.Month })
+            .GroupBy(d => new { d.MesReferencia.Year, d.MesReferencia.Month })
             .Select(g => new EvolucaoMensal
             {
                 Ano = g.Key.Year,
@@ -414,25 +436,25 @@
         try
         {
             var csv = new StringBuilder();
-            csv.AppendLine("Data;Descrição;ESF;Categoria;Fornecedor;Valor");
-            
-            foreach (var despesa in todasDespesas.OrderBy(d => d.CreatedAt))
+            csv.AppendLine("Mes Referencia;Descricao;ESF;Categoria;Fornecedor;Valor");
+
+            foreach (var despesa in todasDespesas.OrderBy(d => d.MesReferencia))
             {
-                csv.AppendLine($"{despesa.CreatedAt:dd/MM/yyyy};{despesa.Descricao};{despesa.Esf?.Nome};{despesa.Categoria?.Nome};{despesa.Fornecedor?.NomeFantasia ?? despesa.Fornecedor?.RazaoSocial};{despesa.Valor:F2}");
+                csv.AppendLine($"{despesa.MesReferencia:MM/yyyy};{despesa.Descricao};{despesa.Esf?.Nome};{despesa.Categoria?.Nome};{despesa.Fornecedor?.NomeFantasia ?? despesa.Fornecedor?.RazaoSocial};{despesa.Valor:F2}");
             }
-            
+
             csv.AppendLine();
-            csv.AppendLine("SALÁRIOS");
-            csv.AppendLine("Nome;ESF;Cargo;Salário");
+            csv.AppendLine("SALARIOS");
+            csv.AppendLine("Nome;ESF;Cargo;Salario");
             foreach (var func in todosFuncionarios.OrderBy(f => f.Esf?.Nome).ThenBy(f => f.Nome))
             {
                 csv.AppendLine($"{func.Nome};{func.Esf?.Nome};{func.Cargo};{func.Salario:F2}");
             }
-            
+
             var bytes = Encoding.UTF8.GetBytes(csv.ToString());
             var base64 = Convert.ToBase64String(bytes);
-            var filename = $"relatorio-financeiro-{DateTime.Now:yyyy-MM-dd}.csv";
-            
+            var filename = $"relatorio-{mesInicio}-a-{mesFim}.csv";
+
             await JSRuntime.InvokeVoidAsync("downloadFile", filename, base64, "text/csv");
         }
         catch (Exception ex)
@@ -448,14 +470,14 @@
             var pdfBytes = PdfService.GerarRelatorioPDF(
                 todasDespesas,
                 todosFuncionarios,
-                dataInicio,
-                dataFim,
+                DataInicioParsed,
+                DataFimParsed,
                 totalDespesas,
                 totalSalarios
             );
 
             var base64 = Convert.ToBase64String(pdfBytes);
-            var filename = $"relatorio-financeiro-{DateTime.Now:yyyy-MM-dd}.pdf";
+            var filename = $"relatorio-{mesInicio}-a-{mesFim}.pdf";
 
             await JSRuntime.InvokeVoidAsync("downloadFile", filename, base64, "application/pdf");
         }

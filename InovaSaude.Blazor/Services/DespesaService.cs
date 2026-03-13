@@ -129,7 +129,7 @@ public class DespesaService
     public async Task<decimal> GetTotalDespesasByPeriodoAsync(DateTime inicio, DateTime fim)
     {
         return await _context.Despesas
-            .Where(d => d.CreatedAt >= inicio && d.CreatedAt <= fim)
+            .Where(d => d.MesReferencia >= inicio && d.MesReferencia <= fim)
             .SumAsync(d => d.Valor);
     }
 }

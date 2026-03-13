@@ -1,4 +1,4 @@
-@page "/dashboard"
+﻿@page "/dashboard"
 @using InovaSaude.Blazor.Services
 @using InovaSaude.Blazor.Models
 @using InovaSaude.Blazor.Helpers
@@ -17,27 +17,34 @@
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><span class="oi oi-dashboard me-2"></span>Dashboard - Resumo Geral</h2>
-        <div>
-            <span class="badge bg-primary">@DateTimeHelper.NowBrasilia().ToString("dd/MM/yyyy HH:mm")</span>
+        <h2><span class="oi oi-dashboard me-2"></span>Dashboard</h2>
+        <div class="d-flex align-items-center gap-2">
+            <label class="form-label mb-0 fw-bold"><span class="oi oi-calendar me-1"></span>Mes:</label>
+            <select class="form-select form-select-sm" style="width: auto;" @bind="mesSelecionado" @bind:after="CarregarDados">
+                @for (int i = -11; i <= 0; i++)
+                {
+                    var mes = new DateTime(DateTimeHelper.NowBrasilia().Year, DateTimeHelper.NowBrasilia().Month, 1).AddMonths(i);
+                    var valor = mes.ToString("yyyy-MM");
+                    <option value="@valor">@mes.ToString("MMMM/yyyy", new CultureInfo("pt-BR"))</option>
+                }
+            </select>
+            <span class="badge bg-secondary">@DateTimeHelper.NowBrasilia().ToString("dd/MM/yyyy HH:mm")</span>
         </div>
     </div>
 
     <!-- Cards de Resumo -->
     <div class="row g-3 mb-4">
-        <!-- Total Despesas -->
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100 bg-danger text-white">
                 <div class="card-body text-center">
                     <h1 class="display-4"><span class="oi oi-dollar"></span></h1>
                     <h3 class="mb-0">@totalDespesas.ToString("C", new CultureInfo("pt-BR"))</h3>
                     <p class="mb-0">Total Despesas</p>
-                    <small>@quantidadeDespesas despesas</small>
+                    <small>@quantidadeDespesas despesas no mes</small>
                 </div>
             </div>
         </div>
 
-        <!-- Total Salarios -->
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100 bg-warning text-dark">
                 <div class="card-body text-center">
@@ -49,7 +56,6 @@
             </div>
         </div>
 
-        <!-- Total Geral -->
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100 bg-primary text-white">
                 <div class="card-body text-center">
@@ -61,7 +67,6 @@
             </div>
         </div>
 
-        <!-- ESF Cadastradas -->
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100 bg-success text-white">
                 <div class="card-body text-center">
@@ -74,101 +79,123 @@
         </div>
     </div>
 
-    <!-- Graficos e Rankings -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><span class="oi oi-bar-chart me-2"></span>Top 5 Categorias (Despesas)</h5>
-                </div>
-                <div class="card-body">
-                    @foreach (var cat in topCategorias)
-                    {
-                        var percentual = totalDespesas > 0 ? (cat.Total / totalDespesas * 100) : 0;
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <strong>@cat.Categoria</strong>
-                                <span>@cat.Total.ToString("C", new CultureInfo("pt-BR"))</span>
-                            </div>
-                            <div class="progress" style="height: 25px;">
-                                <div class="progress-bar bg-danger" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
-                                    @cat.Quantidade item@(cat.Quantidade != 1 ? "s" : "")
+    @if (!carregando)
+    {
+        <!-- Graficos e Rankings -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><span class="oi oi-bar-chart me-2"></span>Top Categorias - @mesSelecionadoDisplay</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (topCategorias.Any())
+                        {
+                            @foreach (var cat in topCategorias)
+                            {
+                                var percentual = totalDespesas > 0 ? (cat.Total / totalDespesas * 100) : 0;
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <strong>@cat.Categoria</strong>
+                                        <span>@cat.Total.ToString("C", new CultureInfo("pt-BR"))</span>
+                                    </div>
+                                    <div class="progress" style="height: 22px;">
+                                        <div class="progress-bar bg-danger" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
+                                            @cat.Quantidade item@(cat.Quantidade != 1 ? "s" : "")
+                                        </div>
+                                    </div>
                                 </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-info mb-0">
+                                <span class="oi oi-info me-2"></span>Nenhuma despesa em @mesSelecionadoDisplay
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><span class="oi oi-medical-cross me-2"></span>Top ESF por Despesas - @mesSelecionadoDisplay</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (esfPorDespesa.Any())
+                        {
+                            @foreach (var esf in esfPorDespesa)
+                            {
+                                var percentual = totalDespesas > 0 ? (esf.Total / totalDespesas * 100) : 0;
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <strong>@esf.Nome</strong>
+                                        <span>@esf.Total.ToString("C", new CultureInfo("pt-BR"))</span>
+                                    </div>
+                                    <div class="progress" style="height: 22px;">
+                                        <div class="progress-bar bg-success" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
+                                            @esf.Quantidade item@(esf.Quantidade != 1 ? "s" : "")
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-info mb-0">
+                                <span class="oi oi-info me-2"></span>Nenhuma despesa em @mesSelecionadoDisplay
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><span class="oi oi-medical-cross me-2"></span>ESF por Despesas</h5>
-                </div>
-                <div class="card-body">
-                    @foreach (var esf in esfPorDespesa)
-                    {
-                        var percentual = totalDespesas > 0 ? (esf.Total / totalDespesas * 100) : 0;
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <strong>@esf.Nome</strong>
-                                <span>@esf.Total.ToString("C", new CultureInfo("pt-BR"))</span>
+        <!-- Acoes Rapidas -->
+        <div class="row g-3">
+            <div class="col-md-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0"><span class="oi oi-flash me-2"></span>Acoes Rapidas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <a href="/gerenciar-despesas" class="btn btn-outline-primary w-100 py-3">
+                                    <h3><span class="oi oi-dollar"></span></h3>
+                                    <div>Nova Despesa</div>
+                                </a>
                             </div>
-                            <div class="progress" style="height: 25px;">
-                                <div class="progress-bar bg-success" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
-                                    @esf.Quantidade item@(esf.Quantidade != 1 ? "s" : "")
-                                </div>
+                            <div class="col-md-3">
+                                <a href="/gerenciar-esf" class="btn btn-outline-success w-100 py-3">
+                                    <h3><span class="oi oi-medical-cross"></span></h3>
+                                    <div>Gerenciar ESF</div>
+                                </a>
                             </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Acoes Rapidas -->
-    <div class="row g-3">
-        <div class="col-md-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0"><span class="oi oi-flash me-2"></span>Acoes Rapidas</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <a href="/gerenciar-despesas" class="btn btn-outline-primary w-100 py-3">
-                                <h3><span class="oi oi-dollar"></span></h3>
-                                <div>Nova Despesa</div>
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="/gerenciar-esf" class="btn btn-outline-success w-100 py-3">
-                                <h3><span class="oi oi-medical-cross"></span></h3>
-                                <div>Gerenciar ESF</div>
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="/relatorios-financeiros" class="btn btn-outline-info w-100 py-3">
-                                <h3><span class="oi oi-bar-chart"></span></h3>
-                                <div>Relatorios</div>
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="/gerenciar-usuarios" class="btn btn-outline-warning w-100 py-3">
-                                <h3><span class="oi oi-people"></span></h3>
-                                <div>Usuarios</div>
-                            </a>
+                            <div class="col-md-3">
+                                <a href="/relatorios-financeiros" class="btn btn-outline-info w-100 py-3">
+                                    <h3><span class="oi oi-bar-chart"></span></h3>
+                                    <div>Relatorios</div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/gerenciar-usuarios" class="btn btn-outline-warning w-100 py-3">
+                                    <h3><span class="oi oi-people"></span></h3>
+                                    <div>Usuarios</div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 </div>
 
 @code {
     private bool carregando = true;
+    private string mesSelecionado = DateTimeHelper.NowBrasilia().ToString("yyyy-MM");
     private decimal totalDespesas = 0;
     private decimal totalSalarios = 0;
     private int quantidadeDespesas = 0;
@@ -176,6 +203,13 @@
     private int quantidadeESF = 0;
     private List<CategoriaResumo> topCategorias = new();
     private List<ESFResumo> esfPorDespesa = new();
+
+    private string mesSelecionadoDisplay =>
+        DateTime.TryParseExact(mesSelecionado + "-01", "yyyy-MM-dd",
+            System.Globalization.CultureInfo.InvariantCulture,
+            System.Globalization.DateTimeStyles.None, out var dt)
+        ? dt.ToString("MMMM/yyyy", new CultureInfo("pt-BR"))
+        : mesSelecionado;
 
     protected override async Task OnInitializedAsync()
     {
@@ -195,43 +229,62 @@
 
     private async Task CarregarDados()
     {
-        var dataBrasilia = DateTimeHelper.NowBrasilia();
-        var dataInicio = new DateTime(dataBrasilia.Year, dataBrasilia.Month, 1);
-        var dataFim = dataBrasilia;
-
-        var despesas = await DespesaService.GetDespesasByPeriodoAsync(dataInicio, dataFim) ?? new List<Despesa>();
-        var funcionarios = await FuncionarioService.GetAllAsync() ?? new List<Funcionario>();
-        var esfs = await ESFService.GetAllESFAsync() ?? new List<ESF>();
-
-        totalDespesas = despesas.Sum(d => d.Valor);
-        quantidadeDespesas = despesas.Count;
-        totalSalarios = funcionarios.Sum(f => f.Salario);
-        quantidadeFuncionarios = funcionarios.Count;
-        quantidadeESF = esfs.Count;
-
-        topCategorias = despesas
-            .GroupBy(d => d.Categoria?.Nome ?? "Sem Categoria")
-            .Select(g => new CategoriaResumo
+        carregando = true;
+        try
+        {
+            // Converter mes selecionado para inicio/fim do mes
+            DateTime mesRef;
+            if (!DateTime.TryParseExact(mesSelecionado + "-01", "yyyy-MM-dd",
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out mesRef))
             {
-                Categoria = g.Key,
-                Total = g.Sum(d => d.Valor),
-                Quantidade = g.Count()
-            })
-            .OrderByDescending(c => c.Total)
-            .Take(5)
-            .ToList();
+                mesRef = new DateTime(DateTimeHelper.NowBrasilia().Year, DateTimeHelper.NowBrasilia().Month, 1);
+            }
+            var inicioDomes = DateTime.SpecifyKind(mesRef, DateTimeKind.Utc);
+            var fimDomes = DateTime.SpecifyKind(mesRef.AddMonths(1).AddSeconds(-1), DateTimeKind.Utc);
 
-        esfPorDespesa = despesas
-            .GroupBy(d => d.Esf?.Nome ?? "Sem ESF")
-            .Select(g => new ESFResumo
-            {
-                Nome = g.Key,
-                Total = g.Sum(d => d.Valor),
-                Quantidade = g.Count()
-            })
-            .OrderByDescending(e => e.Total)
-            .Take(5)
-            .ToList();
+            var despesas = await DespesaService.GetDespesasByPeriodoAsync(inicioDomes, fimDomes) ?? new List<Despesa>();
+            var funcionarios = await FuncionarioService.GetAllAsync() ?? new List<Funcionario>();
+            var esfs = await ESFService.GetAllESFAsync() ?? new List<ESF>();
+
+            totalDespesas = despesas.Sum(d => d.Valor);
+            quantidadeDespesas = despesas.Count;
+            totalSalarios = funcionarios.Sum(f => f.Salario);
+            quantidadeFuncionarios = funcionarios.Count;
+            quantidadeESF = esfs.Count;
+
+            topCategorias = despesas
+                .GroupBy(d => d.Categoria?.Nome ?? "Sem Categoria")
+                .Select(g => new CategoriaResumo
+                {
+                    Categoria = g.Key,
+                    Total = g.Sum(d => d.Valor),
+                    Quantidade = g.Count()
+                })
+                .OrderByDescending(c => c.Total)
+                .Take(5)
+                .ToList();
+
+            esfPorDespesa = despesas
+                .GroupBy(d => d.Esf?.Nome ?? "Sem ESF")
+                .Select(g => new ESFResumo
+                {
+                    Nome = g.Key,
+                    Total = g.Sum(d => d.Valor),
+                    Quantidade = g.Count()
+                })
+                .OrderByDescending(e => e.Total)
+                .Take(5)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Erro ao carregar dados: " + ex.Message);
+        }
+        finally
+        {
+            carregando = false;
+        }
     }
 
     private class CategoriaResumo
