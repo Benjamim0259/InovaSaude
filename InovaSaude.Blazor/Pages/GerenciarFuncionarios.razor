@@ -168,7 +168,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">Cargo *</label>
-                            <select class="form-select" @bind="form.Cargo">
+                            <select class="form-select" @bind="cargoSelecionado">
                                 <option value="">Selecione...</option>
                                 <option value="Medico">Medico</option>
                                 <option value="Enfermeiro">Enfermeiro</option>
@@ -183,6 +183,15 @@
                             </select>
                             <ValidationMessage For="@(() => form.Cargo)" />
                         </div>
+
+                        @if (cargoSelecionado == "Outros")
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Especifique o cargo *</label>
+                                <InputText class="form-control" @bind-Value="form.CargoCustom" placeholder="Digite o nome do cargo" />
+                                <ValidationMessage For="@(() => form.CargoCustom)" />
+                            </div>
+                        }
 
                         <div class="mb-3">
                             <label class="form-label">Salario *</label>
@@ -229,6 +238,7 @@
     private string? mensagemErro;
     private Funcionario? editando;
     private FuncFormModel form = new();
+    private string cargoSelecionado = "";
 
     // Filtros
     private string filtroNome = "";
@@ -295,6 +305,7 @@
     {
         editando = null;
         form = new FuncFormModel();
+        cargoSelecionado = "";
         mensagemErro = null;
         mostrarModal = true;
     }
@@ -302,10 +313,13 @@
     private void AbrirModalEditar(Funcionario func)
     {
         editando = func;
+        var ehCargoPredefinido = cargosDisponiveis.Contains(func.Cargo);
+        cargoSelecionado = ehCargoPredefinido ? func.Cargo : "Outros";
         form = new FuncFormModel
         {
             Nome = func.Nome,
             Cargo = func.Cargo,
+            CargoCustom = ehCargoPredefinido ? "" : func.Cargo,
             Salario = func.Salario,
             EsfId = func.EsfId
         };
@@ -327,9 +341,14 @@
 
         try
         {
-            if (string.IsNullOrEmpty(form.Cargo))
+            if (string.IsNullOrEmpty(cargoSelecionado))
             {
                 mensagemErro = "Selecione um cargo";
+                return;
+            }
+            if (cargoSelecionado == "Outros" && string.IsNullOrWhiteSpace(form.CargoCustom))
+            {
+                mensagemErro = "Especifique o nome do cargo";
                 return;
             }
             if (string.IsNullOrEmpty(form.EsfId))
@@ -338,12 +357,14 @@
                 return;
             }
 
+            var cargoFinal = cargoSelecionado == "Outros" ? form.CargoCustom.Trim() : cargoSelecionado;
+
             if (editando == null)
             {
                 var novo = new Funcionario
                 {
                     Nome = form.Nome,
-                    Cargo = form.Cargo,
+                    Cargo = cargoFinal,
                     Salario = form.Salario,
                     EsfId = form.EsfId
                 };
@@ -352,7 +373,7 @@
             else
             {
                 editando.Nome = form.Nome;
-                editando.Cargo = form.Cargo;
+                editando.Cargo = cargoFinal;
                 editando.Salario = form.Salario;
                 editando.EsfId = form.EsfId;
                 await FuncionarioService.UpdateAsync(editando);
@@ -390,8 +411,9 @@
         [StringLength(255)]
         public string Nome { get; set; } = "";
 
-        [Required(ErrorMessage = "Cargo obrigatorio")]
         public string Cargo { get; set; } = "";
+
+        public string CargoCustom { get; set; } = "";
 
         [Required(ErrorMessage = "Salario obrigatorio")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Salario deve ser maior que zero")]
