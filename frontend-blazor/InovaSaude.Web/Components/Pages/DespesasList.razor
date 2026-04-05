@@ -1,0 +1,193 @@
+@page "/despesas"
+@attribute [Authorize]
+
+<PageTitle>Despesas - InovaSaúde</PageTitle>
+
+<MudText Typo="Typo.h3" Class="mb-4">Despesas</MudText>
+
+<MudPaper Class="pa-4 mb-4">
+    <MudGrid>
+        <MudItem xs="12" md="4">
+            <MudTextField @bind-Value="searchString" 
+                          Placeholder="Buscar despesas..." 
+                          Adornment="Adornment.Start" 
+                          AdornmentIcon="@Icons.Material.Filled.Search" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker @bind-Date="dataInicio" 
+                           Label="Data Início" 
+                           Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker @bind-Date="dataFim" 
+                           Label="Data Fim" 
+                           Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Primary" 
+                       FullWidth="true"
+                       OnClick="LoadData">
+                Filtrar
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+    
+    <MudDivider Class="my-4" />
+    
+    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+        <MudText Typo="Typo.body2">Total: @FilteredDespesas.Count() despesas</MudText>
+        
+        <MudStack Row="true" Spacing="2">
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Success" 
+                       StartIcon="@Icons.Material.Filled.Download" 
+                       OnClick="ExportToExcel">
+                Excel
+            </MudButton>
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Info" 
+                       StartIcon="@Icons.Material.Filled.Download" 
+                       OnClick="ExportToCsv">
+                CSV
+            </MudButton>
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Primary" 
+                       StartIcon="@Icons.Material.Filled.Add" 
+                       Href="/despesas/create">
+                Nova Despesa
+            </MudButton>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+@if (isLoading)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+else
+{
+    <MudTable Items="@FilteredDespesas" Hover="true" Striped="true" Dense="true">
+        <HeaderContent>
+            <MudTh>Data</MudTh>
+            <MudTh>Descrição</MudTh>
+            <MudTh>UBS</MudTh>
+            <MudTh>Categoria</MudTh>
+            <MudTh>Valor</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Ações</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Data">@context.Data.ToString("dd/MM/yyyy")</MudTd>
+            <MudTd DataLabel="Descrição">@context.Descricao</MudTd>
+            <MudTd DataLabel="UBS">@context.UbsNome</MudTd>
+            <MudTd DataLabel="Categoria">@context.CategoriaNome</MudTd>
+            <MudTd DataLabel="Valor">@context.Valor.ToString("C")</MudTd>
+            <MudTd DataLabel="Status">
+                <MudChip T="string" Color="@GetStatusColor(context.Status)" Size="Size.Small">
+                    @context.Status.ToString()
+                </MudChip>
+            </MudTd>
+            <MudTd DataLabel="Ações">
+                <MudIconButton Icon="@Icons.Material.Filled.Visibility" 
+                               Color="Color.Info" 
+                               Size="Size.Small" 
+                               Href="@($"/despesas/details/{context.Id}")" />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                               Color="Color.Primary" 
+                               Size="Size.Small" 
+                               Href="@($"/despesas/edit/{context.Id}")" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+@code {
+    [Inject]
+    private IApiService? ApiService { get; set; }
+    
+    [Inject]
+    private IExportService? ExportService { get; set; }
+    
+    [Inject]
+    private IJSRuntime? JS { get; set; }
+    
+    [Inject]
+    private ISnackbar? Snackbar { get; set; }
+
+    private List<DespesaDto> despesasList = new();
+    private string searchString = "";
+    private DateTime? dataInicio;
+    private DateTime? dataFim;
+    private bool isLoading = true;
+
+    private IEnumerable<DespesaDto> FilteredDespesas => 
+        despesasList.Where(d => string.IsNullOrWhiteSpace(searchString) ||
+                               d.Descricao.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                               d.UbsNome.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        if (ApiService == null || Snackbar == null)
+            return;
+
+        try
+        {
+            isLoading = true;
+            despesasList = await ApiService.GetDespesasAsync(null, dataInicio, dataFim);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Erro: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ExportToExcel()
+    {
+        if (ExportService == null || JS == null)
+            return;
+
+        var data = FilteredDespesas.ToList();
+        var bytes = ExportService.ExportToExcel(data, "Despesas");
+        await DownloadFile(bytes, "despesas_export.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    }
+
+    private async Task ExportToCsv()
+    {
+        if (ExportService == null || JS == null)
+            return;
+
+        var data = FilteredDespesas.ToList();
+        var bytes = ExportService.ExportToCsv(data);
+        await DownloadFile(bytes, "despesas_export.csv", "text/csv");
+    }
+
+    private async Task DownloadFile(byte[] bytes, string fileName, string contentType)
+    {
+        if (JS == null)
+            return;
+
+        var base64 = Convert.ToBase64String(bytes);
+        await JS.InvokeVoidAsync("downloadFile", fileName, contentType, base64);
+    }
+
+    private Color GetStatusColor(DespesaStatus status)
+    {
+        return status switch
+        {
+            DespesaStatus.Pendente => Color.Warning,
+            DespesaStatus.Aprovada => Color.Success,
+            DespesaStatus.Rejeitada => Color.Error,
+            _ => Color.Default
+        };
+    }
+}

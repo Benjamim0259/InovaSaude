@@ -1,0 +1,14 @@
+﻿<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Início</MudNavLink>
+    <AuthorizeView>
+        <Authorized>
+            <MudNavLink Href="/dashboard" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+            <MudNavLink Href="/ubs" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.LocalHospital">UBS</MudNavLink>
+            <MudNavLink Href="/despesas" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AttachMoney">Despesas</MudNavLink>
+        </Authorized>
+        <NotAuthorized>
+            <MudNavLink Href="/login" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Login">Login</MudNavLink>
+        </NotAuthorized>
+    </AuthorizeView>
+</MudNavMenu>
+
