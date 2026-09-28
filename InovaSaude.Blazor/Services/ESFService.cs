@@ -118,7 +118,7 @@ public class ESFService
         return await _context.ESF
             .Where(e => e.Nome.Contains(searchTerm) ||
                        e.Codigo.Contains(searchTerm) ||
-                       e.Bairro.Contains(searchTerm) ||
+                       (e.Bairro != null && e.Bairro.Contains(searchTerm)) ||
                        (e.Endereco != null && e.Endereco.Contains(searchTerm)))
             .Include(e => e.Coordenador)
             .OrderBy(e => e.Nome)

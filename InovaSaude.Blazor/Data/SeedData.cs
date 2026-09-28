@@ -13,6 +13,7 @@ public static class SeedData
         var provider = scope.ServiceProvider;
         var context = provider.GetRequiredService<ApplicationDbContext>();
         var logger = provider.GetRequiredService<ILogger<Program>>();
+        var environment = provider.GetService<IHostEnvironment>();
 
         try
         {
@@ -141,34 +142,37 @@ public static class SeedData
             logger.LogError(ex, "Erro ao atualizar categoria (pode nao existir)");
         }
 
-        // Seed usuarios de teste (um por perfil)
-        var usuariosTeste = new[]
+        // Seed usuarios de teste (somente em desenvolvimento)
+        if (environment?.IsDevelopment() == true)
         {
-            new { Email = "admin@inovasaude.com.br",        Senha = "Admin@123",  Nome = "Administrador",     Perfil = PerfilUsuario.ADMIN },
-            new { Email = "coordenador@inovasaude.com.br",  Senha = "Coord@123",  Nome = "Coordenador Teste", Perfil = PerfilUsuario.COORDENADOR },
-            new { Email = "gestor@inovasaude.com.br",       Senha = "Gestor@123", Nome = "Gestor Teste",      Perfil = PerfilUsuario.GESTOR },
-            new { Email = "auditor@inovasaude.com.br",      Senha = "Audit@123",  Nome = "Auditor Teste",     Perfil = PerfilUsuario.AUDITOR },
-            new { Email = "operador@inovasaude.com.br",     Senha = "Oper@123",   Nome = "Operador Teste",    Perfil = PerfilUsuario.OPERADOR },
-            new { Email = "visualizador@inovasaude.com.br", Senha = "Visual@123", Nome = "Visualizador Teste",Perfil = PerfilUsuario.VISUALIZADOR },
-        };
-
-        foreach (var u in usuariosTeste)
-        {
-            if (!await context.Usuarios.AnyAsync(x => x.Email == u.Email))
+            var usuariosTeste = new[]
             {
-                context.Usuarios.Add(new Usuario
+                new { Email = "admin@inovasaude.com.br",        Senha = "Admin@123",  Nome = "Administrador",     Perfil = PerfilUsuario.ADMIN },
+                new { Email = "coordenador@inovasaude.com.br",  Senha = "Coord@123",  Nome = "Coordenador Teste", Perfil = PerfilUsuario.COORDENADOR },
+                new { Email = "gestor@inovasaude.com.br",       Senha = "Gestor@123", Nome = "Gestor Teste",      Perfil = PerfilUsuario.GESTOR },
+                new { Email = "auditor@inovasaude.com.br",      Senha = "Audit@123",  Nome = "Auditor Teste",     Perfil = PerfilUsuario.AUDITOR },
+                new { Email = "operador@inovasaude.com.br",     Senha = "Oper@123",   Nome = "Operador Teste",    Perfil = PerfilUsuario.OPERADOR },
+                new { Email = "visualizador@inovasaude.com.br", Senha = "Visual@123", Nome = "Visualizador Teste",Perfil = PerfilUsuario.VISUALIZADOR },
+            };
+
+            foreach (var u in usuariosTeste)
+            {
+                if (!await context.Usuarios.AnyAsync(x => x.Email == u.Email))
                 {
-                    Nome = u.Nome,
-                    Email = u.Email,
-                    SenhaHash = BCrypt.Net.BCrypt.HashPassword(u.Senha),
-                    Perfil = u.Perfil,
-                    Status = "ATIVO",
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
-                });
+                    context.Usuarios.Add(new Usuario
+                    {
+                        Nome = u.Nome,
+                        Email = u.Email,
+                        SenhaHash = BCrypt.Net.BCrypt.HashPassword(u.Senha),
+                        Perfil = u.Perfil,
+                        Status = "ATIVO",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    });
+                }
             }
+            await context.SaveChangesAsync();
         }
-        await context.SaveChangesAsync();
 
         // Seed default categories
         if (!await context.Categorias.AnyAsync())

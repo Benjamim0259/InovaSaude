@@ -325,22 +325,24 @@
         await CarregarDados();
     }
 
-    private void ToggleESFCard(string esfId)
+    private async Task ToggleESFCard(string esfId)
     {
         if (esfIdsSelecionadas.Contains(esfId))
             esfIdsSelecionadas.Remove(esfId);
         else
             esfIdsSelecionadas.Add(esfId);
-        CarregarDados();
+
+        await CarregarDados();
     }
 
-    private void SelecionarTodasESF()
+    private async Task SelecionarTodasESF()
     {
         if (esfIdsSelecionadas.Count == esfList.Count)
             esfIdsSelecionadas.Clear();
         else
             esfIdsSelecionadas = esfList.Select(e => e.Id).ToList();
-        CarregarDados();
+
+        await CarregarDados();
     }
 
     private async Task CarregarDados()

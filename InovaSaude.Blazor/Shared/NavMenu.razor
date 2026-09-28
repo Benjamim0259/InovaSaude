@@ -93,11 +93,12 @@
                     </NavLink>
                 </div>
 
-                <!-- Sair via GET: funciona sempre, sem depender de HttpClient ou CSRF -->
                 <div class="nav-item px-3">
-                    <a class="nav-link text-danger" href="/account/logout">
-                        <span class="oi oi-account-logout" aria-hidden="true"></span> Sair
-                    </a>
+                    <form method="post" action="/account/logout" class="m-0">
+                        <button type="submit" class="nav-link text-danger bg-transparent border-0 w-100 text-start">
+                            <span class="oi oi-account-logout" aria-hidden="true"></span> Sair
+                        </button>
+                    </form>
                 </div>
             </Authorized>
 

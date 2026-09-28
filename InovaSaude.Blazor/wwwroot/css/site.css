@@ -9,17 +9,17 @@ h1:focus {
 }
 
 a, .btn-link {
-    color: #0071c1;
+    color: #6d28d9;
 }
 
 .btn-primary {
     color: #fff;
-  background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: #7c3aed;
+    border-color: #6d28d9;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #a855f7;
 }
 
 .content {
@@ -111,8 +111,8 @@ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: #1b6ec2;
-    box-shadow: 0 0 0 0.2rem rgba(27, 110, 194, 0.25);
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25);
 }
 
 /* Labels melhorados */
@@ -242,7 +242,7 @@ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .bg-gradient-primary {
-    background: linear-gradient(135deg, #1b6ec2 0%, #0d6efd 100%);
+    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
 }
 
 .bg-gradient-success {

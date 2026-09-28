@@ -34,3 +34,22 @@ function base64toBlob(base64Data, contentType) {
 window.downloadFileFromBytes = (filename, base64Data) => {
     window.downloadFile(filename, base64Data, 'application/json');
 };
+
+window.authLogin = async (email, password) => {
+    try {
+        const response = await fetch('/account/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            return { success: true, message: null };
+        }
+
+        return { success: false, message: 'Email ou senha inválidos.' };
+    } catch {
+        return { success: false, message: 'Falha ao conectar ao servidor.' };
+    }
+};

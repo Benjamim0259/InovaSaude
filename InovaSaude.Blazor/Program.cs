@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using InovaSaude.Blazor.Data;
 using InovaSaude.Blazor.Services;
+using Microsoft.AspNetCore.HttpOverrides;
+using System.Threading.RateLimiting;
 using System.Text;
 using System.Globalization;
 
@@ -73,8 +75,9 @@ else
 // Configuração de Antiforgery para funcionar com proxy reverso (Render)
 builder.Services.AddAntiforgery(options =>
 {
-// O proxy do Render lida com SSL externamente, internamente é HTTP
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SecurePolicy = builder.Environment.IsProduction()
+        ? CookieSecurePolicy.Always
+        : CookieSecurePolicy.SameAsRequest;
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.HttpOnly = true;
     options.Cookie.Name = ".InovaSaude.Antiforgery";
@@ -178,15 +181,41 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/login";
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
-      
-        // Configurações de cookie compatíveis com proxy reverso (Render)
-        // O proxy lida com SSL externamente, internamente é HTTP
-  options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
+        options.Cookie.SecurePolicy = builder.Environment.IsProduction()
+            ? CookieSecurePolicy.Always
+            : CookieSecurePolicy.SameAsRequest;
         options.Cookie.SameSite = SameSiteMode.Lax;
-   options.Cookie.HttpOnly = true;
-      options.Cookie.IsEssential = true;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
     });
 builder.Services.AddAuthorization();
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("login", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+
+    options.AddPolicy("api-read", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 60,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+});
 
 // Add custom services
 builder.Services.AddHttpContextAccessor();
@@ -230,15 +259,30 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// Não usar UseHttpsRedirection no Render (causa loop de redirecionamento)
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 if (!app.Environment.IsProduction())
 {
     app.UseHttpsRedirection();
 }
 
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    context.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+    context.Response.Headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'";
+    await next();
+});
+
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -279,9 +323,41 @@ if (app.Environment.IsProduction())
     }
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        var logger = services.GetRequiredService<ILogger<Program>>();
+
+        if (context.Database.IsNpgsql())
+        {
+            await context.Database.ExecuteSqlRawAsync("CREATE INDEX IF NOT EXISTS ix_despesas_mesreferencia_categoriaid ON despesas (\"MesReferencia\", \"CategoriaId\");");
+            await context.Database.ExecuteSqlRawAsync("CREATE INDEX IF NOT EXISTS ix_despesas_mesreferencia_esfid ON despesas (\"MesReferencia\", \"EsfId\");");
+            await context.Database.ExecuteSqlRawAsync("CREATE INDEX IF NOT EXISTS ix_despesas_createdat_categoriaid ON despesas (\"CreatedAt\", \"CategoriaId\");");
+            await context.Database.ExecuteSqlRawAsync("CREATE INDEX IF NOT EXISTS ix_despesas_createdat_esfid ON despesas (\"CreatedAt\", \"EsfId\");");
+            logger.LogInformation("Índices de desempenho verificados/aplicados (PostgreSQL).");
+        }
+        else if (context.Database.IsSqlServer())
+        {
+            await context.Database.ExecuteSqlRawAsync("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'ix_despesas_mesreferencia_categoriaid' AND object_id = OBJECT_ID('despesas')) CREATE INDEX ix_despesas_mesreferencia_categoriaid ON despesas ([MesReferencia], [CategoriaId]);");
+            await context.Database.ExecuteSqlRawAsync("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'ix_despesas_mesreferencia_esfid' AND object_id = OBJECT_ID('despesas')) CREATE INDEX ix_despesas_mesreferencia_esfid ON despesas ([MesReferencia], [EsfId]);");
+            await context.Database.ExecuteSqlRawAsync("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'ix_despesas_createdat_categoriaid' AND object_id = OBJECT_ID('despesas')) CREATE INDEX ix_despesas_createdat_categoriaid ON despesas ([CreatedAt], [CategoriaId]);");
+            await context.Database.ExecuteSqlRawAsync("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'ix_despesas_createdat_esfid' AND object_id = OBJECT_ID('despesas')) CREATE INDEX ix_despesas_createdat_esfid ON despesas ([CreatedAt], [EsfId]);");
+            logger.LogInformation("Índices de desempenho verificados/aplicados (SQL Server).");
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning(ex, "Não foi possível aplicar índices de desempenho automaticamente.");
+    }
+}
+
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 // Map controller routes (AccountController)
-app.MapControllers();
+app.MapControllers().RequireAuthorization();
 
 app.Run();

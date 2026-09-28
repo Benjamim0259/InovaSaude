@@ -4,9 +4,6 @@
 @using InovaSaude.Blazor.Helpers
 @using System.Globalization
 @inject DashboardService DashboardService
-@inject DespesaService DespesaService
-@inject FuncionarioService FuncionarioService
-@inject ESFService ESFService
 @inject ToastService ToastService
 @inject NavigationManager Navigation
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
@@ -201,8 +198,8 @@
     private int quantidadeDespesas = 0;
     private int quantidadeFuncionarios = 0;
     private int quantidadeESF = 0;
-    private List<CategoriaResumo> topCategorias = new();
-    private List<ESFResumo> esfPorDespesa = new();
+    private List<CategoriaData2> topCategorias = new();
+    private List<ESFResumoData> esfPorDespesa = new();
 
     private string mesSelecionadoDisplay =>
         DateTime.TryParseExact(mesSelecionado + "-01", "yyyy-MM-dd",
@@ -243,39 +240,15 @@
             var inicioDomes = DateTime.SpecifyKind(mesRef, DateTimeKind.Utc);
             var fimDomes = DateTime.SpecifyKind(mesRef.AddMonths(1).AddSeconds(-1), DateTimeKind.Utc);
 
-            var despesas = await DespesaService.GetDespesasByPeriodoAsync(inicioDomes, fimDomes) ?? new List<Despesa>();
-            var funcionarios = await FuncionarioService.GetAllAsync() ?? new List<Funcionario>();
-            var esfs = await ESFService.GetAllESFAsync() ?? new List<ESF>();
+            var resumo = await DashboardService.GetDashboardResumoMensalAsync(inicioDomes, fimDomes);
 
-            totalDespesas = despesas.Sum(d => d.Valor);
-            quantidadeDespesas = despesas.Count;
-            totalSalarios = funcionarios.Sum(f => f.Salario);
-            quantidadeFuncionarios = funcionarios.Count;
-            quantidadeESF = esfs.Count;
-
-            topCategorias = despesas
-                .GroupBy(d => d.Categoria?.Nome ?? "Sem Categoria")
-                .Select(g => new CategoriaResumo
-                {
-                    Categoria = g.Key,
-                    Total = g.Sum(d => d.Valor),
-                    Quantidade = g.Count()
-                })
-                .OrderByDescending(c => c.Total)
-                .Take(5)
-                .ToList();
-
-            esfPorDespesa = despesas
-                .GroupBy(d => d.Esf?.Nome ?? "Sem ESF")
-                .Select(g => new ESFResumo
-                {
-                    Nome = g.Key,
-                    Total = g.Sum(d => d.Valor),
-                    Quantidade = g.Count()
-                })
-                .OrderByDescending(e => e.Total)
-                .Take(5)
-                .ToList();
+            totalDespesas = resumo.TotalDespesas;
+            quantidadeDespesas = resumo.QuantidadeDespesas;
+            totalSalarios = resumo.TotalSalarios;
+            quantidadeFuncionarios = resumo.QuantidadeFuncionarios;
+            quantidadeESF = resumo.QuantidadeESF;
+            topCategorias = resumo.TopCategorias;
+            esfPorDespesa = resumo.TopEsf;
         }
         catch (Exception ex)
         {
@@ -287,17 +260,5 @@
         }
     }
 
-    private class CategoriaResumo
-    {
-        public string Categoria { get; set; } = "";
-        public decimal Total { get; set; }
-        public int Quantidade { get; set; }
-    }
 
-    private class ESFResumo
-    {
-        public string Nome { get; set; } = "";
-        public decimal Total { get; set; }
-        public int Quantidade { get; set; }
-    }
 }

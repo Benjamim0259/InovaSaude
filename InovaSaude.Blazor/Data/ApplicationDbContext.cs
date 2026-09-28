@@ -259,6 +259,21 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Despesa>()
             .HasIndex(d => d.MesReferencia);
 
+        modelBuilder.Entity<Despesa>()
+            .HasIndex(d => d.CreatedAt);
+
+        modelBuilder.Entity<Despesa>()
+            .HasIndex(d => new { d.MesReferencia, d.CategoriaId });
+
+        modelBuilder.Entity<Despesa>()
+            .HasIndex(d => new { d.MesReferencia, d.EsfId });
+
+        modelBuilder.Entity<Despesa>()
+            .HasIndex(d => new { d.CreatedAt, d.CategoriaId });
+
+        modelBuilder.Entity<Despesa>()
+            .HasIndex(d => new { d.CreatedAt, d.EsfId });
+
         modelBuilder.Entity<Anexo>()
             .HasIndex(a => a.DespesaId);
 

@@ -20,6 +20,7 @@ public class RelatorioService
         string? categoriaId = null)
     {
         var query = _context.Despesas
+            .AsNoTracking()
             .Include(d => d.Categoria)
             .Include(d => d.Esf)
             .Include(d => d.Fornecedor)
@@ -89,6 +90,7 @@ public class RelatorioService
     public async Task<RelatorioESFDetalhado> GerarRelatorioESFAsync(string esfId, DateTime dataInicio, DateTime dataFim)
     {
         var esf = await _context.ESF
+            .AsNoTracking()
             .Include(e => e.Coordenador)
             .Include(e => e.Usuarios)
             .FirstOrDefaultAsync(e => e.Id == esfId);
@@ -96,6 +98,7 @@ public class RelatorioService
         if (esf == null) throw new Exception("ESF não encontrada");
 
         var despesas = await _context.Despesas
+            .AsNoTracking()
             .Include(d => d.Categoria)
             .Include(d => d.Fornecedor)
             .Include(d => d.UsuarioCriacao)
@@ -118,24 +121,35 @@ public class RelatorioService
 
     public async Task<List<RelatorioMensal>> GerarRelatorioMensalAsync(int ano)
     {
-        var relatorios = new List<RelatorioMensal>();
+        var inicioAno = new DateTime(ano, 1, 1);
+        var fimAno = inicioAno.AddYears(1);
+
+        var agregados = await _context.Despesas
+            .AsNoTracking()
+            .Where(d => d.CreatedAt >= inicioAno && d.CreatedAt < fimAno)
+            .GroupBy(d => d.CreatedAt.Month)
+            .Select(g => new
+            {
+                Mes = g.Key,
+                TotalDespesas = g.Sum(d => d.Valor),
+                QuantidadeDespesas = g.Count()
+            })
+            .ToListAsync();
+
+        var agregadosPorMes = agregados.ToDictionary(x => x.Mes);
+        var relatorios = new List<RelatorioMensal>(12);
 
         for (int mes = 1; mes <= 12; mes++)
         {
-            var inicioMes = new DateTime(ano, mes, 1);
-            var fimMes = inicioMes.AddMonths(1).AddDays(-1);
-
-            var despesas = await _context.Despesas
-                .Where(d => d.CreatedAt >= inicioMes && d.CreatedAt <= fimMes)
-                .ToListAsync();
+            agregadosPorMes.TryGetValue(mes, out var agregadoMes);
 
             relatorios.Add(new RelatorioMensal
             {
                 Ano = ano,
                 Mes = mes,
                 NomeMes = new DateTime(ano, mes, 1).ToString("MMMM"),
-                TotalDespesas = despesas.Sum(d => d.Valor),
-                QuantidadeDespesas = despesas.Count
+                TotalDespesas = agregadoMes?.TotalDespesas ?? 0,
+                QuantidadeDespesas = agregadoMes?.QuantidadeDespesas ?? 0
             });
         }
 

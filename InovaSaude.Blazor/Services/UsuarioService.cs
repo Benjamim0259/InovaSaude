@@ -46,8 +46,14 @@ public class UsuarioService
 
         try
         {
-            // Hash da senha (simplificado para demonstração)
-            usuario.SenhaHash = BCrypt.Net.BCrypt.HashPassword("senha123");
+            if (string.IsNullOrWhiteSpace(usuario.SenhaHash))
+                throw new InvalidOperationException("Senha do usuário não informada.");
+
+            // Se vier em texto plano, aplicar hash; se já vier hash BCrypt, manter.
+            if (!usuario.SenhaHash.StartsWith("$2"))
+            {
+                usuario.SenhaHash = BCrypt.Net.BCrypt.HashPassword(usuario.SenhaHash);
+            }
 
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();

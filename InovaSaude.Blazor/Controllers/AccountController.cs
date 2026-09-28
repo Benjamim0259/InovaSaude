@@ -2,7 +2,9 @@ using InovaSaude.Blazor.Models;
 using InovaSaude.Blazor.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace InovaSaude.Blazor.Controllers;
@@ -20,32 +22,28 @@ public class AccountController : ControllerBase
         _logger = logger;
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
-    [HttpGet("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest? bodyModel, [FromQuery] string? email, [FromQuery] string? password)
+    [EnableRateLimiting("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest model)
     {
-        var model = bodyModel ?? new LoginRequest { Email = email ?? "", Password = password ?? "" };
-
         if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password))
             return BadRequest(new { message = "Email and password required" });
 
         var user = await _usuarioService.GetUsuarioByEmailAsync(model.Email);
         if (user == null)
         {
-            if (Request.Method == "GET") return Redirect("/login?error=invalid");
             return Unauthorized(new { message = "Invalid credentials" });
         }
 
         var verified = BCrypt.Net.BCrypt.Verify(model.Password, user.SenhaHash);
         if (!verified)
         {
-            if (Request.Method == "GET") return Redirect("/login?error=invalid");
             return Unauthorized(new { message = "Invalid credentials" });
         }
 
         if (user.Status != "ATIVO")
         {
-            if (Request.Method == "GET") return Redirect("/login?error=inactive");
             return Unauthorized(new { message = "User inactive" });
         }
 
@@ -70,17 +68,14 @@ public class AccountController : ControllerBase
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 
-        if (Request.Method == "GET") return Redirect("/dashboard");
         return Ok(new { message = "Logged in" });
     }
 
-    // Sem [Authorize]: logout deve funcionar sempre, inclusive com sessao expirada
+    [AllowAnonymous]
     [HttpPost("logout")]
-    [HttpGet("logout")]
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        if (Request.Method == "GET") return Redirect("/login");
         return Ok(new { message = "Logged out" });
     }
 }

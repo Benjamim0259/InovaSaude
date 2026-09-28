@@ -200,6 +200,12 @@ public class WebhookService
             try
             {
                 var payload = JsonSerializer.Deserialize<object>(delivery.Payload);
+                if (payload == null)
+                {
+                    _logger.LogWarning("Payload nulo ao reprocessar entrega {DeliveryId}", delivery.Id);
+                    continue;
+                }
+
                 await SendWebhookAsync(webhook, payload);
             }
             catch (Exception ex)

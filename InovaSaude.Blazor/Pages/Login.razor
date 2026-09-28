@@ -1,8 +1,6 @@
 @page "/login"
-@using InovaSaude.Blazor.Services
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.JSInterop
-@inject UsuarioService UsuarioService
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
@@ -90,31 +88,17 @@
            return;
  }
 
-     var user = await UsuarioService.GetUsuarioByEmailAsync(loginModel.Email);
-   
-      if (user == null)
-       {
-   error = "Email ou senha inválidos.";
-                return;
-      }
+     var result = await JS.InvokeAsync<AuthLoginResult>("authLogin", loginModel.Email, loginModel.Password);
 
-      var verified = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.SenhaHash);
-    
- if (!verified)
-            {
-      error = "Email ou senha inválidos.";
-       return;
-            }
+     if (result is null || !result.Success)
+     {
+         error = string.IsNullOrWhiteSpace(result?.Message)
+             ? "Email ou senha inválidos."
+             : result.Message;
+         return;
+     }
 
-          if (user.Status != "ATIVO")
-       {
-      error = "Usuário inativo. Entre em contato com o administrador.";
-    return;
-    }
-
-      // Redirecionar para o endpoint GET do controller que fará o login
-            var loginUrl = $"/account/login?email={Uri.EscapeDataString(loginModel.Email)}&password={Uri.EscapeDataString(loginModel.Password)}";
-      await JS.InvokeVoidAsync("eval", $"window.location.href = '{loginUrl}'");
+     Navigation.NavigateTo("/dashboard", forceLoad: true);
         }
       catch (Exception ex)
     {
@@ -136,4 +120,10 @@
 [System.ComponentModel.DataAnnotations.MinLength(6, ErrorMessage = "Senha deve ter no mínimo 6 caracteres")]
      public string Password { get; set; } = string.Empty;
  }
+
+    public class AuthLoginResult
+    {
+        public bool Success { get; set; }
+        public string? Message { get; set; }
+    }
 }
