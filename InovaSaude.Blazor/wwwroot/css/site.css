@@ -285,3 +285,40 @@ background-position: 200% 0;
     margin-bottom: 1rem;
   opacity: 0.5;
 }
+
+/* Tema Caelum Saúde: roxo + preto + branco */
+.hero-caelum {
+    background: linear-gradient(135deg, #2a0845 0%, #4c1d95 45%, #7c3aed 100%);
+}
+
+.caelum-section .card,
+.sobre-caelum .card {
+    background: #ffffff;
+    border-left: 4px solid #7c3aed;
+}
+
+.caelum-section .card-title,
+.sobre-caelum .card-title {
+    color: #2a0845;
+}
+
+.caelum-muted {
+    color: #5b6472 !important;
+}
+
+.caelum-stats {
+    background: linear-gradient(180deg, #ffffff 0%, #f4efff 100%);
+}
+
+.caelum-cta {
+    background: linear-gradient(180deg, #ffffff 0%, #f8f5ff 100%);
+    border-radius: 1rem;
+}
+
+.caelum-footer {
+    background: linear-gradient(135deg, #12051f 0%, #2a0845 60%, #4c1d95 100%);
+}
+
+.sobre-caelum h1 {
+    color: #2a0845;
+}
