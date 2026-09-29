@@ -79,6 +79,17 @@
     @if (!carregando)
     {
         <!-- Graficos e Rankings -->
+        <div class="d-flex justify-content-end mb-3">
+            <div style="max-width: 220px;">
+                <label class="form-label small fw-bold mb-1">Tipo de gráfico</label>
+                <select class="form-select form-select-sm" @bind="tipoGraficoDashboard">
+                    <option value="Barras">Barras</option>
+                    <option value="Colunas">Colunas</option>
+                    <option value="Pizza">Pizza</option>
+                </select>
+            </div>
+        </div>
+
         <div class="row g-3 mb-4">
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm">
@@ -88,18 +99,55 @@
                     <div class="card-body">
                         @if (topCategorias.Any())
                         {
-                            @foreach (var cat in topCategorias)
+                            @if (tipoGraficoDashboard == TipoGrafico.Barras)
                             {
-                                var percentual = totalDespesas > 0 ? (cat.Total / totalDespesas * 100) : 0;
-                                <div class="mb-3">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <strong>@cat.Categoria</strong>
-                                        <span>@cat.Total.ToString("C", new CultureInfo("pt-BR"))</span>
-                                    </div>
-                                    <div class="progress" style="height: 22px;">
-                                        <div class="progress-bar bg-danger" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
-                                            @cat.Quantidade item@(cat.Quantidade != 1 ? "s" : "")
+                                @foreach (var cat in topCategorias)
+                                {
+                                    var percentual = totalDespesas > 0 ? (cat.Total / totalDespesas * 100) : 0;
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <strong>@cat.Categoria</strong>
+                                            <span>@cat.Total.ToString("C", new CultureInfo("pt-BR"))</span>
                                         </div>
+                                        <div class="progress" style="height: 22px;">
+                                            <div class="progress-bar bg-danger" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
+                                                @cat.Quantidade item@(cat.Quantidade != 1 ? "s" : "")
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else if (tipoGraficoDashboard == TipoGrafico.Colunas)
+                            {
+                                var maxValor = topCategorias.Max(c => c.Total);
+                                <div class="chart-columns-container">
+                                    @for (var i = 0; i < topCategorias.Count; i++)
+                                    {
+                                        var cat = topCategorias[i];
+                                        var altura = maxValor > 0 ? (cat.Total / maxValor * 220m) : 0;
+                                        <div class="chart-column-item" title="@cat.Total.ToString("C", new CultureInfo("pt-BR"))">
+                                            <div class="chart-column-bar" style="height: @altura.ToString("F0", CultureInfo.InvariantCulture)px; background-color: @GetCorGrafico(i);"></div>
+                                            <small class="chart-column-label">@cat.Categoria</small>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row align-items-center">
+                                    <div class="col-md-5 text-center">
+                                        <div class="chart-pie" style="background:@GetPieCategorias();"></div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        @for (var i = 0; i < topCategorias.Count; i++)
+                                        {
+                                            var cat = topCategorias[i];
+                                            var percentual = totalDespesas > 0 ? (cat.Total / totalDespesas * 100) : 0;
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@cat.Categoria</span>
+                                                <strong>@percentual.ToString("F1")%</strong>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             }
@@ -122,18 +170,55 @@
                     <div class="card-body">
                         @if (esfPorDespesa.Any())
                         {
-                            @foreach (var esf in esfPorDespesa)
+                            @if (tipoGraficoDashboard == TipoGrafico.Barras)
                             {
-                                var percentual = totalDespesas > 0 ? (esf.Total / totalDespesas * 100) : 0;
-                                <div class="mb-3">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <strong>@esf.Nome</strong>
-                                        <span>@esf.Total.ToString("C", new CultureInfo("pt-BR"))</span>
-                                    </div>
-                                    <div class="progress" style="height: 22px;">
-                                        <div class="progress-bar bg-success" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
-                                            @esf.Quantidade item@(esf.Quantidade != 1 ? "s" : "")
+                                @foreach (var esf in esfPorDespesa)
+                                {
+                                    var percentual = totalDespesas > 0 ? (esf.Total / totalDespesas * 100) : 0;
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <strong>@esf.Nome</strong>
+                                            <span>@esf.Total.ToString("C", new CultureInfo("pt-BR"))</span>
                                         </div>
+                                        <div class="progress" style="height: 22px;">
+                                            <div class="progress-bar bg-success" style="width: @percentual.ToString("F1", CultureInfo.InvariantCulture)%" role="progressbar">
+                                                @esf.Quantidade item@(esf.Quantidade != 1 ? "s" : "")
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else if (tipoGraficoDashboard == TipoGrafico.Colunas)
+                            {
+                                var maxValor = esfPorDespesa.Max(e => e.Total);
+                                <div class="chart-columns-container">
+                                    @for (var i = 0; i < esfPorDespesa.Count; i++)
+                                    {
+                                        var esf = esfPorDespesa[i];
+                                        var altura = maxValor > 0 ? (esf.Total / maxValor * 220m) : 0;
+                                        <div class="chart-column-item" title="@esf.Total.ToString("C", new CultureInfo("pt-BR"))">
+                                            <div class="chart-column-bar" style="height: @altura.ToString("F0", CultureInfo.InvariantCulture)px; background-color: @GetCorGrafico(i);"></div>
+                                            <small class="chart-column-label">@esf.Nome</small>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row align-items-center">
+                                    <div class="col-md-5 text-center">
+                                        <div class="chart-pie" style="background:@GetPieEsf();"></div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        @for (var i = 0; i < esfPorDespesa.Count; i++)
+                                        {
+                                            var esf = esfPorDespesa[i];
+                                            var percentual = totalDespesas > 0 ? (esf.Total / totalDespesas * 100) : 0;
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@esf.Nome</span>
+                                                <strong>@percentual.ToString("F1")%</strong>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             }
@@ -200,6 +285,14 @@
     private int quantidadeESF = 0;
     private List<CategoriaData2> topCategorias = new();
     private List<ESFResumoData> esfPorDespesa = new();
+    private TipoGrafico tipoGraficoDashboard = TipoGrafico.Barras;
+
+    private enum TipoGrafico
+    {
+        Barras,
+        Colunas,
+        Pizza
+    }
 
     private string mesSelecionadoDisplay =>
         DateTime.TryParseExact(mesSelecionado + "-01", "yyyy-MM-dd",
@@ -260,5 +353,37 @@
         }
     }
 
+    private static readonly string[] CoresGrafico =
+    {
+        "#7c3aed", "#5b21b6", "#a855f7", "#9333ea", "#4c1d95", "#c084fc", "#6d28d9"
+    };
 
+    private string GetCorGrafico(int index) => CoresGrafico[index % CoresGrafico.Length];
+
+    private string GetPieCategorias() => BuildPieGradient(topCategorias.Select(c => c.Total).ToList());
+
+    private string GetPieEsf() => BuildPieGradient(esfPorDespesa.Select(e => e.Total).ToList());
+
+    private string BuildPieGradient(List<decimal> valores)
+    {
+        var total = valores.Sum();
+        if (total <= 0 || !valores.Any())
+            return "conic-gradient(#e9ecef 0 100%)";
+
+        var inicio = 0m;
+        var segmentos = new List<string>();
+
+        for (var i = 0; i < valores.Count; i++)
+        {
+            var perc = valores[i] / total * 100m;
+            var fim = inicio + perc;
+            var inicioTxt = inicio.ToString("F2", CultureInfo.InvariantCulture);
+            var fimTxt = fim.ToString("F2", CultureInfo.InvariantCulture);
+            segmentos.Add($"{GetCorGrafico(i)} {inicioTxt}% {fimTxt}%");
+            inicio = fim;
+        }
+
+        var gradiente = string.Join(", ", segmentos);
+        return "conic-gradient(" + gradiente + ")";
+    }
 }
