@@ -244,7 +244,7 @@
                                 {
                                     var cat = dadosCategoria[i];
                                     var percentual = totalDespesas > 0 ? (cat.Total / totalDespesas * 100) : 0;
-                                    <div class="d-flex justify-content-between mb-2">
+                                    <div class="d-flex justify-content-between mb-2 chart-legend-item">
                                         <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@cat.CategoriaNome</span>
                                         <strong>@percentual.ToString("F1")%</strong>
                                     </div>
@@ -312,7 +312,7 @@
                                         {
                                             var esf = despesasEsf[i];
                                             var percentual = totalDespesas > 0 ? (esf.Total / totalDespesas * 100) : 0;
-                                            <div class="d-flex justify-content-between mb-2">
+                                            <div class="d-flex justify-content-between mb-2 chart-legend-item">
                                                 <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@esf.UbsNome</span>
                                                 <strong>@percentual.ToString("F1")%</strong>
                                             </div>
@@ -375,7 +375,7 @@
                                         {
                                             var esf = salariosEsf[i];
                                             var percentual = totalSalarios > 0 ? (esf.TotalSalarios / totalSalarios * 100) : 0;
-                                            <div class="d-flex justify-content-between mb-2">
+                                            <div class="d-flex justify-content-between mb-2 chart-legend-item">
                                                 <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@esf.UbsNome</span>
                                                 <strong>@percentual.ToString("F1")%</strong>
                                             </div>
@@ -446,7 +446,7 @@
                                 {
                                     var mes = dadosEvolucao[i];
                                     var percentual = totalDespesas > 0 ? (mes.Total / totalDespesas * 100) : 0;
-                                    <div class="d-flex justify-content-between mb-2">
+                                    <div class="d-flex justify-content-between mb-2 chart-legend-item">
                                         <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@mes.MesNome</span>
                                         <strong>@percentual.ToString("F1")%</strong>
                                     </div>
