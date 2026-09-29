@@ -430,7 +430,7 @@ background-position: 200% 0;
     border-radius: 50%;
     margin-right: 0.55rem;
     vertical-align: middle;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px rgba(124, 58, 237, 0.15);
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 .chart-mode-selector {
