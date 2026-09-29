@@ -136,7 +136,7 @@
                             {
                                 <div class="row align-items-center">
                                     <div class="col-md-5 text-center">
-                                        <div class="chart-pie" style="@GetPieStyleCategorias()">
+                                        <div class="chart-pie" data-chart="categorias" style="@GetPieStyleCategorias()">
                                             <div class="chart-pie-inner"></div>
                                         </div>
                                     </div>
@@ -145,7 +145,7 @@
                                         {
                                             var cat = topCategorias[i];
                                             var percentual = totalDespesas > 0 ? (cat.Total / totalDespesas * 100) : 0;
-                                            <div class="d-flex justify-content-between mb-2 chart-legend-item">
+                                            <div class="d-flex justify-content-between mb-2 chart-legend-item" data-chart="categorias" data-index="@i">
                                                 <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@cat.Categoria</span>
                                                 <strong>@percentual.ToString("F1")%</strong>
                                             </div>
@@ -209,7 +209,7 @@
                             {
                                 <div class="row align-items-center">
                                     <div class="col-md-5 text-center">
-                                        <div class="chart-pie" style="@GetPieStyleEsf()">
+                                        <div class="chart-pie" data-chart="esf" style="@GetPieStyleEsf()">
                                             <div class="chart-pie-inner"></div>
                                         </div>
                                     </div>
@@ -218,7 +218,7 @@
                                         {
                                             var esf = esfPorDespesa[i];
                                             var percentual = totalDespesas > 0 ? (esf.Total / totalDespesas * 100) : 0;
-                                            <div class="d-flex justify-content-between mb-2 chart-legend-item">
+                                            <div class="d-flex justify-content-between mb-2 chart-legend-item" data-chart="esf" data-index="@i">
                                                 <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@esf.Nome</span>
                                                 <strong>@percentual.ToString("F1")%</strong>
                                             </div>

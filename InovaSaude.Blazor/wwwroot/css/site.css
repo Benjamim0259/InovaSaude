@@ -328,12 +328,13 @@ background-position: 200% 0;
     display: flex;
     align-items: flex-end;
     gap: 0.75rem;
-    min-height: 250px;
+    min-height: 280px;
     overflow-x: auto;
-    padding: 1rem 0.75rem 0.75rem;
+    padding: 2rem 0.75rem 1rem;
     border: 1px solid #e5e7eb;
     border-radius: 0.85rem;
     background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
+    overflow-y: visible;
 }
 
 .chart-column-item {
@@ -342,7 +343,8 @@ background-position: 200% 0;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    gap: 0.4rem;
+    align-items: center;
+    gap: 0.5rem;
     position: relative;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -354,6 +356,7 @@ background-position: 200% 0;
     border-radius: 0.6rem 0.6rem 0 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     transition: all 0.2s ease;
+    order: 2;
 }
 
 .chart-column-item:hover .chart-column-bar {
@@ -395,11 +398,15 @@ background-position: 200% 0;
 
 .chart-column-label {
     display: block;
-    margin-top: 0.35rem;
-    font-size: 0.72rem;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
     color: #3f3f46;
     font-weight: 600;
     line-height: 1.2;
+    order: 3;
+    word-wrap: break-word;
+    max-width: 100%;
+    flex-shrink: 1;
 }
 
 .chart-pie {
@@ -481,4 +488,64 @@ background-position: 200% 0;
     color: #4c1d95;
     letter-spacing: 0.01em;
     margin-bottom: 0.35rem;
+}
+
+/* Rodapé de Relatórios */
+footer {
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 3rem;
+    padding: 2rem 0;
+}
+
+footer h6 {
+    font-size: 0.95rem;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+footer small {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    display: block;
+}
+
+footer .text-muted {
+    color: #6b7280;
+}
+
+footer hr {
+    border-top: 1px solid #d1d5db;
+    margin: 1rem 0;
+}
+
+/* Interatividade do Gráfico de Pizza */
+.chart-pie.pie-highlight {
+    filter: drop-shadow(0 0 0 3px rgba(59, 130, 246, 0.3));
+}
+
+.chart-pie.pie-active {
+    box-shadow: 0 1rem 1.5rem rgba(0, 0, 0, 0.2), 0 0 0 5px rgba(59, 130, 246, 0.4);
+}
+
+.chart-legend-item.legend-dimmed {
+    opacity: 0.5;
+}
+
+.chart-legend-item.legend-dimmed .chart-legend-dot {
+    transform: scale(0.8);
+}
+
+/* Efeito de saturação no gráfico de pizza */
+.chart-pie[data-hover-index] {
+    animation: pieHighlight 0.3s ease forwards;
+}
+
+@keyframes pieHighlight {
+    from {
+        filter: saturate(1) brightness(1);
+    }
+    to {
+        filter: saturate(1.2) brightness(1.05);
+    }
 }

@@ -235,7 +235,7 @@
                     {
                         <div class="row align-items-center">
                             <div class="col-md-5 text-center">
-                                <div class="chart-pie" style="@GetPieStyleCategoriasRelatorio()">
+                                <div class="chart-pie" data-chart="categorias-rel" style="@GetPieStyleCategoriasRelatorio()">
                                     <div class="chart-pie-inner"></div>
                                 </div>
                             </div>
@@ -244,7 +244,7 @@
                                 {
                                     var cat = dadosCategoria[i];
                                     var percentual = totalDespesas > 0 ? (cat.Total / totalDespesas * 100) : 0;
-                                    <div class="d-flex justify-content-between mb-2 chart-legend-item">
+                                    <div class="d-flex justify-content-between mb-2 chart-legend-item" data-chart="categorias-rel" data-index="@i">
                                         <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@cat.CategoriaNome</span>
                                         <strong>@percentual.ToString("F1")%</strong>
                                     </div>
@@ -303,7 +303,7 @@
                             {
                                 <div class="row align-items-center">
                                     <div class="col-md-5 text-center">
-                                        <div class="chart-pie" style="@GetPieStyleDespesasEsf()">
+                                        <div class="chart-pie" data-chart="despesas-esf" style="@GetPieStyleDespesasEsf()">
                                             <div class="chart-pie-inner"></div>
                                         </div>
                                     </div>
@@ -312,7 +312,7 @@
                                         {
                                             var esf = despesasEsf[i];
                                             var percentual = totalDespesas > 0 ? (esf.Total / totalDespesas * 100) : 0;
-                                            <div class="d-flex justify-content-between mb-2 chart-legend-item">
+                                            <div class="d-flex justify-content-between mb-2 chart-legend-item" data-chart="despesas-esf" data-index="@i">
                                                 <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@esf.UbsNome</span>
                                                 <strong>@percentual.ToString("F1")%</strong>
                                             </div>
@@ -366,7 +366,7 @@
                             {
                                 <div class="row align-items-center">
                                     <div class="col-md-5 text-center">
-                                        <div class="chart-pie" style="@GetPieStyleSalariosEsf()">
+                                        <div class="chart-pie" data-chart="salarios-esf" style="@GetPieStyleSalariosEsf()">
                                             <div class="chart-pie-inner"></div>
                                         </div>
                                     </div>
@@ -375,7 +375,7 @@
                                         {
                                             var esf = salariosEsf[i];
                                             var percentual = totalSalarios > 0 ? (esf.TotalSalarios / totalSalarios * 100) : 0;
-                                            <div class="d-flex justify-content-between mb-2 chart-legend-item">
+                                            <div class="d-flex justify-content-between mb-2 chart-legend-item" data-chart="salarios-esf" data-index="@i">
                                                 <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@esf.UbsNome</span>
                                                 <strong>@percentual.ToString("F1")%</strong>
                                             </div>
@@ -437,7 +437,7 @@
                     {
                         <div class="row align-items-center">
                             <div class="col-md-5 text-center">
-                                <div class="chart-pie" style="@GetPieStyleEvolucao()">
+                                <div class="chart-pie" data-chart="evolucao" style="@GetPieStyleEvolucao()">
                                     <div class="chart-pie-inner"></div>
                                 </div>
                             </div>
@@ -446,7 +446,7 @@
                                 {
                                     var mes = dadosEvolucao[i];
                                     var percentual = totalDespesas > 0 ? (mes.Total / totalDespesas * 100) : 0;
-                                    <div class="d-flex justify-content-between mb-2 chart-legend-item">
+                                    <div class="d-flex justify-content-between mb-2 chart-legend-item" data-chart="evolucao" data-index="@i">
                                         <span><span class="chart-legend-dot" style="background-color:@GetCorGrafico(i);"></span>@mes.MesNome</span>
                                         <strong>@percentual.ToString("F1")%</strong>
                                     </div>
@@ -459,6 +459,30 @@
         }
     }
 </div>
+
+<!-- Rodapé com Espaço Extra -->
+<footer class="bg-light border-top mt-5 py-4 mb-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <h6 class="fw-bold text-dark">Relatórios Financeiros</h6>
+                <small class="text-muted">Análise completa de despesas, categorias e evolução mensal</small>
+            </div>
+            <div class="col-md-4">
+                <h6 class="fw-bold text-dark">Filtros Disponíveis</h6>
+                <small class="text-muted">Período, ESF e visualizações em barras, colunas e pizza</small>
+            </div>
+            <div class="col-md-4">
+                <h6 class="fw-bold text-dark">Exportar</h6>
+                <small class="text-muted">Exporte seus dados em Excel ou PDF para análise posterior</small>
+            </div>
+        </div>
+        <hr class="my-3">
+        <div class="text-center">
+            <small class="text-muted">© 2024 Caelum Saúde - Relatórios Financeiros</small>
+        </div>
+    </div>
+</footer>
 
 @code {
     private List<Despesa> todasDespesas = new();
