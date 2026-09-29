@@ -80,11 +80,11 @@
     {
         <!-- Graficos e Rankings -->
         <div class="d-flex justify-content-end mb-3">
-            <div style="max-width: 220px;">
+            <div class="chart-mode-selector" style="max-width: 240px;">
                 <label class="form-label small fw-bold mb-1">Tipo de gráfico</label>
                 <select class="form-select form-select-sm" @bind="tipoGraficoDashboard">
-                    <option value="Barras">Barras</option>
-                    <option value="Colunas">Colunas</option>
+                    <option value="Barras">Barras (horizontal)</option>
+                    <option value="Colunas">Colunas (vertical)</option>
                     <option value="Pizza">Pizza</option>
                 </select>
             </div>
@@ -99,7 +99,7 @@
                     <div class="card-body">
                         @if (topCategorias.Any())
                         {
-                            @if (tipoGraficoDashboard == TipoGrafico.Barras)
+                            @if (tipoGraficoDashboard == "Barras")
                             {
                                 @foreach (var cat in topCategorias)
                                 {
@@ -117,7 +117,7 @@
                                     </div>
                                 }
                             }
-                            else if (tipoGraficoDashboard == TipoGrafico.Colunas)
+                            else if (tipoGraficoDashboard == "Colunas")
                             {
                                 var maxValor = topCategorias.Max(c => c.Total);
                                 <div class="chart-columns-container">
@@ -136,7 +136,9 @@
                             {
                                 <div class="row align-items-center">
                                     <div class="col-md-5 text-center">
-                                        <div class="chart-pie" style="background:@GetPieCategorias();"></div>
+                                        <div class="chart-pie" style="@GetPieStyleCategorias()">
+                                            <div class="chart-pie-inner"></div>
+                                        </div>
                                     </div>
                                     <div class="col-md-7">
                                         @for (var i = 0; i < topCategorias.Count; i++)
@@ -170,7 +172,7 @@
                     <div class="card-body">
                         @if (esfPorDespesa.Any())
                         {
-                            @if (tipoGraficoDashboard == TipoGrafico.Barras)
+                            @if (tipoGraficoDashboard == "Barras")
                             {
                                 @foreach (var esf in esfPorDespesa)
                                 {
@@ -188,7 +190,7 @@
                                     </div>
                                 }
                             }
-                            else if (tipoGraficoDashboard == TipoGrafico.Colunas)
+                            else if (tipoGraficoDashboard == "Colunas")
                             {
                                 var maxValor = esfPorDespesa.Max(e => e.Total);
                                 <div class="chart-columns-container">
@@ -207,7 +209,9 @@
                             {
                                 <div class="row align-items-center">
                                     <div class="col-md-5 text-center">
-                                        <div class="chart-pie" style="background:@GetPieEsf();"></div>
+                                        <div class="chart-pie" style="@GetPieStyleEsf()">
+                                            <div class="chart-pie-inner"></div>
+                                        </div>
                                     </div>
                                     <div class="col-md-7">
                                         @for (var i = 0; i < esfPorDespesa.Count; i++)
@@ -285,14 +289,7 @@
     private int quantidadeESF = 0;
     private List<CategoriaData2> topCategorias = new();
     private List<ESFResumoData> esfPorDespesa = new();
-    private TipoGrafico tipoGraficoDashboard = TipoGrafico.Barras;
-
-    private enum TipoGrafico
-    {
-        Barras,
-        Colunas,
-        Pizza
-    }
+    private string tipoGraficoDashboard = "Barras";
 
     private string mesSelecionadoDisplay =>
         DateTime.TryParseExact(mesSelecionado + "-01", "yyyy-MM-dd",
@@ -363,6 +360,10 @@
     private string GetPieCategorias() => BuildPieGradient(topCategorias.Select(c => c.Total).ToList());
 
     private string GetPieEsf() => BuildPieGradient(esfPorDespesa.Select(e => e.Total).ToList());
+
+    private string GetPieStyleCategorias() => "background-image: " + GetPieCategorias() + ";";
+
+    private string GetPieStyleEsf() => "background-image: " + GetPieEsf() + ";";
 
     private string BuildPieGradient(List<decimal> valores)
     {

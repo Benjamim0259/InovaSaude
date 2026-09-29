@@ -175,11 +175,11 @@
                     </button>
                 </li>
             </ul>
-            <div style="min-width: 220px;">
+            <div class="chart-mode-selector" style="min-width: 240px;">
                 <label class="form-label small fw-bold mb-1">Tipo de gráfico</label>
                 <select class="form-select form-select-sm" @bind="tipoGraficoRelatorios">
-                    <option value="Barras">Barras</option>
-                    <option value="Colunas">Colunas</option>
+                    <option value="Barras">Barras (horizontal)</option>
+                    <option value="Colunas">Colunas (vertical)</option>
                     <option value="Pizza">Pizza</option>
                 </select>
             </div>
@@ -194,7 +194,7 @@
                     <h5 class="mb-0"><span class="oi oi-bar-chart me-2"></span>Despesas por Categoria</h5>
                 </div>
                 <div class="card-body">
-                    @if (tipoGraficoRelatorios == TipoGrafico.Barras)
+                    @if (tipoGraficoRelatorios == "Barras")
                     {
                         @foreach (var cat in dadosCategoria)
                         {
@@ -216,7 +216,7 @@
                             </div>
                         }
                     }
-                    else if (tipoGraficoRelatorios == TipoGrafico.Colunas)
+                    else if (tipoGraficoRelatorios == "Colunas")
                     {
                         var maxValor = dadosCategoria.Any() ? dadosCategoria.Max(x => x.Total) : 0;
                         <div class="chart-columns-container">
@@ -235,7 +235,9 @@
                     {
                         <div class="row align-items-center">
                             <div class="col-md-5 text-center">
-                                <div class="chart-pie" style="background:@GetPieCategoriasRelatorio();"></div>
+                                <div class="chart-pie" style="@GetPieStyleCategoriasRelatorio()">
+                                    <div class="chart-pie-inner"></div>
+                                </div>
                             </div>
                             <div class="col-md-7">
                                 @for (var i = 0; i < dadosCategoria.Count; i++)
@@ -264,7 +266,7 @@
                             <h5 class="mb-0"><span class="oi oi-dollar me-2"></span>Despesas por ESF</h5>
                         </div>
                         <div class="card-body">
-                            @if (tipoGraficoRelatorios == TipoGrafico.Barras)
+                            @if (tipoGraficoRelatorios == "Barras")
                             {
                                 @foreach (var esf in despesasEsf)
                                 {
@@ -282,7 +284,7 @@
                                     </div>
                                 }
                             }
-                            else if (tipoGraficoRelatorios == TipoGrafico.Colunas)
+                            else if (tipoGraficoRelatorios == "Colunas")
                             {
                                 var maxValor = despesasEsf.Any() ? despesasEsf.Max(x => x.Total) : 0;
                                 <div class="chart-columns-container">
@@ -301,7 +303,9 @@
                             {
                                 <div class="row align-items-center">
                                     <div class="col-md-5 text-center">
-                                        <div class="chart-pie" style="background:@GetPieDespesasEsf();"></div>
+                                        <div class="chart-pie" style="@GetPieStyleDespesasEsf()">
+                                            <div class="chart-pie-inner"></div>
+                                        </div>
                                     </div>
                                     <div class="col-md-7">
                                         @for (var i = 0; i < despesasEsf.Count; i++)
@@ -325,7 +329,7 @@
                             <h5 class="mb-0"><span class="oi oi-people me-2"></span>Salarios por ESF</h5>
                         </div>
                         <div class="card-body">
-                            @if (tipoGraficoRelatorios == TipoGrafico.Barras)
+                            @if (tipoGraficoRelatorios == "Barras")
                             {
                                 @foreach (var esf in salariosEsf)
                                 {
@@ -343,7 +347,7 @@
                                     </div>
                                 }
                             }
-                            else if (tipoGraficoRelatorios == TipoGrafico.Colunas)
+                            else if (tipoGraficoRelatorios == "Colunas")
                             {
                                 var maxValor = salariosEsf.Any() ? salariosEsf.Max(x => x.TotalSalarios) : 0;
                                 <div class="chart-columns-container">
@@ -362,7 +366,9 @@
                             {
                                 <div class="row align-items-center">
                                     <div class="col-md-5 text-center">
-                                        <div class="chart-pie" style="background:@GetPieSalariosEsf();"></div>
+                                        <div class="chart-pie" style="@GetPieStyleSalariosEsf()">
+                                            <div class="chart-pie-inner"></div>
+                                        </div>
                                     </div>
                                     <div class="col-md-7">
                                         @for (var i = 0; i < salariosEsf.Count; i++)
@@ -390,7 +396,7 @@
                     <h5 class="mb-0"><span class="oi oi-graph me-2"></span>Evolucao Mensal</h5>
                 </div>
                 <div class="card-body">
-                    @if (tipoGraficoRelatorios == TipoGrafico.Barras)
+                    @if (tipoGraficoRelatorios == "Barras")
                     {
                         @foreach (var mes in dadosEvolucao)
                         {
@@ -408,7 +414,7 @@
                             </div>
                         }
                     }
-                    else if (tipoGraficoRelatorios == TipoGrafico.Colunas)
+                    else if (tipoGraficoRelatorios == "Colunas")
                     {
                         <div class="d-flex justify-content-start align-items-end" style="height: 300px; gap: 20px; overflow-x: auto; padding: 20px;">
                             @foreach (var mes in dadosEvolucao)
@@ -431,7 +437,9 @@
                     {
                         <div class="row align-items-center">
                             <div class="col-md-5 text-center">
-                                <div class="chart-pie" style="background:@GetPieEvolucao();"></div>
+                                <div class="chart-pie" style="@GetPieStyleEvolucao()">
+                                    <div class="chart-pie-inner"></div>
+                                </div>
                             </div>
                             <div class="col-md-7">
                                 @for (var i = 0; i < dadosEvolucao.Count; i++)
@@ -484,14 +492,7 @@
     private List<DespesaPorUBS> despesasPorUBS = new();
     private List<SalarioPorUBS> salariosPorUBS = new();
     private List<EvolucaoMensal> evolucaoMensal = new();
-    private TipoGrafico tipoGraficoRelatorios = TipoGrafico.Barras;
-
-    private enum TipoGrafico
-    {
-        Barras,
-        Colunas,
-        Pizza
-    }
+    private string tipoGraficoRelatorios = "Barras";
 
     protected override async Task OnInitializedAsync()
     {
@@ -616,6 +617,11 @@
     private string GetPieDespesasEsf() => BuildPieGradient(despesasPorUBS.OrderByDescending(x => x.Total).Select(x => x.Total).ToList());
     private string GetPieSalariosEsf() => BuildPieGradient(salariosPorUBS.OrderByDescending(x => x.TotalSalarios).Select(x => x.TotalSalarios).ToList());
     private string GetPieEvolucao() => BuildPieGradient(evolucaoMensal.Select(x => x.Total).ToList());
+
+    private string GetPieStyleCategoriasRelatorio() => "background-image: " + GetPieCategoriasRelatorio() + ";";
+    private string GetPieStyleDespesasEsf() => "background-image: " + GetPieDespesasEsf() + ";";
+    private string GetPieStyleSalariosEsf() => "background-image: " + GetPieSalariosEsf() + ";";
+    private string GetPieStyleEvolucao() => "background-image: " + GetPieEvolucao() + ";";
 
     private string BuildPieGradient(List<decimal> valores)
     {
