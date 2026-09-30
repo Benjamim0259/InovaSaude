@@ -11,187 +11,187 @@
 @inject IJSRuntime JSRuntime
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
-<PageTitle>IntegraÁıes com APIs Externas - InovaSa˙de</PageTitle>
+<PageTitle>Integra√ß√µes com APIs Externas - InovaSa√∫de</PageTitle>
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
- <h2>?? IntegraÁıes com APIs Externas</h2>
+        <h2>üîó Integra√ß√µes com APIs Externas</h2>
         <button class="btn btn-primary" @onclick="AbrirModalNova">
-  <span class="oi oi-plus me-2"></span>Nova IntegraÁ„o
+            <span class="oi oi-plus me-2"></span>Nova Integra√ß√£o
         </button>
     </div>
 
     @if (carregando)
-  {
+    {
         <div class="text-center py-5">
-          <div class="spinner-border text-primary"></div>
-   <p class="mt-2">Carregando integraÁıes...</p>
-      </div>
- }
+            <div class="spinner-border text-primary"></div>
+            <p class="mt-2">Carregando integra√ß√µes...</p>
+        </div>
+    }
     else if (!integracoes.Any())
     {
-    <div class="alert alert-info text-center py-5">
-         <h4>?? Nenhuma integraÁ„o configurada</h4>
-    <p>Configure as integraÁıes com HORUS, e-SUS PEC e NEMESIS para comeÁar.</p>
- <button class="btn btn-primary" @onclick="AbrirModalNova">
- Configurar Agora
-     </button>
-     </div>
-
-        <!-- Guia de IntegraÁ„o -->
-        <div class="card mb-4">
-     <div class="card-header bg-info text-white">
-     <h5 class="mb-0">?? Guia de IntegraÁ„o</h5>
-       </div>
-    <div class="card-body">
-      <div class="row">
-          <div class="col-md-4">
-           <h6>?? HORUS</h6>
-      <p class="small">Sistema Nacional de Gest„o da AssistÍncia FarmacÍutica</p>
-         <ul class="small">
-  <li>Controle de estoque de medicamentos</li>
-              <li>DispensaÁ„o e prescriÁıes</li>
-   <li>RelatÛrios de consumo</li>
-        </ul>
-            </div>
-      <div class="col-md-4">
-   <h6>?? e-SUS PEC</h6>
-      <p class="small">Prontu·rio EletrÙnico do Cidad„o</p>
-   <ul class="small">
-       <li>Dados de atendimentos</li>
-    <li>HistÛrico de pacientes</li>
-       <li>Procedimentos e CID-10</li>
- </ul>
-    </div>
-       <div class="col-md-4">
-       <h6>?? NEMESIS</h6>
- <p class="small">Sistema de Gerenciamento</p>
-<ul class="small">
-   <li>Indicadores de sa˙de</li>
-     <li>Metas e monitoramento</li>
-          <li>Dados agregados</li>
-    </ul>
+        <div class="alert alert-info text-center py-5">
+            <h4>üîå Nenhuma integra√ß√£o configurada</h4>
+            <p>Configure as integra√ß√µes com HORUS, e-SUS PEC e NEMESIS para come√ßar.</p>
+            <button class="btn btn-primary" @onclick="AbrirModalNova">
+                Configurar Agora
+            </button>
         </div>
-     </div>
-          </div>
-  </div>
+
+        <!-- Guia de Integra√ß√£o -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">üìñ Guia de Integra√ß√£o</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>üíä HORUS</h6>
+                        <p class="small">Sistema Nacional de Gest√£o da Assist√™ncia Farmac√™utica</p>
+                        <ul class="small">
+                            <li>Controle de estoque de medicamentos</li>
+                            <li>Dispensa√ß√£o e prescri√ß√µes</li>
+                            <li>Relat√≥rios de consumo</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>üè• e-SUS PEC</h6>
+                        <p class="small">Prontu√°rio Eletr√¥nico do Cidad√£o</p>
+                        <ul class="small">
+                            <li>Dados de atendimentos</li>
+                            <li>Hist√≥rico de pacientes</li>
+                            <li>Procedimentos e CID-10</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>üìä NEMESIS</h6>
+                        <p class="small">Sistema de Gerenciamento</p>
+                        <ul class="small">
+                            <li>Indicadores de sa√∫de</li>
+                            <li>Metas e monitoramento</li>
+                            <li>Dados agregados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
     else
     {
-      <div class="row">
-          @foreach (var integracao in integracoes)
-        {
-  <div class="col-md-4 mb-3">
-     <div class="card h-100">
-  <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>@GetSistemaIcon(integracao.Nome) @integracao.Nome</strong>
-      <span class="badge @(integracao.Status == "ATIVA" ? "bg-success" : "bg-secondary")">
-         @integracao.Status
- </span>
-           </div>
-   <div class="card-body">
-      <p class="small mb-2">
-    <strong>URL:</strong><br/>
-    <code class="small">@(string.IsNullOrEmpty(integracao.BaseUrl) ? "N„o configurada" : integracao.BaseUrl)</code>
-       </p>
-          <p class="small mb-2">
-   <strong>AutenticaÁ„o:</strong> @integracao.TipoAutenticacao
-    </p>
-     @if (integracao.UltimaSincronizacao.HasValue)
+        <div class="row">
+            @foreach (var integracao in integracoes)
             {
-       <p class="small mb-2">
-       <strong>⁄ltima Sync:</strong><br/>
-   @integracao.UltimaSincronizacao.Value.ToString("dd/MM/yyyy HH:mm")
-          </p>
-         }
-      </div>
- <div class="card-footer">
-       <div class="btn-group w-100" role="group">
-   <button class="btn btn-sm btn-primary" @onclick="() => Sincronizar(integracao)" disabled="@(integracao.Status != "ATIVA")">
-<span class="oi oi-reload me-1"></span>Sincronizar
-       </button>
-   <button class="btn btn-sm btn-warning" @onclick="() => EditarIntegracao(integracao)">
-   <span class="oi oi-pencil"></span>
-        </button>
-   <button class="btn btn-sm btn-danger" @onclick="() => DeletarIntegracao(integracao)">
-          <span class="oi oi-trash"></span>
- </button>
-       </div>
-    </div>
-      </div>
-      </div>
-  }
- </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <strong>@GetSistemaIcon(integracao.Nome) @integracao.Nome</strong>
+                            <span class="badge @(integracao.Status == "ATIVA" ? "bg-success" : "bg-secondary")">
+                                @integracao.Status
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p class="small mb-2">
+                                <strong>URL:</strong><br />
+                                <code class="small">@(string.IsNullOrEmpty(integracao.BaseUrl) ? "N√£o configurada" : integracao.BaseUrl)</code>
+                            </p>
+                            <p class="small mb-2">
+                                <strong>Autentica√ß√£o:</strong> @integracao.TipoAutenticacao
+                            </p>
+                            @if (integracao.UltimaSincronizacao.HasValue)
+                            {
+                                <p class="small mb-2">
+                                    <strong>√öltima Sync:</strong><br />
+                                    @integracao.UltimaSincronizacao.Value.ToString("dd/MM/yyyy HH:mm")
+                                </p>
+                            }
+                        </div>
+                        <div class="card-footer">
+                            <div class="btn-group w-100" role="group">
+                                <button class="btn btn-sm btn-primary" @onclick="() => Sincronizar(integracao)" disabled="@(integracao.Status != "ATIVA")">
+                                    <span class="oi oi-reload me-1"></span>Sincronizar
+                                </button>
+                                <button class="btn btn-sm btn-warning" @onclick="() => EditarIntegracao(integracao)">
+                                    <span class="oi oi-pencil"></span>
+                                </button>
+                                <button class="btn btn-sm btn-danger" @onclick="() => DeletarIntegracao(integracao)">
+                                    <span class="oi oi-trash"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
 
     @if (!string.IsNullOrEmpty(mensagem))
     {
         <div class="alert @(mensagemSucesso ? "alert-success" : "alert-danger") alert-dismissible fade show">
-   @mensagem
-     <button type="button" class="btn-close" @onclick="() => mensagem = null"></button>
+            @mensagem
+            <button type="button" class="btn-close" @onclick="() => mensagem = null"></button>
         </div>
-  }
+    }
 </div>
 
-<!-- Modal Nova/Editar IntegraÁ„o -->
+<!-- Modal Nova/Editar Integra√ß√£o -->
 @if (mostrarModal)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
         <div class="modal-dialog">
-         <div class="modal-content">
-        <div class="modal-header">
-   <h5 class="modal-title">@(integracaoEditando == null ? "Nova" : "Editar") IntegraÁ„o</h5>
-         <button type="button" class="btn-close" @onclick="FecharModal"></button>
-   </div>
-      <div class="modal-body">
- <div class="mb-3">
-         <label class="form-label">Sistema *</label>
-       <select class="form-select" @bind="formIntegracao.Nome" disabled="@(integracaoEditando != null)">
-        <option value="">Selecione...</option>
-            <option value="HORUS">HORUS - Farm·cia</option>
-     <option value="ESUS_PEC">e-SUS PEC - Prontu·rio</option>
- <option value="NEMESIS">NEMESIS - Indicadores</option>
- </select>
-   </div>
-   <div class="mb-3">
- <label class="form-label">URL Base *</label>
-       <input type="url" class="form-control" @bind="formIntegracao.BaseUrl" placeholder="https://api.exemplo.com.br" />
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(integracaoEditando == null ? "Nova" : "Editar") Integra√ß√£o</h5>
+                    <button type="button" class="btn-close" @onclick="FecharModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Sistema *</label>
+                        <select class="form-select" @bind="formIntegracao.Nome" disabled="@(integracaoEditando != null)">
+                            <option value="">Selecione...</option>
+                            <option value="HORUS">HORUS - Farm√°cia</option>
+                            <option value="ESUS_PEC">e-SUS PEC - Prontu√°rio</option>
+                            <option value="NEMESIS">NEMESIS - Indicadores</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">URL Base *</label>
+                        <input type="url" class="form-control" @bind="formIntegracao.BaseUrl" placeholder="https://api.exemplo.com.br" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de Autentica√ß√£o</label>
+                        <select class="form-select" @bind="formIntegracao.TipoAutenticacao">
+                            <option value="Bearer">Bearer Token</option>
+                            <option value="ApiKey">API Key</option>
+                            <option value="OAuth2">OAuth 2.0</option>
+                            <option value="Basic">Basic Auth</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Token/Chave de API *</label>
+                        <input type="password" class="form-control" @bind="formIntegracao.Token" placeholder="Seu token ou chave" />
+                        <small class="text-muted">Ser√° armazenado de forma segura e criptografado</small>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" @bind="formIntegracao.Ativo" id="ativoCheck" />
+                            <label class="form-check-label" for="ativoCheck">
+                                Ativar integra√ß√£o
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" @onclick="SalvarIntegracao">
+                        @if (salvando)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                        }
+                        Salvar
+                    </button>
+                </div>
+            </div>
         </div>
-    <div class="mb-3">
-       <label class="form-label">Tipo de AutenticaÁ„o</label>
-       <select class="form-select" @bind="formIntegracao.TipoAutenticacao">
-        <option value="Bearer">Bearer Token</option>
-     <option value="ApiKey">API Key</option>
-         <option value="OAuth2">OAuth 2.0</option>
- <option value="Basic">Basic Auth</option>
-            </select>
-    </div>
-      <div class="mb-3">
-       <label class="form-label">Token/Chave de API *</label>
-       <input type="password" class="form-control" @bind="formIntegracao.Token" placeholder="Seu token ou chave" />
-       <small class="text-muted">Ser· armazenado de forma segura e criptografado</small>
-    </div>
-   <div class="mb-3">
-            <div class="form-check form-switch">
-     <input class="form-check-input" type="checkbox" @bind="formIntegracao.Ativo" id="ativoCheck" />
-        <label class="form-check-label" for="ativoCheck">
-           Ativar integraÁ„o
-   </label>
-      </div>
-</div>
-    </div>
-          <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
-<button type="button" class="btn btn-primary" @onclick="SalvarIntegracao">
-          @if (salvando)
-     {
-<span class="spinner-border spinner-border-sm me-2"></span>
-    }
-        Salvar
-      </button>
-      </div>
-       </div>
-    </div>
     </div>
 }
 
@@ -199,10 +199,10 @@
     private List<ApiExterna> integracoes = new();
     private bool carregando = true;
     private bool mostrarModal = false;
-private bool salvando = false;
+    private bool salvando = false;
     private string? mensagem;
     private bool mensagemSucesso;
-  private ApiExterna? integracaoEditando;
+    private ApiExterna? integracaoEditando;
     private FormIntegracaoModel formIntegracao = new();
 
     protected override async Task OnInitializedAsync()
@@ -213,170 +213,170 @@ private bool salvando = false;
     private async Task CarregarIntegracoes()
     {
         carregando = true;
-     try
+        try
         {
-      integracoes = await Context.Set<ApiExterna>()
-  .OrderBy(i => i.Nome)
-.ToListAsync();
-}
-  finally
-   {
-      carregando = false;
+            integracoes = await Context.Set<ApiExterna>()
+                .OrderBy(i => i.Nome)
+                .ToListAsync();
         }
- }
+        finally
+        {
+            carregando = false;
+        }
+    }
 
     private void AbrirModalNova()
     {
-integracaoEditando = null;
+        integracaoEditando = null;
         formIntegracao = new FormIntegracaoModel { Ativo = true, TipoAutenticacao = "Bearer" };
-mostrarModal = true;
+        mostrarModal = true;
     }
 
     private void EditarIntegracao(ApiExterna integracao)
     {
         integracaoEditando = integracao;
-     formIntegracao = new FormIntegracaoModel
-  {
-   Nome = integracao.Nome,
-        BaseUrl = integracao.BaseUrl,
-    TipoAutenticacao = integracao.TipoAutenticacao,
-    Token = integracao.Token,
-       Ativo = integracao.Status == "ATIVA"
+        formIntegracao = new FormIntegracaoModel
+        {
+            Nome = integracao.Nome,
+            BaseUrl = integracao.BaseUrl,
+            TipoAutenticacao = integracao.TipoAutenticacao,
+            Token = integracao.Token,
+            Ativo = integracao.Status == "ATIVA"
         };
-     mostrarModal = true;
+        mostrarModal = true;
     }
 
     private void FecharModal()
-  {
-  mostrarModal = false;
-  integracaoEditando = null;
-    formIntegracao = new();
+    {
+        mostrarModal = false;
+        integracaoEditando = null;
+        formIntegracao = new();
     }
 
- private async Task SalvarIntegracao()
+    private async Task SalvarIntegracao()
     {
-if (string.IsNullOrWhiteSpace(formIntegracao.Nome) ||
-        string.IsNullOrWhiteSpace(formIntegracao.BaseUrl) ||
-    string.IsNullOrWhiteSpace(formIntegracao.Token))
+        if (string.IsNullOrWhiteSpace(formIntegracao.Nome) ||
+            string.IsNullOrWhiteSpace(formIntegracao.BaseUrl) ||
+            string.IsNullOrWhiteSpace(formIntegracao.Token))
         {
-    mensagem = "Preencha todos os campos obrigatÛrios.";
- mensagemSucesso = false;
-  return;
- }
+            mensagem = "Preencha todos os campos obrigat√≥rios.";
+            mensagemSucesso = false;
+            return;
+        }
 
         salvando = true;
         try
         {
             if (integracaoEditando == null)
-    {
-       var nova = new ApiExterna
-    {
-      Nome = formIntegracao.Nome,
-BaseUrl = formIntegracao.BaseUrl,
-       TipoAutenticacao = formIntegracao.TipoAutenticacao,
-  Token = formIntegracao.Token,
-  Status = formIntegracao.Ativo ? "ATIVA" : "INATIVA"
-        };
-        Context.Set<ApiExterna>().Add(nova);
-   }
-      else
-    {
-        integracaoEditando.BaseUrl = formIntegracao.BaseUrl;
-              integracaoEditando.TipoAutenticacao = formIntegracao.TipoAutenticacao;
-          integracaoEditando.Token = formIntegracao.Token;
-    integracaoEditando.Status = formIntegracao.Ativo ? "ATIVA" : "INATIVA";
-   integracaoEditando.UpdatedAt = DateTime.UtcNow;
- }
+            {
+                var nova = new ApiExterna
+                {
+                    Nome = formIntegracao.Nome,
+                    BaseUrl = formIntegracao.BaseUrl,
+                    TipoAutenticacao = formIntegracao.TipoAutenticacao,
+                    Token = formIntegracao.Token,
+                    Status = formIntegracao.Ativo ? "ATIVA" : "INATIVA"
+                };
+                Context.Set<ApiExterna>().Add(nova);
+            }
+            else
+            {
+                integracaoEditando.BaseUrl = formIntegracao.BaseUrl;
+                integracaoEditando.TipoAutenticacao = formIntegracao.TipoAutenticacao;
+                integracaoEditando.Token = formIntegracao.Token;
+                integracaoEditando.Status = formIntegracao.Ativo ? "ATIVA" : "INATIVA";
+                integracaoEditando.UpdatedAt = DateTime.UtcNow;
+            }
 
-     await Context.SaveChangesAsync();
-await CarregarIntegracoes();
-    FecharModal();
-     mensagem = "IntegraÁ„o salva com sucesso!";
-mensagemSucesso = true;
-    }
-      catch (Exception ex)
-      {
-    mensagem = $"Erro ao salvar: {ex.Message}";
-       mensagemSucesso = false;
+            await Context.SaveChangesAsync();
+            await CarregarIntegracoes();
+            FecharModal();
+            mensagem = "Integra√ß√£o salva com sucesso!";
+            mensagemSucesso = true;
         }
-     finally
+        catch (Exception ex)
         {
-      salvando = false;
+            mensagem = $"Erro ao salvar: {ex.Message}";
+            mensagemSucesso = false;
+        }
+        finally
+        {
+            salvando = false;
         }
     }
 
     private async Task DeletarIntegracao(ApiExterna integracao)
     {
- if (await JSRuntime.InvokeAsync<bool>("confirm", $"Deseja realmente deletar a integraÁ„o com {integracao.Nome}?"))
+        if (await JSRuntime.InvokeAsync<bool>("confirm", $"Deseja realmente deletar a integra√ß√£o com {integracao.Nome}?"))
         {
-  try
-   {
-      Context.Set<ApiExterna>().Remove(integracao);
- await Context.SaveChangesAsync();
-     await CarregarIntegracoes();
-        mensagem = "IntegraÁ„o deletada com sucesso!";
- mensagemSucesso = true;
- }
-    catch (Exception ex)
-         {
-      mensagem = $"Erro ao deletar: {ex.Message}";
-     mensagemSucesso = false;
-   }
-     }
+            try
+            {
+                Context.Set<ApiExterna>().Remove(integracao);
+                await Context.SaveChangesAsync();
+                await CarregarIntegracoes();
+                mensagem = "Integra√ß√£o deletada com sucesso!";
+                mensagemSucesso = true;
+            }
+            catch (Exception ex)
+            {
+                mensagem = $"Erro ao deletar: {ex.Message}";
+                mensagemSucesso = false;
+            }
+        }
     }
 
     private async Task Sincronizar(ApiExterna integracao)
     {
-   mensagem = $"Sincronizando com {integracao.Nome}...";
+        mensagem = $"Sincronizando com {integracao.Nome}...";
         mensagemSucesso = true;
 
         try
         {
-     bool sucesso = integracao.Nome switch
+            bool sucesso = integracao.Nome switch
             {
-  "HORUS" => await HorusService.SincronizarMedicamentosAsync(),
- "ESUS_PEC" => await EsusPecService.SincronizarAtendimentosAsync(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow),
-           "NEMESIS" => await NemesisService.SincronizarIndicadoresAsync(DateTime.UtcNow.ToString("yyyy-MM")),
-   _ => false
-   };
+                "HORUS" => await HorusService.SincronizarMedicamentosAsync(),
+                "ESUS_PEC" => await EsusPecService.SincronizarAtendimentosAsync(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow),
+                "NEMESIS" => await NemesisService.SincronizarIndicadoresAsync(DateTime.UtcNow.ToString("yyyy-MM")),
+                _ => false
+            };
 
- if (sucesso)
+            if (sucesso)
             {
-      integracao.UltimaSincronizacao = DateTime.UtcNow;
- integracao.UpdatedAt = DateTime.UtcNow;
-     await Context.SaveChangesAsync();
-  mensagem = $"SincronizaÁ„o com {integracao.Nome} concluÌda com sucesso!";
-     mensagemSucesso = true;
-      }
-   else
+                integracao.UltimaSincronizacao = DateTime.UtcNow;
+                integracao.UpdatedAt = DateTime.UtcNow;
+                await Context.SaveChangesAsync();
+                mensagem = $"Sincroniza√ß√£o com {integracao.Nome} conclu√≠da com sucesso!";
+                mensagemSucesso = true;
+            }
+            else
             {
-      mensagem = $"Falha na sincronizaÁ„o com {integracao.Nome}. Verifique as configuraÁıes.";
-        mensagemSucesso = false;
+                mensagem = $"Falha na sincroniza√ß√£o com {integracao.Nome}. Verifique as configura√ß√µes.";
+                mensagemSucesso = false;
             }
         }
- catch (Exception ex)
+        catch (Exception ex)
         {
-      mensagem = $"Erro na sincronizaÁ„o: {ex.Message}";
- mensagemSucesso = false;
+            mensagem = $"Erro na sincroniza√ß√£o: {ex.Message}";
+            mensagemSucesso = false;
         }
 
-  await CarregarIntegracoes();
+        await CarregarIntegracoes();
     }
 
     private string GetSistemaIcon(string sistema) => sistema switch
     {
-        "HORUS" => "??",
-"ESUS_PEC" => "??",
-        "NEMESIS" => "??",
-    _ => "??"
+        "HORUS" => "üíä",
+        "ESUS_PEC" => "üè•",
+        "NEMESIS" => "üìä",
+        _ => "üîå"
     };
 
     private class FormIntegracaoModel
     {
         public string Nome { get; set; } = string.Empty;
-     public string BaseUrl { get; set; } = string.Empty;
+        public string BaseUrl { get; set; } = string.Empty;
         public string TipoAutenticacao { get; set; } = "Bearer";
-    public string? Token { get; set; }
+        public string? Token { get; set; }
         public bool Ativo { get; set; } = true;
     }
 }
