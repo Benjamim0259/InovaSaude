@@ -22,4 +22,10 @@
     <PackageReference Include="QuestPDF" Version="2026.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\seed_inicial.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

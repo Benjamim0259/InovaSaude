@@ -1,0 +1,4599 @@
+{
+  "DataExportacao": "2026-11-03T02:19:37.0000000Z",
+  "Versao": "1.0",
+  "Usuarios": [
+    {
+      "Id": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "Nome": "Administrador Geral - SMS Cáceres",
+      "Email": "admin@inovasaude.com.br",
+      "SenhaHash": "$2a$11$1RJWurJpmBdg3IJwoS4sye/4HHb2.VTVaKV1/.sPA5XXATaci0MMe",
+      "Perfil": 0,
+      "Status": "ATIVO",
+      "EsfId": null,
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    }
+  ],
+  "ESFs": [
+    {
+      "Id": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "Nome": "Unidade Basica De Saude Sao Miguel",
+      "Codigo": "4439236",
+      "Endereco": "Av Castelo Branco, S/N",
+      "Bairro": "Sao Miguel",
+      "Cep": "78205-036",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "Nome": "Programa Imuniza Caceres",
+      "Codigo": "8054452",
+      "Endereco": "Av Getulio Vargas, S/N",
+      "Bairro": "Santa Isabel",
+      "Cep": "78205-745",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fd24fadd-931e-497c-86be-662276ad8167",
+      "Nome": "Programa Mais Medicamentos",
+      "Codigo": "8119074",
+      "Endereco": "Av Getulio Vargas, S/N",
+      "Bairro": "Santa Isabel",
+      "Cep": "78205-745",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "440560f3-88f0-4495-996f-f91217f339db",
+      "Nome": "Cadeia Publica Feminina De Caceres",
+      "Codigo": "776238",
+      "Endereco": "Marechal Deodoro, S/N",
+      "Bairro": "Centro",
+      "Cep": "78200-959",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "Nome": "Unidade Basica De Saude Santa Emilie De Vileneuve",
+      "Codigo": "2394812",
+      "Endereco": "Av Castelo Branco, S/N",
+      "Bairro": "Sao Miguel",
+      "Cep": "78205-036",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "Nome": "Unidade Saude Familia Do Caramujo",
+      "Codigo": "2394871",
+      "Endereco": "Da Escola Estadual, S/N",
+      "Bairro": "Distrito De Caramujo",
+      "Cep": "78236-000",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "Nome": "Unid Saude Da Familia Vitoria Regia",
+      "Codigo": "2394928",
+      "Endereco": "Rua Amazonas, S/N",
+      "Bairro": "Jardim Popular",
+      "Cep": "78219-899",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "Nome": "Unid De Saude Da Familia Marajoara",
+      "Codigo": "2394944",
+      "Endereco": "Rua Rouxinol, 0",
+      "Bairro": "Santa Isabel",
+      "Cep": "78205-720",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "Nome": "Unidade De Saude Da Familia Do Caic",
+      "Codigo": "2394952",
+      "Endereco": "Rua Hermes Da Fonseca, S/N",
+      "Bairro": "Jad Cidade Nova",
+      "Cep": "78201-006",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "Nome": "Unid De Saude Da Familia Vista Alegre",
+      "Codigo": "2395096",
+      "Endereco": "Rua Das Margaridas, 557",
+      "Bairro": "Vista Alegre",
+      "Cep": "78217-635",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5011be96-e015-4067-9b0f-2115045fa245",
+      "Nome": "Unidade De Saude Da Familia Do Rodeio",
+      "Codigo": "2395118",
+      "Endereco": "Rua Madri, S/N",
+      "Bairro": "Rodeio",
+      "Cep": "78200-405",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "Nome": "Unidade De Saude Da Familia Vila Real",
+      "Codigo": "2395126",
+      "Endereco": "Rua Austria, S/N",
+      "Bairro": "Vila Real",
+      "Cep": "78201-414",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "Nome": "Unidade De Saude Da Familia Jd Paraiso",
+      "Codigo": "2395347",
+      "Endereco": "Rua 31 De Marco, S/N",
+      "Bairro": "Jdr Paraiso",
+      "Cep": "78219-899",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "Nome": "Unidade Basica De Saude Sadia",
+      "Codigo": "2699435",
+      "Endereco": "Estrada Rural, S/N",
+      "Bairro": "Assentamento Sadia",
+      "Cep": "78219-899",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "Nome": "Unidade Basica De Saude Jardim Das Oliveiras",
+      "Codigo": "4828968",
+      "Endereco": "Rua Jequiti, S/N",
+      "Bairro": "Jardim Das Oliveiras",
+      "Cep": "78200-280",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "Nome": "Unidade Saude Familia Jardim Guanabara",
+      "Codigo": "5304156",
+      "Endereco": "Rua Cerejeira, 0",
+      "Bairro": "Jardim Guanabara",
+      "Cep": "78206-097",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "Nome": "Unidade De Saude Da Familia Cohab Nova",
+      "Codigo": "5544009",
+      "Endereco": "Rua Dos Marinhos, 09",
+      "Bairro": "Cohab Nova",
+      "Cep": "78217-407",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "Nome": "Unidade Basica De Saude Santa Isabel",
+      "Codigo": "9007997",
+      "Endereco": "Rua Rouxinol, S/N",
+      "Bairro": "Santa Isabel",
+      "Cep": "78205-720",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "Nome": "Unidade De Saude Santos Dumont",
+      "Codigo": "9286888",
+      "Endereco": "Avenida Dos Aviadores, 162",
+      "Bairro": "Santos Dumont",
+      "Cep": "78211-352",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "Nome": "Unidade Basica De Saude Vila Irene",
+      "Codigo": "9323775",
+      "Endereco": "Sao Pedro, S/N",
+      "Bairro": "Cavalhada",
+      "Cep": "78216-155",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "Nome": "Posto De Saude De Vila Aparecida",
+      "Codigo": "2394901",
+      "Endereco": "Eua Das Maravilhas, 745",
+      "Bairro": "Vila Aparecida",
+      "Cep": "78219-899",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "Nome": "Unidade Basica De Saude Dr Ademar Rocha De Oliveira Cavalhad",
+      "Codigo": "411876",
+      "Endereco": "Rua Sao Pedro, S/N",
+      "Bairro": "Cavalhada 1",
+      "Cep": "78216-600",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "Nome": "Posto De Saude Horizonte Doeste",
+      "Codigo": "2394863",
+      "Endereco": "Rua 12 De Janeiro, S/N",
+      "Bairro": "Zona Rural",
+      "Cep": "78219-899",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "Nome": "Posto De Saude Do Limao",
+      "Codigo": "3212149",
+      "Endereco": "Br 070, S/N",
+      "Bairro": "Distrito Limao",
+      "Cep": "78219-899",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "Nome": "Posto De Saude Da Paiol",
+      "Codigo": "4085736",
+      "Endereco": "Estrada Rural, S/N",
+      "Bairro": "Paiol",
+      "Cep": "78219-899",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "Nome": "Posto De Saude Prof Vera Lygia Baldo Facao",
+      "Codigo": "4750292",
+      "Endereco": "Assentamento Facao, S/N",
+      "Bairro": "Zona Rural",
+      "Cep": "78219-899",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "Nome": "Posto De Saude Laranjeiras",
+      "Codigo": "9355014",
+      "Endereco": "Zona Rural, S/N",
+      "Bairro": "Comunidade Das Laran",
+      "Cep": "78219-899",
+      "Status": "ATIVA",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    }
+  ],
+  "Funcionarios": [
+    {
+      "Id": "fed2f06d-ffd5-48e6-baed-2c73d1f7d96d",
+      "Nome": "Adailton Baca Queiroz",
+      "Salario": 5291.1,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "49c6540e-cf81-4299-b6bb-a3556d8af32d",
+      "Nome": "Adam Garcia Pereira",
+      "Salario": 10166.11,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8dadaa8a-58b7-4d75-97d9-8e171731b1e4",
+      "Nome": "Adelia De Carvalho",
+      "Salario": 3900.14,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fc364d8d-c714-4870-a7a9-adabb246abc9",
+      "Nome": "Adelia Santana Da Silva",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "106bad38-62d9-4bfb-a511-df1c20fd8538",
+      "Nome": "Aderginia Aparecida Barbosa Florencio",
+      "Salario": 7338.66,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "599de127-4db3-4ab6-ab0f-66773fca8e97",
+      "Nome": "Adna Rodrigues Dos Santos Pires",
+      "Salario": 7505.65,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "116fd36a-19bd-4027-9e48-5ff5ed7d6224",
+      "Nome": "Adriana Fatima Oliveira Caetano Macedo",
+      "Salario": 8237.93,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "31cc2d74-3ace-49ba-8068-9b44efd5945b",
+      "Nome": "Adriano Johnny Figueroa Paes Landim",
+      "Salario": 7558.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d3556aa8-e21f-4306-ab4c-eff4f74bea9e",
+      "Nome": "Adryan Barbara Franca Ramos",
+      "Salario": 6976.99,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "841d22b6-fdec-4fd7-b0ce-70c0369a1d0b",
+      "Nome": "Aireno De Souza Silva",
+      "Salario": 18490.18,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9a406278-e577-4ada-95d9-d1db84d7a407",
+      "Nome": "Aleida Maria De Moraes Ferreira Honorio",
+      "Salario": 6930.58,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "47c60f6c-104e-4fdc-a7e3-4d7564d11610",
+      "Nome": "Alessandra Andrade Souza Orro Silva",
+      "Salario": 8179.22,
+      "Cargo": "Periodentista (N/S)-20Hs",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d83a747e-640c-4d51-8d0c-62109df6c141",
+      "Nome": "Alessandra Basto Neves",
+      "Salario": 7691.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "83035d6a-ee21-4826-8173-5d588c64681e",
+      "Nome": "Alessandra De Assis Cintra Nascimento",
+      "Salario": 3850.0,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4045956d-7929-4adf-9499-e83cf2a46770",
+      "Nome": "Alessandro Guzzo Da Silva",
+      "Salario": 7949.06,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6290add1-3dd3-49d4-bdc4-e1884155e90f",
+      "Nome": "Aline Rejane Caxito Braga",
+      "Salario": 14517.03,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8730cb88-a020-4d41-9966-5314461ca85a",
+      "Nome": "Aline Vieira Dos Santos",
+      "Salario": 7624.86,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4fbef177-8a79-40ec-9073-bb811462da46",
+      "Nome": "Amanda Cristina Gomes Ribeiro",
+      "Salario": 8671.41,
+      "Cargo": "Psicologo Organizacional E Do Trabalho (40H)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5eea8839-b914-429c-8028-e384cf2373e5",
+      "Nome": "Amanda Farias E Silva",
+      "Salario": 1621.0,
+      "Cargo": "Gerência Do Centro De Especialidades Médicas - Cem",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "694d37a6-10b4-4137-97bb-4b7b76f6c5ab",
+      "Nome": "Ana Adelia Dantas Da Cruz",
+      "Salario": 9080.99,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3a0fa71c-3c22-4c64-bbd3-2d1191ed8575",
+      "Nome": "Ana Antonia Alves Ribeiro",
+      "Salario": 6636.35,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "08eeb319-0cac-4bc6-b795-62beac621a71",
+      "Nome": "Ana Beatriz Da Silva Felisbino",
+      "Salario": 4036.65,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d57cc59a-c2cf-4ad0-820c-cdacf25f1cb4",
+      "Nome": "Ana Cristina Amaral Torres E Hermidorff",
+      "Salario": 3850.0,
+      "Cargo": "Medico(A) Pediatra (N/S) - 10 Horas",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "536f2df0-a7e1-47ca-aacd-844134852e81",
+      "Nome": "Ana Elizethe Da Silva Monteiro",
+      "Salario": 4370.2,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "49cc2e6a-f3ff-412f-95c9-a34de6d93555",
+      "Nome": "Ana Lucia Ferreira De Oliveira",
+      "Salario": 6985.34,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6a26cbd1-5cbf-4faf-bbe2-5c98baaa5945",
+      "Nome": "Ana Maria De Arruda Souza",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c06c146f-7132-4765-92af-995202872b4d",
+      "Nome": "Ana Paula Rodrigues Da Silva",
+      "Salario": 7505.65,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "af678746-6795-4931-8fa0-d57c13b2f156",
+      "Nome": "Ana Rosa Cardoso",
+      "Salario": 3850.0,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "f01081a1-ecee-47c9-bfcf-1dee55aafaff",
+      "Nome": "Andre Luis Silva Do Amaral",
+      "Salario": 11719.32,
+      "Cargo": "Medico(A) Cirurgião Geral (N/S) - 10 Horas",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9c02b9a0-5e63-40ed-81a9-96134b82f9e7",
+      "Nome": "Andreia Batista Ribeiro",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "15edb309-86d4-4b5c-9fca-eb81f6e4b304",
+      "Nome": "Andreia Costa Ferreira Da Silva",
+      "Salario": 13336.93,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0d9d5c1e-a3ba-444a-9961-985ddb5e078b",
+      "Nome": "Andreia Daniele Basto Neves Oliveira",
+      "Salario": 14515.61,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "44bbd4c5-d446-4c13-a14f-cf453db45566",
+      "Nome": "Andreia Karoline Vales Da Silva",
+      "Salario": 7626.99,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5537603e-3390-48a0-b34d-b120c255c493",
+      "Nome": "Andreia Monteiro Dos Santos",
+      "Salario": 9008.4,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a289acea-4f6b-4115-9170-52b64e558268",
+      "Nome": "Andreia Santiago Sobreira Santos Souza",
+      "Salario": 11509.94,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "f5e9dccb-5f83-4f91-b994-30b757fa6afc",
+      "Nome": "Angela Maria Rodrigues",
+      "Salario": 1775.88,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fad8ea59-cce7-4ec7-8bf3-d398c3e88bca",
+      "Nome": "Anna Patricia Holanda Soares Ludwig",
+      "Salario": 2419.26,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "14cbaec5-db5f-4329-9d15-c973894ab5e1",
+      "Nome": "Antonia Maria Da Silva",
+      "Salario": 6516.46,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d942ec5d-6d91-494a-85ab-2be37048ab35",
+      "Nome": "Aparecida De Melo",
+      "Salario": 7955.29,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "221b2e42-b104-4d40-93e2-41daeb3b7917",
+      "Nome": "Aparecida Laudiceia Da Silva Senabio",
+      "Salario": 3665.85,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2b0db3b3-3c47-4481-9425-c9d5e177f6c5",
+      "Nome": "Ariane Costa Silva",
+      "Salario": 3418.83,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "47fdf48d-2b13-4b46-96ce-32c43185c52e",
+      "Nome": "Barbara Lara Flores",
+      "Salario": 8248.07,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d1964d46-2c86-4b75-b14a-b6089266011a",
+      "Nome": "Beatriz De Oliveira Guimaraes Pontes Paulino",
+      "Salario": 7774.36,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "541b5637-4e40-40cd-9737-3893a56f05de",
+      "Nome": "Bernadete Cebalho Da Silva",
+      "Salario": 5774.72,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "91058ea3-2231-4477-b8bf-ed8abfd720b6",
+      "Nome": "Bianca De Paula Almeida",
+      "Salario": 7058.76,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6555560f-a683-47dc-b81a-7094adbca01e",
+      "Nome": "Bruno Tiago Pessoa",
+      "Salario": 8377.24,
+      "Cargo": "Farmacêutico-Bioquímico - 40H",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fca02bfa-3d9d-414b-ab94-730d2ccdf802",
+      "Nome": "Caio Da Silva Castilho",
+      "Salario": 6211.16,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0e760af0-da5d-4dcc-aea3-385d63867bf8",
+      "Nome": "Camila Da Silva Campos Teixeira",
+      "Salario": 12673.63,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1e26c215-7538-4c1f-b61f-14d5f944a95a",
+      "Nome": "Camilo Augusto Gattass Costa",
+      "Salario": 9531.07,
+      "Cargo": "Fisioterapeuta N/S (20Hs)",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4ca20c9f-51c2-4c09-baeb-0709be342355",
+      "Nome": "Carla Barros Silva",
+      "Salario": 8495.51,
+      "Cargo": "Farmacêutico-Bioquímico - 40H",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0429ac11-1130-4302-9771-5785570c0805",
+      "Nome": "Carla Patricia Pereira Santana Latorraca",
+      "Salario": 17229.96,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "269f51c9-ef18-4ad2-ba37-aa23b44d21e7",
+      "Nome": "Catia Virginia Weber De Oliveira",
+      "Salario": 15930.55,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d281ac0c-3316-41c9-8374-c7b71e3eaf0e",
+      "Nome": "Cecilia Sile Justiniano",
+      "Salario": 2255.69,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4459506e-5f0a-487c-bcfc-c6b83fe144e0",
+      "Nome": "Celia Aparecida Moura De Oliveira",
+      "Salario": 6894.84,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "26efe6b0-df50-49f5-abd0-2f6ba50bae64",
+      "Nome": "Celia Maria De Souza",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "55c4826d-b020-41d1-9466-0bac76f71cb7",
+      "Nome": "Celio Aparecido Nogueira De Moraes",
+      "Salario": 2772.29,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "63724f00-7525-4dcd-8406-8043aa0814bd",
+      "Nome": "Claudia Aparecida Lopes Andrade",
+      "Salario": 819.51,
+      "Cargo": "Auxiliar De Saúde Bucal",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d9807141-4423-47e4-a40e-857e1bbe3192",
+      "Nome": "Claudiane Miranda Do Carmo Morales",
+      "Salario": 13336.93,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "75a92f69-7775-4f0d-ab4d-cd8d259d0515",
+      "Nome": "Claudimiria Santana Do Rosario",
+      "Salario": 6920.65,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "f3942883-4029-4981-b717-c0482ac22846",
+      "Nome": "Cleidiane Batista Silva",
+      "Salario": 4039.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0ab2acb6-9e17-4b76-8b6e-a2fd7fd3bc99",
+      "Nome": "Crislaine Da Silva Leopoldo",
+      "Salario": 7677.4,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a19122f4-b8b1-439f-9065-a3868c4966e6",
+      "Nome": "Cristiane Moreno Almeida Da Silva",
+      "Salario": 8064.76,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5981263d-05af-4df4-b0d6-d910e967a26c",
+      "Nome": "Cristiane Regina Goncalves Oliveira",
+      "Salario": 7635.67,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0703d054-8f61-4006-919b-9b9bdc781ad7",
+      "Nome": "Cristina Batista Dias",
+      "Salario": 2095.2,
+      "Cargo": "Auxiliar De Saúde Bucal",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "f3d81e62-88e4-4440-a45e-42601a15fc18",
+      "Nome": "Cristina Souza Da Silva",
+      "Salario": 2095.2,
+      "Cargo": "Auxiliar De Saúde Bucal",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "52edbac4-c99c-4919-ab4e-b62f24385c69",
+      "Nome": "Daise Amaral Torres",
+      "Salario": 23444.7,
+      "Cargo": "Medico(A) Pediatra (N/S)-20Hs",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "02596158-68c0-415c-a225-3319ed4d0fb4",
+      "Nome": "Daniel Rodrigues Teixeira",
+      "Salario": 1486.87,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "50842c09-60d4-426a-943c-31d54c23eb74",
+      "Nome": "Daniela Menegucci",
+      "Salario": 7954.0,
+      "Cargo": "Medico(A) Clinico Geral N/S (20Hs)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "61bc01d5-3193-41de-9559-53ab0322f3fa",
+      "Nome": "Daniella Aparecida Da Rocha",
+      "Salario": 5647.4,
+      "Cargo": "Fisioterapeuta N/S (20Hs)",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0f12230b-9921-4d73-8e00-2a70a90a43de",
+      "Nome": "Danyella Rodrigues De Almeida",
+      "Salario": 13944.12,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "63c07c90-ba8d-4cd4-8b03-eb93b26a7c99",
+      "Nome": "Dario Jose Ferreira",
+      "Salario": 10698.52,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "bdda684c-37a5-4db5-bdf1-7faefc42ae39",
+      "Nome": "Dayana Kelren Da Silva Assuncao",
+      "Salario": 4039.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4fe802b3-e8b2-449c-941e-28d88711f840",
+      "Nome": "Dayanne Marciano Moreno Guedes",
+      "Salario": 10463.96,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9bddfa4b-63da-44b7-b5d0-700589753928",
+      "Nome": "Deborah Sampaio Nunes Da Silva",
+      "Salario": 12058.05,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a9983c50-5643-4485-afd3-4f00e93bf7c0",
+      "Nome": "Delia De Paula Do Espirito Santo Almeida",
+      "Salario": 6143.98,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "58b3779e-c090-43f1-acb3-5bb113666b70",
+      "Nome": "Delma Da Cruz Mendes",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0297258f-11e9-493a-933e-e1aa2da6c2ae",
+      "Nome": "Denilsy Garcia De Souza",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "37353e05-3dee-4f1c-ac22-d0a25f243fa0",
+      "Nome": "Denis Fernandes Costa Cavalcante",
+      "Salario": 8728.47,
+      "Cargo": "Auxiliar De Farmácia(S/G)",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9bc4326a-8545-40b0-aed9-a10987a8602f",
+      "Nome": "Denis Marcelo Granado",
+      "Salario": 6668.36,
+      "Cargo": "Odontologo Clinico Geral (N/S) (20Hs)",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0ec578dc-4f4a-4c3b-8742-758803816a63",
+      "Nome": "Denise Da Costa Boamorte Cortela",
+      "Salario": 9556.61,
+      "Cargo": "Odontopediatra (N/S)-20Hs",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "222b2dcd-27c8-4f78-ba5d-d6ab2be83894",
+      "Nome": "Diana Carla Ferrari",
+      "Salario": 13336.93,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0aff39bc-ac84-4e05-8244-77dd9be8fa50",
+      "Nome": "Dilza Goncalves Peixoto",
+      "Salario": 8064.76,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a290b2af-a277-486d-930c-ebe56e4a142a",
+      "Nome": "Dimitria Dahmer Santos",
+      "Salario": 3850.0,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "13044f77-f2c6-49ad-ad4b-fbf9ee7a07d7",
+      "Nome": "Dinalva De Souza Farias",
+      "Salario": 3090.7,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9db2dd51-ec3b-4323-8bf5-916eb6bda39a",
+      "Nome": "Douglas Da Silva Magio",
+      "Salario": 11020.21,
+      "Cargo": "Farmacêutico-Bioquímico - 40H",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "cb813a73-f461-477f-bd7d-9128cfb38277",
+      "Nome": "Dwight Wellington De Campos Castrillon",
+      "Salario": 16560.5,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "50240b71-325f-4b72-b61c-4040c3c7ceff",
+      "Nome": "Dyone Rocha Teotonio",
+      "Salario": 10788.16,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "b82479d9-a01a-489f-a79e-bd33c803945a",
+      "Nome": "Edina Duarte Alves Costa",
+      "Salario": 5593.68,
+      "Cargo": "Atend.Consultorio Dentário(P/G)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "07c0fbef-b242-43c6-acf4-f63c3ac6f207",
+      "Nome": "Edina Gomes Dos Santos",
+      "Salario": 6143.98,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1de7453b-9b02-44c9-a8fe-9485a17eeea9",
+      "Nome": "Edna Aparecida Pinto Dos Passos",
+      "Salario": 7058.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "61279c39-9912-437c-9938-edc9413c4fa9",
+      "Nome": "Eduardo Alves Da Silva",
+      "Salario": 8098.56,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5eb157ff-6b4f-46c8-a357-f0a05bccaec9",
+      "Nome": "Elaine Alves De Carvalho",
+      "Salario": 5607.85,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "dbb887a7-e493-49db-8f85-be76c47a4cce",
+      "Nome": "Elaine Mendes Da Silva",
+      "Salario": 2095.2,
+      "Cargo": "Auxiliar De Saúde Bucal",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "316a8dff-386b-473c-9cb0-0eaba6bd043f",
+      "Nome": "Elaine Osinaga Silva",
+      "Salario": 1816.74,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "73798d27-c1fc-4476-85c0-4d6427ca4dfc",
+      "Nome": "Eliane Da Chaga Oliveira Campos",
+      "Salario": 6093.59,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6217c95a-bd80-4455-8f87-914a5aa384c7",
+      "Nome": "Eliesio Campos Arcanjo De Deus",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3120e182-7280-4ef0-93f4-40283537656f",
+      "Nome": "Eliete Baptista Mucari De Almeida",
+      "Salario": 3850.0,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1fd9aea8-3c1a-4684-92c1-ce25d68451ea",
+      "Nome": "Eliezer Augusto Cardoso",
+      "Salario": 9080.99,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "aeb2f5ba-61c2-429f-a98b-9e045ff53e31",
+      "Nome": "Elizamar Marcal De Araujo",
+      "Salario": 8337.39,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fe839e37-872c-41ef-970b-c4974977e382",
+      "Nome": "Emily Perez Prado",
+      "Salario": 6734.56,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "785a239d-87f8-4729-8c4e-149f6f644843",
+      "Nome": "Eonice Fernandes Da Silva",
+      "Salario": 6953.92,
+      "Cargo": "Auxiliar De Enfermagem(S/G)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "249411f2-6513-47f9-b1ea-bebf2971d07b",
+      "Nome": "Eranilce Ferreira Gomes",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "af4b9a80-eb9e-4789-9b2d-9d666736e4b4",
+      "Nome": "Estela Mara Brandini",
+      "Salario": 5695.86,
+      "Cargo": "Atend.Consultorio Dentário(P/G)",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0c238f9f-90cc-4ff8-9d19-e4c621e6fb1f",
+      "Nome": "Eucidina Gonçalves Marins Brunelli",
+      "Salario": 8547.09,
+      "Cargo": "Farmacêutico-Bioquímico - 40H",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "b44f0626-bc69-4a88-81b6-a2556079d381",
+      "Nome": "Eva De Fatima Duarte Artiaga",
+      "Salario": 7685.51,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2ca9b342-c275-452c-8bd0-61c881576ea9",
+      "Nome": "Evandro Regis De Lima",
+      "Salario": 12280.71,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d6793746-1e62-4c79-bbcd-44666b956c6b",
+      "Nome": "Evanice Pinto Do Nascimento Jatoba",
+      "Salario": 9915.73,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "18de4c7f-ada6-4718-8eed-c07aacf6e30c",
+      "Nome": "Evellyn Crystine Pessoa De Lima",
+      "Salario": 7058.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4fdcf00e-18cc-47c7-995a-c74c45214b1b",
+      "Nome": "Fabia Arruda De Souza",
+      "Salario": 5604.91,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5a2fdb9d-200c-456e-856c-69a600b75f02",
+      "Nome": "Fabiana Cunha Da Guia Pires",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "68c8f143-560e-4fd8-99f1-97adc585fd08",
+      "Nome": "Fabio Ferreira Landim",
+      "Salario": 7058.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "01f61cfe-b81d-482d-938f-c81534d11557",
+      "Nome": "Fernanda Castrillon Leiva Rolim",
+      "Salario": 3850.0,
+      "Cargo": "Medico(A) Clinico Geral N/S (20Hs)",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "ab0b452c-9628-43c3-bd59-c41b16d455b6",
+      "Nome": "Fernanda Nascimento De Oliveira",
+      "Salario": 11698.23,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "79dcf84d-c88f-4cf2-8532-068008aaaebe",
+      "Nome": "Fernanda Regina Viana De Oliveira",
+      "Salario": 2577.54,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "848e029c-6f81-4042-9d11-764499fe9f8d",
+      "Nome": "Flavia De Arruda Farias",
+      "Salario": 3900.14,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "461a96a2-ec31-43a5-9b22-e706910617f2",
+      "Nome": "Flavia Garcia Pires",
+      "Salario": 3348.44,
+      "Cargo": "Medico(A) Ginecologista Obstetra (N/S) - 10 Horas",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "53116adf-873a-413a-bab0-2bfd8358d46b",
+      "Nome": "Franciele Aparecida Ferraz Dos Santos",
+      "Salario": 7795.25,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5682b421-ab58-493a-a57a-aec9cca95387",
+      "Nome": "Francinne Strobel De Souza",
+      "Salario": 9633.92,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "637c9d60-ce9f-476d-a032-b8db045af885",
+      "Nome": "Genilson Ribeiro Da Silva",
+      "Salario": 7058.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "39fa8b5e-58f4-4c75-9b3f-7046995f5827",
+      "Nome": "Geruza De Souza Silva",
+      "Salario": 6601.48,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5b3050ce-0a3a-4abc-ae15-2c26ec7cb93c",
+      "Nome": "Giane Akimoto Furtado",
+      "Salario": 14706.6,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6bf42a3a-f92d-4d0d-9364-6bc97f01bce5",
+      "Nome": "Gilza Ferreira Gomes",
+      "Salario": 9235.61,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "b9993e94-3868-4a4a-a382-b01fdab504c7",
+      "Nome": "Gisele Santos Mendes De Oliveira",
+      "Salario": 4572.77,
+      "Cargo": "Atend.Consultorio Dentário(P/G)",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "59b8dfb0-5baf-45a3-91ea-410238962c8c",
+      "Nome": "Giselly Da Silva Lara Picada",
+      "Salario": 3850.0,
+      "Cargo": "Medico(A) Clinico Geral N/S (20Hs)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2abf2d67-bd6f-49f4-8e13-18f82a52fd4c",
+      "Nome": "Gislaine Keiko Nakata",
+      "Salario": 2095.2,
+      "Cargo": "Auxiliar De Saúde Bucal",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8fd9f8b8-df92-466a-8c47-a4d3be5142da",
+      "Nome": "Giulliano Luiz Da Silva Garcia",
+      "Salario": 7146.15,
+      "Cargo": "Coord. De Vigilância Em Saúde",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5f26a4bf-59a7-459b-85ba-759ad4713341",
+      "Nome": "Graziele Aguiar Dias",
+      "Salario": 14515.61,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fdd66e61-e07b-4163-a4db-16b05b8ac396",
+      "Nome": "Gregorio Garcia Lobato Lopez",
+      "Salario": 24042.39,
+      "Cargo": "Odontologo N/S (40Hs)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a88c9885-759a-4999-b830-9e22093875d2",
+      "Nome": "Guilherme Eclair Dos Santos Cardoso",
+      "Salario": 3491.52,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8538ecc8-10b7-4d36-ae30-a3fc76adfc2a",
+      "Nome": "Helena Goncalves Marins",
+      "Salario": 2020.36,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "177ba403-92fd-46a3-9b1a-f7ea602b85c9",
+      "Nome": "Helison Marcondes Pereira",
+      "Salario": 6417.35,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "28fc4982-2ac9-4316-a808-fbbebd442d2d",
+      "Nome": "Hellen De Souza Fernandes Dos Santos",
+      "Salario": 10982.67,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0de271c1-de84-447f-aa43-b272c1937c45",
+      "Nome": "Idilmara De Oliveira Campos",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1062b433-a496-4635-bc10-32867e4feb3f",
+      "Nome": "Iklifis De Oliveira Alves",
+      "Salario": 3484.71,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "ff046a03-ffc6-4869-8218-86e9738cadd8",
+      "Nome": "Isaura De Assuncao",
+      "Salario": 118.88,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4e086238-9f6d-4815-b92c-1485b119559d",
+      "Nome": "Ivanilda Inocencio Gomes",
+      "Salario": 8104.21,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "f15dd53a-5357-43b6-8c84-441c12f3a69c",
+      "Nome": "Ivoneide De Fatima Cespedes",
+      "Salario": 3678.62,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "27a34700-09b5-493a-9378-b2d3d9a20636",
+      "Nome": "Janaina Da Silva Machado",
+      "Salario": 7745.52,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "496b824c-2f2b-4e27-a59e-ce4ce36d5b9c",
+      "Nome": "Janaina Gomes Dos Santos",
+      "Salario": 9876.35,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4bbf62a1-983a-4791-ab8a-85246bf47e4a",
+      "Nome": "Janainna Valeria Duarte Freitas",
+      "Salario": 8908.91,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d54d1547-24ca-4ee8-ac05-fef3993f37ff",
+      "Nome": "Jeferson De Oliveira Silva",
+      "Salario": 12207.95,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "37d08444-fc2b-4fcb-9a4d-899f2b0839ed",
+      "Nome": "Jenniffer Thais Monaski Vila",
+      "Salario": 3801.69,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "517cab1b-84dc-4625-8a5c-a994ec1fe92d",
+      "Nome": "Jessica Do Espirito Santo Bernardo",
+      "Salario": 7949.06,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "7b0de037-72f1-4b98-b645-4e5a6f8ec796",
+      "Nome": "Jessica Kelly Almeida Rosa",
+      "Salario": 6734.56,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "79b7cdb6-6d91-4469-9a13-308245d654c8",
+      "Nome": "Jessica Oliveira Da Silva",
+      "Salario": 8671.41,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "18241d9f-be71-4f40-b1d0-73166e911f83",
+      "Nome": "Joana Darc Goncalves Rocha",
+      "Salario": 7415.73,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2747b382-2c9d-4392-8e8b-e367b6ab8503",
+      "Nome": "Joane Ramos Viana De Castro",
+      "Salario": 8418.24,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "56e19c08-846b-4c70-bf9a-aff195fbd822",
+      "Nome": "Joao Pedroso Lino",
+      "Salario": 6260.37,
+      "Cargo": "Auxiliar De Farmácia(S/G)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "bde66285-2502-44f5-b501-313be1ba121c",
+      "Nome": "Joao Victor Da Costa",
+      "Salario": 705.88,
+      "Cargo": "Odontologo N/S (40Hs)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d9aba809-2488-4e79-bf68-a5773a164837",
+      "Nome": "Jociana Da Silva Miranda",
+      "Salario": 3544.59,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "187f364a-a5a6-4f96-97c3-199706fb39f1",
+      "Nome": "Jociely Maria Mendes Da Silva",
+      "Salario": 15015.61,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "7bbcb913-d15f-4b0e-bc92-18f67afdfd0c",
+      "Nome": "Joeli Cassia Da Silva Magalhães",
+      "Salario": 6048.16,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3707912a-09fc-4e71-afa6-df4c0d3d4847",
+      "Nome": "Joelma Aparecida Da Silva",
+      "Salario": 8146.65,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "274791c0-58e7-4350-8775-69d14b137fce",
+      "Nome": "Joelma Moreira Brito",
+      "Salario": 7115.59,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a655fad4-6b81-479e-9b6c-ad96b2fb79e6",
+      "Nome": "Jones Angelo Bisinella",
+      "Salario": 8409.77,
+      "Cargo": "Medico(A) Clinico Geral N/S (20Hs)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "ab42691b-8a85-4da3-bc38-f32efaed99c6",
+      "Nome": "Jose Augusto Da Silva Garcia",
+      "Salario": 14038.65,
+      "Cargo": "Farmacêutico N/S (40Hs)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fbb27268-9c21-492f-8499-39877181fe4b",
+      "Nome": "Jose Erasmo Rodrigues Da Silva",
+      "Salario": 3804.06,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e980eca6-f215-4c18-89c1-2348628cac14",
+      "Nome": "Jose Flores Espinosa Neto",
+      "Salario": 3530.0,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "32b44340-36ee-4715-9def-8565c97efd1a",
+      "Nome": "Joselayne Loureiro De Moraes Borges",
+      "Salario": 4339.59,
+      "Cargo": "Medico(A) Clinico Geral N/S (20Hs)",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c55e4b9f-f9bb-494b-9ec6-4e4a09c89562",
+      "Nome": "Josiane Pires De Almeida",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "75ddec99-41e5-4bb6-b2b1-48c6960bcdca",
+      "Nome": "Josiane Simoes Dos Santos",
+      "Salario": 8397.58,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d14f9921-98ef-42fb-a455-b3088e3453f5",
+      "Nome": "Julio Cesar Da Cruz Lara",
+      "Salario": 9148.56,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "081242f1-69e4-4af1-a424-72df2f630f83",
+      "Nome": "Jussara Ramos Santos Evangelista",
+      "Salario": 14515.61,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "12f1c23c-b5e6-4ba6-bf29-c2a3c8bc2043",
+      "Nome": "Kamilly Vitoria Silva Da Conceicao",
+      "Salario": 3829.22,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c15b0984-2849-4fa8-99d8-425e9e48aa0b",
+      "Nome": "Karine Carrijo Batista",
+      "Salario": 7193.45,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "771d9e04-be49-4d33-91e7-0e11107946cb",
+      "Nome": "Karla Salviani Azeredo Santos",
+      "Salario": 7949.06,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "82e2595e-8c14-4a7c-ba69-43cac1822293",
+      "Nome": "Keiko Christie Hayashida Silva",
+      "Salario": 6668.36,
+      "Cargo": "Odontologo Clinico Geral (N/S) (20Hs)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "996ce360-8ab0-42aa-a4de-048b0b4056db",
+      "Nome": "Kelly Gomes De Oliveira",
+      "Salario": 7058.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0c391a6b-6280-4aa1-8561-ce7d9d3f645c",
+      "Nome": "Kenia Francisco Pereira De Matos",
+      "Salario": 3575.28,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "62ef233a-08ee-4714-8d07-7474219974e3",
+      "Nome": "Lauciene Vargas Pimentel",
+      "Salario": 7481.5,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3c514e53-42d6-4765-9734-985f9d405408",
+      "Nome": "Laura Do Prado",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "7928ff17-e73b-4fbf-b2be-90e511a4be5b",
+      "Nome": "Laura Maria Pereira Filsinger",
+      "Salario": 1826.98,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2c446df9-7520-469c-b948-ce36e73d8f13",
+      "Nome": "Lauro Sergio Aparecido Weber",
+      "Salario": 15007.06,
+      "Cargo": "Farmacêutico N/S (40Hs)",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c5d5c71f-2513-4f0b-968e-0b167cc51127",
+      "Nome": "Lecilda Souza De Lima",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "65dbe38d-9962-44a8-87bf-ff3d3e3d03d2",
+      "Nome": "Leiliane Muniz Fonseca",
+      "Salario": 9536.04,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "47f13238-71b3-4274-bd6b-e395558a4e1a",
+      "Nome": "Leonam De Miranda Feitosa",
+      "Salario": 7193.45,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1a173c9a-67cd-4b6e-9263-74872c3b9fc5",
+      "Nome": "Leonice Fernandes Da Silva",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "47769891-afc4-4082-aea8-9e434b651ef8",
+      "Nome": "Leonilce Pereira Da Silva",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a49894c0-6233-44f4-a351-8bb41ac310b7",
+      "Nome": "Leysiley Juliana Da Silva",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1bf469bc-3b2c-4959-b182-042d84fa70c0",
+      "Nome": "Luana Beraldi Da Silva",
+      "Salario": 7624.86,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e952c4a0-ce91-40fe-9c37-278eff17aea6",
+      "Nome": "Luana Franca Mendes",
+      "Salario": 8064.76,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "26408152-ccb7-4a4e-974f-0a8ab2862942",
+      "Nome": "Luciana Mitie Kawai Ahagon",
+      "Salario": 7058.76,
+      "Cargo": "Farmacêutico-Bioquímico - 40H",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c42ad5b4-300a-40f7-8090-ab2c3716eea4",
+      "Nome": "Luciene Geralda De Andrade Sousa",
+      "Salario": 6143.98,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "43ff5451-cd75-4b76-a9ac-f5b320e80be9",
+      "Nome": "Luciene Goncalves",
+      "Salario": 8064.76,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "396b12e4-8ecc-4e09-a046-7daae0e0cf0b",
+      "Nome": "Luciene Jose Cabral Venancio",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1c9a20c2-89e5-40ee-bcd1-7185c3722ede",
+      "Nome": "Lucilene Souza De Oliveira",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "41d2689e-2dac-4ef9-8342-5880c2202640",
+      "Nome": "Lucimar De Lara Aires Silvestre Dos Reis",
+      "Salario": 2945.9,
+      "Cargo": "Medico(A) Ginecologista Obstetra (N/S) - 10 Horas",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "848202cd-8d2e-47bb-832e-10833513d198",
+      "Nome": "Ludimila Tuani Ferreira Lemes",
+      "Salario": 5232.75,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8ac3f878-77c2-4042-89c0-60c6ab8892d8",
+      "Nome": "Luis Antonio Delgadillo Silva Roma",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5c9b47f8-2aa5-4f2e-9ed2-57ecea7cf19a",
+      "Nome": "Luis Reinaldo Candido",
+      "Salario": 9800.02,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "11671bf1-bd8d-42f6-90b3-9368886797fe",
+      "Nome": "Luiz Angelo Da Costa Antunes",
+      "Salario": 12382.35,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e3a4b7ec-02c3-429f-9326-e5b5de06485c",
+      "Nome": "Luiz Jorge Pereira Leite",
+      "Salario": 6542.75,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "06d7de8f-180e-4afe-b924-cbd61634ed62",
+      "Nome": "Luiz Roberto Delfim",
+      "Salario": 9531.07,
+      "Cargo": "Odontologo N/S (20Hs)",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8b3c00f4-617c-4682-9f5d-e05d56df5928",
+      "Nome": "Luiz Wilson De Lima Gusmao",
+      "Salario": 3838.67,
+      "Cargo": "Medico(A) Clinico Geral N/S (20Hs)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "055685ce-17db-4e0a-8e08-fd00e629a06d",
+      "Nome": "Luiza Carla De Souza Freitas",
+      "Salario": 3632.14,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1866e4ec-4e28-4017-83d9-e465355872bb",
+      "Nome": "Lutervania Do Nascimento Trocate",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4d2ae0e8-f663-4e04-88ac-2d808d7a9ce5",
+      "Nome": "Luzinete Aparecida Da Silva Lemes",
+      "Salario": 6287.16,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6b3be6cb-8dd1-440c-98e6-1052aee24bbe",
+      "Nome": "Luzinete Duarte Leite",
+      "Salario": 6069.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "034eccc0-17a0-48b4-bd01-f02b78035586",
+      "Nome": "Magna Souza Lima",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "ca8b8e36-26f4-4c29-a254-30a8d69247ee",
+      "Nome": "Mallory Sommerfeld De Lara",
+      "Salario": 7624.86,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0741b83e-28a9-4905-a972-f8f9110e20e0",
+      "Nome": "Mara Gracia Dos Santos Mello",
+      "Salario": 7576.4,
+      "Cargo": "Medico(A) Pediatra (N/S)-20Hs",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "46357ec8-29ee-4a6c-b506-bba92e6e0e9e",
+      "Nome": "Marcelo Poquiviqui",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9044da93-62ad-49f9-9021-76f4ce1ae29b",
+      "Nome": "Marcia Aparecida De Souza Meira",
+      "Salario": 6287.16,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "f3f6198c-b378-4bb4-a600-6f987157ac3c",
+      "Nome": "Marcia Maria Da Silva Ribeiro",
+      "Salario": 3484.71,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "215178ec-f15c-45da-a800-641ea2d73eac",
+      "Nome": "Marcia Rosa De Barros",
+      "Salario": 3257.77,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "909a6492-f0e4-4c00-af48-d55d160deac6",
+      "Nome": "Marciene Aparecida De Oliveira Nery",
+      "Salario": 4352.22,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e2b4f975-5f9f-47a9-a559-9cd480731e9c",
+      "Nome": "Marco Cesar Nelli",
+      "Salario": 7901.13,
+      "Cargo": "Endodontista (N/S)-20Hs",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0c9342c0-0e38-40b7-8c1d-36d0cb8d6154",
+      "Nome": "Maria Adalia Ramos Da Luz",
+      "Salario": 3484.71,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9e3bda37-f05d-4eae-ac88-1c29519b0a6e",
+      "Nome": "Maria Aparecida Gomes",
+      "Salario": 6814.94,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8e785e83-bc5f-4a68-8103-bc46a5efd4b3",
+      "Nome": "Maria Aparecida Ramos De Oliveira",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "46bb272d-7af9-4d80-a562-e69286040ffc",
+      "Nome": "Maria Euvanete Nunes Uchoa",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fe59e539-42ef-48ea-a6ec-101ef01d609f",
+      "Nome": "Maria Jose De Almeida",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "56ad2e5b-d1b3-4d23-a67f-399cc2b62dfb",
+      "Nome": "Maria Jose De Oliveira Neta",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9660444e-1cf2-46b0-93af-fdfec4ac5160",
+      "Nome": "Maria Jose Ferreira",
+      "Salario": 3530.0,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "99138368-bc4b-49d1-b5e6-a31400c7b719",
+      "Nome": "Maria Jose Leite Da Costa",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3cf08b1c-0151-42fa-a340-ede2cd29683e",
+      "Nome": "Maria Leiliane Da Silva Goncalves De Jesus",
+      "Salario": 3484.71,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "cb2daaf8-5a8f-466b-8a29-32b52fb5ae87",
+      "Nome": "Maria Makelly Amarante Miranda",
+      "Salario": 6976.99,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1ea154c5-0453-42df-ac67-ecfbc9b21dd2",
+      "Nome": "Maria Marta Da Silva",
+      "Salario": 7030.82,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3391940f-3fd5-48ad-94ff-388378d919b5",
+      "Nome": "Maria Solange Matias Dos Santos",
+      "Salario": 118.88,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "26ee070d-6d35-4df6-83c6-f3de55d3ab97",
+      "Nome": "Maria Teresa De Arruda E Silva Lace",
+      "Salario": 6063.04,
+      "Cargo": "Atend.Consultorio Dentário(P/G)",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d1865892-da60-4e35-abbb-a3e79c200c32",
+      "Nome": "Marileide Petronila Dos Santos",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "769ea409-fb4f-40be-bd17-937f38182d05",
+      "Nome": "Marione Martins Monteiro Da Silva Caceres",
+      "Salario": 11827.25,
+      "Cargo": "Farmacêutico N/S (40Hs)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2cc1392c-fd0d-4d24-9024-bd828f49bbdf",
+      "Nome": "Mayara Aparecida Bertoldo Constantino",
+      "Salario": 11651.45,
+      "Cargo": "Farmacêutico N/S (40Hs)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a40128cc-ceb0-4168-9b45-ede7f8a760fd",
+      "Nome": "Maycon Fabiano Ramos Cabrera",
+      "Salario": 3484.71,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "15c49060-1d03-41dc-86a1-bbc0fbd743d8",
+      "Nome": "Melissa Fabia Dias Moretto",
+      "Salario": 2646.03,
+      "Cargo": "Odontologo Clinico Geral (N/S) (20Hs)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "17dd4bcc-37ec-4145-aa69-87065188f41b",
+      "Nome": "Mery Estefane Da Silva Endlich",
+      "Salario": 7415.73,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c16a4b31-9383-42f2-b05e-103afb8b7853",
+      "Nome": "Michelle Da Silva Espirito Santo",
+      "Salario": 3850.0,
+      "Cargo": "Medico(A) Clinico Geral N/S (20Hs)",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5101b0c1-0f2e-4820-a26b-800ac9ba8c22",
+      "Nome": "Michelle Ferreira Azevedo Martins",
+      "Salario": 8825.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e041fc43-5a23-404a-b31d-21b8ac118650",
+      "Nome": "Millena Zabele Luiz Amorim",
+      "Salario": 3484.71,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2e0e7cee-8f4e-4af6-93cc-f177bed0fa47",
+      "Nome": "Mirtes De Jesus Da Gama Costa",
+      "Salario": 3328.46,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c790ac13-bd14-4b79-b1b1-2bfd7963a27c",
+      "Nome": "Moises Moretto",
+      "Salario": 6851.05,
+      "Cargo": "Odontologo Clinico Geral (N/S) (20Hs)",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e4340313-0a8f-4446-b99d-7a2b44486500",
+      "Nome": "Monica Heyduk",
+      "Salario": 7624.86,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "748fef12-93f8-4643-ac95-9651f1b7f0ca",
+      "Nome": "Nadir Rocha Para",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "485b267c-617e-4d33-bab1-19e01c9bebe5",
+      "Nome": "Nairly Vieira De Melo",
+      "Salario": 6426.53,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "ba87085b-ebbe-4291-b5a6-bd8fbc88c37f",
+      "Nome": "Natalia Da Silva Nunes",
+      "Salario": 7624.86,
+      "Cargo": "Farmacêutico-Bioquímico - 40H",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "03315be9-e4ce-4147-9845-01e332559fc0",
+      "Nome": "Nathalia De Cassia Celestino Dos Santos",
+      "Salario": 7193.45,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "56b86c87-59b0-4c9a-8d34-118cc1a851f2",
+      "Nome": "Nathienne Aparecida Silva Pinto",
+      "Salario": 11827.25,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3a0c312e-ae1b-461e-a48e-0236ca2d1c2b",
+      "Nome": "Natália Lopes Rodrigues Siqueira",
+      "Salario": 7475.35,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c9706c93-3a72-4a5f-af14-7eb2fbb537cc",
+      "Nome": "Neide Da Silva Oliveira",
+      "Salario": 7613.9,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6cdf745b-4cec-4795-a85e-221862fee7b2",
+      "Nome": "Nereida Albertina Gomes De Arruda",
+      "Salario": 16475.57,
+      "Cargo": "Medico(A) Cardiologista (N/S) - 20Hs",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d7f402c1-828c-4ea6-8083-5fc2a479bc1d",
+      "Nome": "Neuliane Da Silva",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "f0f6c4ed-cedc-4c1c-870e-a69d5b549048",
+      "Nome": "Nilson Edmundo De Moraes Junior",
+      "Salario": 11875.34,
+      "Cargo": "Odontologo N/S (40Hs)",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e045666a-113a-4e12-8b4b-152cfd4737a5",
+      "Nome": "Nilson Martins Magalhaes",
+      "Salario": 7830.96,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8fa54336-7f25-48fc-8966-d11fd2fef6b1",
+      "Nome": "Odethe Ferreira De Oliveira",
+      "Salario": 3472.76,
+      "Cargo": "Auxiliar De Saúde Bucal",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "067cc9be-e0c5-4e66-893d-df22b8fc4af1",
+      "Nome": "Pamela Pereira Dos Santos",
+      "Salario": 2162.74,
+      "Cargo": "Auxiliar De Saúde Bucal",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c9a635f2-e988-43ce-83e9-2a9355893b66",
+      "Nome": "Pamella Gattass Morais",
+      "Salario": 15088.59,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "96654b26-fcdf-4c04-aec0-590bc5a4c633",
+      "Nome": "Patricia Ferreira Da Silva",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "80f7f02c-9c72-4e9f-8c4d-ba8acb3e3288",
+      "Nome": "Pedro Luiz Bezerra Moron",
+      "Salario": 14515.61,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "79328cb3-8c6a-4bdf-b049-edae29b44e86",
+      "Nome": "Pedrosa Maria De Almeida",
+      "Salario": 7325.8,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "0277d51c-e275-49bd-8976-cc659bd758d5",
+      "Nome": "Rafael Henrique De Arruda Botelho",
+      "Salario": 8248.07,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "71e4452a-6c34-4414-ab40-c407318c81ff",
+      "Nome": "Rafaela Vila Ramos Pereira De Faro",
+      "Salario": 14067.72,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "594d2657-bffd-42db-85a3-809b6cc61c8f",
+      "Nome": "Raquel Gomes De Moraes",
+      "Salario": 16414.43,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "cd16ef5b-ae3b-46e5-8cf3-0b281221bddd",
+      "Nome": "Regiane Aparecida De Almeida Rodrigues",
+      "Salario": 6426.53,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "88c6a2e2-6491-4b79-bc0f-07335012e172",
+      "Nome": "Reinan Ramos Da Silva",
+      "Salario": 1976.33,
+      "Cargo": "Auxiliar De Saúde Bucal",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "7b652ca2-57c8-4b95-9592-b4f95d901819",
+      "Nome": "Renan Da Silva Alcantara",
+      "Salario": 7058.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5b0cd94b-2fc8-40c1-96d3-e12f2bcc7c2f",
+      "Nome": "Renata Alice De Freitas",
+      "Salario": 7193.45,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "b0d2ea15-ff67-4fee-9228-65877772d9a4",
+      "Nome": "Renata Carrelo Da Costa",
+      "Salario": 8511.08,
+      "Cargo": "Psicologo N/S (20Hs)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8d70af9f-8ba0-40a0-822f-ba1bbaeda281",
+      "Nome": "Renata Gomes De Oliveira Lima Moran",
+      "Salario": 6577.01,
+      "Cargo": "Odontopediatra (N/S)-20Hs",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "053732fd-92e0-4608-8bc0-0386b6235486",
+      "Nome": "Renata Serafim Espindola",
+      "Salario": 8910.8,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "656ab96f-c174-425e-a4c5-e63f574a515e",
+      "Nome": "Rita Stephani Rocha Tubino",
+      "Salario": 8407.29,
+      "Cargo": "Periodentista (N/S)-20Hs",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d8e28871-8a57-4160-a74d-789eba04715b",
+      "Nome": "Rodrigo Antonio Mancuso",
+      "Salario": 17567.09,
+      "Cargo": "Odontologo N/S (40Hs)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "033b2b90-680e-432a-9055-9ebbd1f1e376",
+      "Nome": "Rodrigo Gomes Guimaraes",
+      "Salario": 3850.0,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3686c80b-fdac-4d4b-99bd-a75eb441e971",
+      "Nome": "Rogerio Dias Da Cunha Ramsdorf",
+      "Salario": 12506.17,
+      "Cargo": "Farmacêutico N/S (40Hs)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "da278ae2-f66a-4ab4-8d07-da573acc1354",
+      "Nome": "Ronilson Do Couto Costa",
+      "Salario": 7193.45,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "34c04d68-e652-488c-94d8-d20b04af4706",
+      "Nome": "Roosevelt Ramsay Torres Junior",
+      "Salario": 21936.64,
+      "Cargo": "Medico(A) Ortopedista (N/S) 20Hs",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "465c08ec-7af6-41a2-973a-3d5160bef94e",
+      "Nome": "Rosana Dos Santos Pereira",
+      "Salario": 7415.73,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a0727920-35fa-4004-8636-6ecc3875f4fb",
+      "Nome": "Rosangela Da Silva Tavares",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "16f72a10-fc9a-4e73-9f81-d5e477c53559",
+      "Nome": "Rosemar Aparecida Sampaio",
+      "Salario": 7655.1,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "bad77fae-1414-4fa1-be17-9c2cc81ac2f2",
+      "Nome": "Rosiane Martins Cardozo",
+      "Salario": 5270.7,
+      "Cargo": "Atend.Consultorio Dentário(P/G)",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "612982a6-e61c-4b16-8c45-0af02263d84a",
+      "Nome": "Rosieli Rodrigues De Oliveira",
+      "Salario": 3842.2,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "18554eab-4034-4e83-ae4b-dd311f638d97",
+      "Nome": "Rosineia De Paula",
+      "Salario": 851.08,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9662e024-9102-4bc6-b7d5-f11edd0db784",
+      "Nome": "Roster Pereira Leite",
+      "Salario": 8340.53,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "99008921-05c5-4d34-9417-c19c0b7b1034",
+      "Nome": "Samara Barbara Do Nascimento Dias",
+      "Salario": 7058.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e62f82e0-203b-4441-bd82-d03f90b906cd",
+      "Nome": "Sandra Mara Fernandes Bonilha",
+      "Salario": 9794.68,
+      "Cargo": "Enfermeiro(A) N/S-(20Hs)",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "cc27c34d-7ddf-4981-b21f-0e1a9cb8a9ff",
+      "Nome": "Sandra Regina De Carvalho",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2083d10c-8d7a-4d73-aa4a-f9a3208d696d",
+      "Nome": "Sebastiao Egues Dorado",
+      "Salario": 16175.91,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "95545d2b-fd1f-4b4f-aec8-05b6200de4c1",
+      "Nome": "Shaiana Vilella Hartwig",
+      "Salario": 9941.13,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a2635eee-8fe1-4fa7-bbde-8b90d62dca7f",
+      "Nome": "Silvana Dias Tussues Do Nascimento",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a057a51a-e62a-421c-9f49-ebb86aea6812",
+      "Nome": "Silvia Helena Franco De Oliveira",
+      "Salario": 12207.95,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "85c242bf-e575-4f56-9f42-33c4c6ea8a9f",
+      "Nome": "Silvia Roberta Pereira De Jesus Ortiz",
+      "Salario": 6840.66,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "afc6d173-ff29-4bd5-8e23-e85c25621445",
+      "Nome": "Simone Castrillon Leiva Rolim",
+      "Salario": 19062.16,
+      "Cargo": "Odontologo N/S (40Hs)",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3ba4dcb9-cfa2-43bc-bddc-f27dcfd3f75c",
+      "Nome": "Simone Lopes Motta",
+      "Salario": 3266.49,
+      "Cargo": "Atend.Consultorio Dentário(P/G)",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "5d498f70-649a-45c9-ae17-c3c355762936",
+      "Nome": "Sonia Cristina De Oliveira",
+      "Salario": 10869.38,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2f7ae1cd-ae2e-40e7-9800-f0ed095380c3",
+      "Nome": "Sonia Maria Miranda De Lima",
+      "Salario": 6930.58,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "68088c46-727e-4035-ab3a-954e81babddf",
+      "Nome": "Stefanny Maria Santana De Campos",
+      "Salario": 7545.15,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "c3111127-b634-4897-821f-b41a2ddb5d68",
+      "Nome": "Sueli Paula De Oliveira",
+      "Salario": 3939.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "003d9423-4cdf-49c6-802b-c35d1341c6e8",
+      "Nome": "Suellen Benta Da Silva",
+      "Salario": 3484.71,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "6d98c330-faa8-4149-b5c0-34fb9ebeaf38",
+      "Nome": "Suzana Garcia Araujo Nunes",
+      "Salario": 9531.07,
+      "Cargo": "Odontologo N/S (20Hs)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "b7a2545a-a9e7-4384-8638-6bb71227f707",
+      "Nome": "Suzilene Szubris Da Silva",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9e372de3-2c35-476d-826d-203ed0bb1050",
+      "Nome": "Tammy Dos Santos Alvares Costa",
+      "Salario": 19062.16,
+      "Cargo": "Odontologo N/S (40Hs)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e3164eb0-5ea9-498f-ad96-a264627aa2c9",
+      "Nome": "Tatiane Amorim De Matos",
+      "Salario": 16346.45,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3d96aa9f-271e-42c4-bb34-83870ed83562",
+      "Nome": "Tatiane Maciel Pessoa",
+      "Salario": 2588.35,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "f668e5fc-c0b8-457c-b880-91b5f8c3704f",
+      "Nome": "Tatiane Mussato De Candio",
+      "Salario": 5010.09,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fea7061b-902b-45b1-ba32-0183c997b2eb",
+      "Nome": "Tatiane Pinow Camini",
+      "Salario": 4039.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "bdad1605-39b5-45c3-9324-51e4ded43aad",
+      "Nome": "Teresinha Maria De Oliveira",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "2c8463e0-92cd-4e68-8cfa-cc00dbbb71c4",
+      "Nome": "Tereza Helena De Jesus",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a29e0ea9-2c8c-4b87-bc10-082c4df32ca7",
+      "Nome": "Thaina Marcia Da Silva",
+      "Salario": 7058.76,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d5f64c34-519c-456c-9e2c-e3932273f14d",
+      "Nome": "Thais Dayana Da Silva",
+      "Salario": 13336.93,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "9e4ffc87-94c4-407e-882b-4b9405cf5f74",
+      "Nome": "Thais Laet Santos",
+      "Salario": 7193.45,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "8f77a789-9092-408c-a902-af94c86ee62c",
+      "Nome": "Thales Sullivan Dos Reis Alves",
+      "Salario": 3530.0,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "58ae8f38-3d3a-4744-a46a-e8d13c7afc3d",
+      "Nome": "Thiago Nespoli",
+      "Salario": 11588.41,
+      "Cargo": "Fisioterapeuta N/S (40Hs)",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1655f115-e221-4885-b928-6a7ddf9065a6",
+      "Nome": "Thiago Zanata",
+      "Salario": 8053.16,
+      "Cargo": "Enfermeiro(A) N/S-(40Hs)",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "cfbb3303-a83f-4442-81e9-565178ac74ee",
+      "Nome": "Thuane Monteiro De Brito",
+      "Salario": 2162.74,
+      "Cargo": "Auxiliar De Saúde Bucal",
+      "EsfId": "a9050019-739d-42b1-8b1f-6946a425bb5b",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "a81a9aa2-3e44-42af-979d-a76f451f191d",
+      "Nome": "Tiago Bottari",
+      "Salario": 7751.06,
+      "Cargo": "Farmacêutico-Bioquímico - 40H",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e473ddf0-224e-4354-bf42-a61f3225482a",
+      "Nome": "Valciele Aparecida Jesus Da Silva",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "de0f584c-4837-48d8-9d22-ecdc42e4c420",
+      "Nome": "Valdecia Cuiabano Da Silva Tavares",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "17cdb941-21cd-45d7-b8ee-b19a95e808a9",
+      "Nome": "Valdineia Leite De Campos",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4a4ef0ec-4067-415e-9f1f-44c74563096a",
+      "Nome": "Valquiria Maria De Oliveira",
+      "Salario": 7058.76,
+      "Cargo": "Farmacêutico-Bioquímico - 40H",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "68beba03-c57f-42f1-88f3-ef18a77f504b",
+      "Nome": "Vanessa Fonseca Rodrigues",
+      "Salario": 1621.0,
+      "Cargo": "Gerência Do Centro De Especialidades Médicas - Cem",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "db062f45-6d2e-4e47-b878-e838b8ba9d8c",
+      "Nome": "Vania Da Conceição Soares",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "33fa48cd-117f-454c-a8c7-ce62a803c7b6",
+      "Nome": "Vania Lourenca De Campos",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "39f1fc2a-c903-4059-b40f-1aedd0c3d96e",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "d15dc8ab-7a22-4061-9652-5770984299c4",
+      "Nome": "Vera Lucia Correia",
+      "Salario": 3439.43,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "331dd025-f78d-4302-849f-a86166130439",
+      "Nome": "Veronica Maldonado Vieira",
+      "Salario": 7475.35,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "78d7783c-1c06-4e50-b5fb-e921e3125202",
+      "Nome": "Veronica Palmiro Da Silva E Lima",
+      "Salario": 1161.01,
+      "Cargo": "Medico(A) Clinico Geral (N/S) - 10 Horas",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e6d5899f-d3cb-4ba3-b4dd-e42059eeb7a2",
+      "Nome": "Veronica Soares De Oliveira Fernandes",
+      "Salario": 7624.86,
+      "Cargo": "Psicologo N/S (40Hs)",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "ab28013f-ba9b-4f0e-8d39-0251d502c295",
+      "Nome": "Verusca Messias Pinha",
+      "Salario": 1078.9,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "ea28bc65-28d1-4b53-9e44-e3f96c7ec031",
+      "Nome": "Vicente De Paulo Moreira Nunes",
+      "Salario": 7942.56,
+      "Cargo": "Odontologo N/S (20Hs)",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "fea6286b-e4a1-4dd8-98e9-d150366b6bd0",
+      "Nome": "Vilma De Fatima Ferreira Mendes",
+      "Salario": 6985.34,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "21f3ce79-b74d-4221-a95f-a5bedc23d658",
+      "Nome": "Vilmar Queiroz De Menezes",
+      "Salario": 3291.43,
+      "Cargo": "Medico(A) Cardiologista (N/S) - 10 Horas",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "78a50720-05e8-431a-aa23-973a1c29bb6b",
+      "Nome": "Vivian Cebalho Pereira",
+      "Salario": 8033.12,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "04f860fb-500e-4ad0-abff-aba4f06c19a2",
+      "Nome": "Vivian Thais Tiecher Simiao",
+      "Salario": 8340.53,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "3cb88814-54af-4c3c-b5c7-c6d347cbee04",
+      "Nome": "Waneska Pinto Mota De Souza",
+      "Salario": 7097.8,
+      "Cargo": "Odontologo N/S (20Hs)",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "019e5145-fd5d-43c2-82da-a967bafa331c",
+      "Nome": "Wemerson Goncalves Dos Santos",
+      "Salario": 4073.39,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "4ae765a0-c9ff-4d4b-8822-51604ea9b98c",
+      "Nome": "Weslainne De Paula Dos Reis Vieira",
+      "Salario": 3566.2,
+      "Cargo": "Agente Comunitario De Saude",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "75121d22-f42b-4a95-ac96-bdfe186174a2",
+      "Nome": "Willer Raimundo Aniceto",
+      "Salario": 7685.51,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "1f1e3988-6c80-475b-bb0f-8dddd312b24f",
+      "Nome": "William Bezerra Cardoso",
+      "Salario": 7235.02,
+      "Cargo": "Tecnico Em Enfermagem(S/G.T)",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    }
+  ],
+  "Categorias": [
+    {
+      "Id": "31dcf01c-566b-4b48-8ba5-5939115e84a1",
+      "Nome": "Farmacia",
+      "Tipo": "DESPESA",
+      "Descricao": "Medicamentos e insumos",
+      "OrcamentoMensal": 45000.0,
+      "Cor": "#dc3545",
+      "Icone": "oi-heart",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "e22f3081-6770-43af-99cb-b0cf08976a14",
+      "Nome": "Manutencao Predial",
+      "Tipo": "DESPESA",
+      "Descricao": "Reformas e reparos nas unidades",
+      "OrcamentoMensal": 25000.0,
+      "Cor": "#fd7e14",
+      "Icone": "oi-wrench",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "98cfbc15-1199-4c11-80d2-b15c9b45ddfc",
+      "Nome": "Contas Fixas e Utilidades",
+      "Tipo": "DESPESA",
+      "Descricao": "Energia elétrica, água e telecomunicações",
+      "OrcamentoMensal": 18000.0,
+      "Cor": "#0dcaf0",
+      "Icone": "oi-flash",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "47cba7dd-b608-4f98-8f5f-cb051ee0f001",
+      "Nome": "Saude Bucal",
+      "Tipo": "DESPESA",
+      "Descricao": "Insumos e equipamentos odontológicos",
+      "OrcamentoMensal": 12000.0,
+      "Cor": "#20c997",
+      "Icone": "oi-medical-cross",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    },
+    {
+      "Id": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "Nome": "Custeio e Expediente",
+      "Tipo": "DESPESA",
+      "Descricao": "Materiais de limpeza, expediente e serviços",
+      "OrcamentoMensal": 15000.0,
+      "Cor": "#6f42c1",
+      "Icone": "oi-clipboard",
+      "CreatedAt": "2026-01-01T10:00:00Z",
+      "UpdatedAt": "2026-01-01T10:00:00Z"
+    }
+  ],
+  "Fornecedores": [
+    {
+      "Id": "50f2e843-bc22-496d-bc75-b8f21dbbf43c",
+      "RazaoSocial": "Daiane Dantas Da Silva Oliveira Laboratorio",
+      "NomeFantasia": "Daiane Dantas",
+      "Cnpj": "22.643.744/0001-67",
+      "Telefone": "(65) 3223-1500",
+      "Email": "licitacao@caceres.mt.gov.br",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "RazaoSocial": "Consorcio Intermunicipal De Saude Do Oeste De Mato",
+      "NomeFantasia": "Consorcio Intermunicipal",
+      "Cnpj": "01.870.663/0001-20",
+      "Telefone": "(65) 3223-1500",
+      "Email": "licitacao@caceres.mt.gov.br",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "RazaoSocial": "Linehosp Medical Comercio De Produtos Hospitalares",
+      "NomeFantasia": "Linehosp Medical",
+      "Cnpj": "38.370.336/0001-19",
+      "Telefone": "(65) 3223-1500",
+      "Email": "licitacao@caceres.mt.gov.br",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "e0acdc0c-16b9-4782-b0ab-092ffad71a23",
+      "RazaoSocial": "Associacao Pro Saude De Quatro Marcos",
+      "NomeFantasia": "Associacao Pro",
+      "Cnpj": "07.469.459/0001-88",
+      "Telefone": "(65) 3223-1500",
+      "Email": "licitacao@caceres.mt.gov.br",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "270a7a31-a5e4-467d-bcc5-7525a1572175",
+      "RazaoSocial": "Construtora Soberana Ltda",
+      "NomeFantasia": "Construtora Soberana",
+      "Cnpj": "33.075.863/0001-87",
+      "Telefone": "(65) 3223-1500",
+      "Email": "licitacao@caceres.mt.gov.br",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "6b0606f7-ee41-4766-af14-96948b347c86",
+      "RazaoSocial": "Interlimp Servicos Tercerizados Ltda",
+      "NomeFantasia": "Interlimp Servicos",
+      "Cnpj": "05.042.708/0001-29",
+      "Telefone": "(65) 3223-1500",
+      "Email": "licitacao@caceres.mt.gov.br",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "6ed10745-7f3a-41ae-828e-9898e1e0eda7",
+      "RazaoSocial": "Favorita Consultoria E Servicos Ltda",
+      "NomeFantasia": "Favorita Consultoria",
+      "Cnpj": "44.052.064/0001-01",
+      "Telefone": "(65) 3223-1500",
+      "Email": "licitacao@caceres.mt.gov.br",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "c99b8ce9-60e4-439f-b7e7-f066cde8049c",
+      "RazaoSocial": "Viegas Comercio De Alimentos Ltda",
+      "NomeFantasia": "Viegas Comercio",
+      "Cnpj": "31.156.604/0001-55",
+      "Telefone": "(65) 3223-1500",
+      "Email": "licitacao@caceres.mt.gov.br",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "5c5021b7-e3ac-4b5f-883b-024709894a80",
+      "RazaoSocial": "Sesi - Servico Social Da Industria",
+      "NomeFantasia": "Sesi -",
+      "Cnpj": "03.819.157/0011-03",
+      "Telefone": "(65) 3223-1500",
+      "Email": "licitacao@caceres.mt.gov.br",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    }
+  ],
+  "Despesas": [
+    {
+      "Id": "6caf4422-51ac-499b-8fde-37869d57a51f",
+      "Descricao": "302 - 3.3.90.39.50 - Inexigibilidade",
+      "Valor": 137374.18,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "50f2e843-bc22-496d-bc75-b8f21dbbf43c",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "341979f8-cdb8-4816-97b5-ab3661dcfda6",
+      "Descricao": "301 - 3.3.72.37.01 - Dispensa",
+      "Valor": 620000.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "70ad5832-93ab-4986-8b34-6533b17428fc",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 464000.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "6b54d9a1-e767-4ea1-a78d-c9da07c9abba",
+      "Descricao": "301 - 3.3.72.37.01 - Dispensa",
+      "Valor": 47300.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "ec803d37-8a04-4f11-948e-322353ea14cd",
+      "Descricao": "304 - 3.3.90.30.35 - Pregão Eletrônico",
+      "Valor": 1760.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "b49ae0a6-c183-4c03-998f-5c229d4a6bee",
+      "Descricao": "302 - 3.3.90.34.02 - Pregão Presencial",
+      "Valor": 39036.18,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0acdc0c-16b9-4782-b0ab-092ffad71a23",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "bbe39af8-53f2-494f-aa72-d05318c83302",
+      "Descricao": "302 - 3.3.90.34.02 - Pregão Presencial",
+      "Valor": 39036.18,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0acdc0c-16b9-4782-b0ab-092ffad71a23",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "66bbd953-9a12-48b1-95fe-52645eab68e7",
+      "Descricao": "303 - 3.3.90.30.09 - Pregão Eletrônico",
+      "Valor": 107670.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "f4ad8f95-ccac-4708-9e6f-c4571cb702ce",
+      "Descricao": "302 - 3.3.90.30.09 - Pregão Eletrônico",
+      "Valor": 4590.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "e72e71f8-8e9a-4391-8a72-0de76f717517",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 13300.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "09499e79-2242-4760-b6c0-bff263cb474d",
+      "Descricao": "302 - 4.4.90.52.08 - Pregão Eletrônico",
+      "Valor": 2850.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "a16b3387-71d5-48be-a3d2-1b1ff06b29a4",
+      "Descricao": "304 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 15500.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "09be62c5-609d-4f77-8aa0-dbd8758a8a45",
+      "Descricao": "302 - 3.1.71.70.01 - Dispensa",
+      "Valor": 247273.35,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-02-01T00:00:00Z",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "d1b3219a-0a52-48d7-a752-3e1c951ea43d",
+      "Descricao": "302 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 850.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "7059bcea-360a-46bb-a4e0-af662910d65d",
+      "Descricao": "302 - 3.3.71.70.01 - Dispensa",
+      "Valor": 3866.65,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-03-01T00:00:00Z",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "253f71a4-3911-4c90-9ff2-91162a52e01d",
+      "Descricao": "303 - 3.3.90.30.09 - Pregão Eletrônico",
+      "Valor": 59300.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "57f56697-560f-4875-8c45-f4bce806b550",
+      "Descricao": "303 - 3.3.90.30.09 - Pregão Eletrônico",
+      "Valor": 76710.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "10d44d75-c28a-467f-afc3-599aa01fa1bd",
+      "Descricao": "304 - 3.3.90.39.16 - Pregão Eletrônico",
+      "Valor": 18676.3,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "270a7a31-a5e4-467d-bcc5-7525a1572175",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "85b9a6f6-d142-47b3-94cc-428bf1d1fc91",
+      "Descricao": "304 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 2275.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "32454235-9cd3-4a09-bc5e-6993cee61995",
+      "Descricao": "303 - 3.3.90.30.09 - Pregão Eletrônico",
+      "Valor": 7200.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "89ba0881-a775-4b50-92d3-175409c9757c",
+      "Descricao": "302 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 2310.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "45842a36-8415-4212-a9b0-397d21ac9e20",
+      "Descricao": "302 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 4150.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "1066d4de-f7cc-4c23-8aaa-f692a579c560",
+      "Descricao": "302 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 425.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "cbae3c8d-9608-46c9-a512-28bbcf1191fa",
+      "Descricao": "302 - 3.3.72.39.33 - Dispensa",
+      "Valor": 102600.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "7ab8d605-69df-49b2-97db-5a37050874fe",
+      "Descricao": "302 - 3.3.71.70.01 - Outro Não Aplicável",
+      "Valor": 57141.42,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-10-01T00:00:00Z",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "7557106b-0a90-4e88-912a-cdde2c895606",
+      "Descricao": "301 - 3.3.72.37.01 - Dispensa",
+      "Valor": 274400.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "d4d24381-2ce7-43a3-8fd1-43f0be789fdf",
+      "Descricao": "302 - 3.3.90.30.10 - Pregão Eletrônico",
+      "Valor": 3200.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "dfe76ca9-79eb-4e84-b9b9-c75b61e9f30e",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 178580.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "d50d8da9-df87-429f-ba1c-68538b9f9fe5",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 60030.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "1b183f85-eb1b-4f02-af4f-c4acb67224f9",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 30250.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "8242c750-9506-4a48-9877-8c52bba8130f",
+      "Descricao": "301 - 3.3.72.37.01 - Dispensa",
+      "Valor": 296472.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "b2de6635-9b9f-40bd-ba4f-c71eeefc6e71",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 196070.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "9f8a4390-e048-4b24-975d-db0c8ec348c9",
+      "Descricao": "302 - 3.3.90.39.50 - Inexigibilidade",
+      "Valor": 78376.3,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "50f2e843-bc22-496d-bc75-b8f21dbbf43c",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "3ffff707-0929-4e6d-b444-db98b6081e2c",
+      "Descricao": "302 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 25700.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "9384d885-60ff-4dd9-9af3-99855c3dc345",
+      "Descricao": "302 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 65880.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "88fc2c0c-e1e4-408a-93ed-df42d72d5b92",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 72650.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "0af18070-1b82-45b0-9a99-4f4db894933c",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 5130.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "b72d5144-f13e-4ac0-8ef9-ae682eb63258",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 21870.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "20c70ab6-c8c1-4e2a-bc00-60e95bd66607",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 15390.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "4d3df49f-96de-4bcf-bec4-4fc8035f7846",
+      "Descricao": "301 - 3.3.90.39.79 - Pregão Eletrônico",
+      "Valor": 113024.37,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "6b0606f7-ee41-4766-af14-96948b347c86",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "fb1113d6-cb07-472c-acb8-abc5d47399f1",
+      "Descricao": "301 - 3.3.72.37.01 - Dispensa",
+      "Valor": 131400.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "3a0b0944-829c-47be-964f-80ce22f43008",
+      "Descricao": "301 - 3.3.72.37.01 - Dispensa",
+      "Valor": 441000.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "148d56f7-1b4f-4afc-befb-5a72d951092e",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 29400.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "d89f74c2-b2c8-4b2a-bf90-6a22e41b6e3d",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 143910.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "13b08425-9e94-4ed3-adbc-9c4fa4d2b9be",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 77820.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "f465a196-399b-4ccf-a1c1-26dc8d068fb6",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "1d666879-dc61-418c-aa63-2ff69887db5b",
+      "Descricao": "304 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 5100.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "cc122773-2db0-4892-a71d-d609537de22f",
+      "Descricao": "301 - 3.3.90.35.03 - Pregão Eletrônico",
+      "Valor": 89625.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "761b2b43-0bfd-4695-98ff-1fd88e0b221d",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "6ed10745-7f3a-41ae-828e-9898e1e0eda7",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "da560576-86af-4090-8f0a-69c1f7900a13",
+      "Descricao": "302 - 3.3.72.37.07 - Dispensa",
+      "Valor": 123000.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "6d8a6cf1-3e1c-47fc-9706-993ff48d6a3f",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 7300.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "b8f9a14e-1ba3-4d13-a748-75792a1ac3e5",
+      "Descricao": "302 - 4.4.90.52.35 - Pregão Eletrônico",
+      "Valor": 22200.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "848e754f-6b1c-4aab-b301-d361bb3f8520",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 52020.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "5011be96-e015-4067-9b0f-2115045fa245",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "c7e04fc8-d160-462e-a32a-c42415a2fc3b",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 62010.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "3a5dd481-e42e-40ac-9830-b63e37ea2e42",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "cd16e9e8-4fac-4b8c-8399-28abfdddbba7",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 116880.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "83cf67d5-194c-4406-9f64-a8e18bc53f51",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 97260.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "4ee012a3-6044-4dbd-bcd2-0c2b4d7535f5",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 51625.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "5fad12ab-0b5a-4f78-a802-e1f8a1228ecf",
+      "Descricao": "302 - 3.3.90.30.22 - Pregão Eletrônico",
+      "Valor": 15745.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "ebafce87-a85a-45c5-9d8e-07ff966b0439",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 39900.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "3ca94558-2f9e-4bdb-89c0-08ed902dbf2c",
+      "Descricao": "301 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 30050.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "a75a1463-ce47-4e2d-b2e5-2e676bb05dab",
+      "Descricao": "305 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 800.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "6c2764f4-c62b-4416-ba9d-441e9ac60459",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "0c7b8870-2aec-43fe-8f0c-d28864f24d02",
+      "Descricao": "301 - 3.3.72.37.01 - Dispensa",
+      "Valor": 499800.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "610e6ed6-f01c-43ed-b24f-e04f3d4e7308",
+      "Descricao": "301 - 3.3.72.37.01 - Dispensa",
+      "Valor": 940000.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "8b2e158e-4023-45ac-90bd-1909b589d3d4",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "51a7994c-0126-4ed1-a3db-3e5dbe8da454",
+      "Descricao": "302 - 3.3.71.70.01 - Dispensa",
+      "Valor": 93032.01,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-10-01T00:00:00Z",
+      "EsfId": "fd24fadd-931e-497c-86be-662276ad8167",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "77922a39-e317-4c30-ad7b-98ed875c356f",
+      "Descricao": "302 - 3.1.71.70.01 - Dispensa",
+      "Valor": 70682.68,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "98751477-8bba-4719-ab4d-c188d22fed78",
+      "Descricao": "301 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 38500.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "ec982973-e5e2-4f31-9656-376e28388c72",
+      "Descricao": "302 - 3.3.72.39.79 - Dispensa",
+      "Valor": 19620.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "bf23c755-8ae0-4bdc-bd9f-6f00f8d9c5fb",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "9c955d64-f0da-408c-a9a1-1773ff482b62",
+      "Descricao": "302 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 16530.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "0b3e1f8f-5b75-463f-af58-82f649420edb",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 4560.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "b9d53b29-e580-4021-b0a0-8fbf1f3850d4",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "69fb16ba-0f4f-46fb-b629-ed23902d201c",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 3450.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "5b0098df-098e-4c2d-9ea1-4756d94e26fd",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 32040.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "ea218ccb-26fd-41e9-ad3b-aa4d20101b25",
+      "Descricao": "304 - 3.3.90.37.01 - Dispensa",
+      "Valor": 49875.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "0524cb18-ef71-4779-916a-5abe636e7f25",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "9654f30b-67a6-4751-8490-ca7993335187",
+      "Descricao": "301 - 3.3.72.37.01 - Dispensa",
+      "Valor": 115560.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "d927481d-feda-44a8-9a4c-fe592441dc16",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 67200.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "02f5442d-6fcd-4e7a-8b58-b5f1823eb672",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "791d4b91-53e0-4904-9e23-320ddb74123d",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 14490.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "d2a3baf2-f703-4a88-a640-bea33b28c77b",
+      "Descricao": "303 - 3.3.90.30.36 - Pregão Eletrônico",
+      "Valor": 16020.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "9e8a8c60-4dc4-4f0f-afe1-b38b33b91e8a",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "e0189ed7-47a4-405f-9747-77dc0e0f29e3",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "1eae6e29-f1ab-4c45-8e7d-ea0f07f890f1",
+      "Descricao": "302 - 3.3.90.39.50 - Inexigibilidade",
+      "Valor": 68762.05,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "50f2e843-bc22-496d-bc75-b8f21dbbf43c",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "d1ead6ef-a7e7-4b33-b0ee-dfbb23a50c6e",
+      "Descricao": "302 - 3.3.90.39.50 - Inexigibilidade",
+      "Valor": 68679.09,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "3c01db77-c236-41eb-b45a-c4f6fc2e3d57",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "50f2e843-bc22-496d-bc75-b8f21dbbf43c",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "bd08ee71-6bd6-4dce-b854-e76da4add6d2",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 415625.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "19e0daf5-bbb2-40ed-989c-498613c8d3e2",
+      "Descricao": "541 - 3.3.90.30.07 - Pregão Eletrônico",
+      "Valor": 3.44,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-10-01T00:00:00Z",
+      "EsfId": "e3f878fe-9724-4ded-a476-e785b9f3e660",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "c99b8ce9-60e4-439f-b7e7-f066cde8049c",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "7046cd7f-cd0c-4c73-9791-9c52d3ffaf06",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 605640.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "06de88d5-e0e9-4796-bd30-762b49afb305",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 148000.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-07-01T00:00:00Z",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "4f9a6f0c-e2b9-457d-86e7-288dca8e3ac3",
+      "Descricao": "306 - 3.3.90.30.07 - Pregão Eletrônico",
+      "Valor": 4108.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "ad4f4a2f-1001-46fd-a1db-110902ead3b4",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "c99b8ce9-60e4-439f-b7e7-f066cde8049c",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "298bbe64-78b6-4876-9e0b-86993b0652ba",
+      "Descricao": "301 - 3.3.90.39.79 - Pregão Eletrônico",
+      "Valor": 129966.72,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "6b0606f7-ee41-4766-af14-96948b347c86",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "13dbf082-d124-4978-bcd6-2c57ea0c958a",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 291200.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "d40500bf-819c-4bbb-b6d2-b20737c84a79",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "84cf894a-1f94-4b9f-a3d7-fcdb786a791e",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 700580.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "82f4f682-e3dd-4a94-a2a9-7c6bd2ca0bb8",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "a4145724-b477-4bd9-bda5-5088644a2ad8",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 60030.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "440560f3-88f0-4495-996f-f91217f339db",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "84168fac-1242-446b-b1cc-bacd09fb35fd",
+      "Descricao": "302 - 3.3.72.37.01 - Dispensa",
+      "Valor": 87500.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "6d9aa894-ada9-4689-95da-6d45bb604dd5",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "f313b529-b969-4ef5-845d-0e5943ea299d",
+      "Descricao": "302 - 3.3.71.70.01 - Dispensa",
+      "Valor": 400000.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "aa4568e4-8c7f-4639-bab3-c2e78147d476",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "30f601ba-57ab-48b4-b794-817ab6137460",
+      "Descricao": "302 - 3.3.71.70.01 - Dispensa",
+      "Valor": 650000.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "62cb2266-322d-4909-87d2-01850d3b74fe",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "247e3dee-71c2-49a2-b471-6d4eac445b3f",
+      "Descricao": "302 - 3.3.71.70.01 - Dispensa",
+      "Valor": 650000.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-10-01T00:00:00Z",
+      "EsfId": "aee9d6e4-4493-4e18-9a53-b69664e26b51",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "86df7086-4595-4f71-a215-f945c489c2cd",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "c703e321-7db9-464d-88cf-9d3a0e9f3179",
+      "Descricao": "306 - 3.3.90.30.07 - Pregão Eletrônico",
+      "Valor": 3359.2,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "9eefb9e6-a627-47b7-8400-0f5759a7e515",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "c99b8ce9-60e4-439f-b7e7-f066cde8049c",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "36d879c6-e11d-4cc8-ae28-550d6e03082b",
+      "Descricao": "306 - 3.3.90.30.19 - Pregão Eletrônico",
+      "Valor": 1566.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-08-01T00:00:00Z",
+      "EsfId": "f5927770-c911-4ac9-8aa5-f31a246d4d4a",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "c99b8ce9-60e4-439f-b7e7-f066cde8049c",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    },
+    {
+      "Id": "504590b3-d8f1-4d3e-992a-af4d06a39866",
+      "Descricao": "122 - 3.3.90.39.33 - Dispensa",
+      "Valor": 36850.0,
+      "Tipo": "VARIAVEL",
+      "MesReferencia": "2026-09-01T00:00:00Z",
+      "EsfId": "69542233-3b8c-44aa-be9e-83fbcd3f0c4c",
+      "CategoriaId": "086c8f15-381c-4d9c-9c32-f03460955456",
+      "FornecedorId": "5c5021b7-e3ac-4b5f-883b-024709894a80",
+      "UsuarioCriacaoId": "ad3fc853-2b33-40d1-b385-292c7f4dc228",
+      "CreatedAt": "2026-11-02T10:00:00Z",
+      "UpdatedAt": "2026-11-02T10:00:00Z"
+    }
+  ]
+}

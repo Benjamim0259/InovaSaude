@@ -1,7 +1,9 @@
 using BCrypt.Net;
 using InovaSaude.Blazor.Models;
+using InovaSaude.Blazor.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace InovaSaude.Blazor.Data;
 
@@ -142,8 +144,55 @@ public static class SeedData
             logger.LogError(ex, "Erro ao atualizar categoria (pode nao existir)");
         }
 
-        // Seed usuarios de teste (somente em desenvolvimento)
-        if (environment?.IsDevelopment() == true)
+        // 1. Importar dados reais a partir do arquivo de backup (seed inicial)
+        try
+        {
+            var backupService = provider.GetService<BackupService>();
+            if (backupService != null)
+            {
+                var caminhosCandidatos = new[]
+                {
+                    Path.Combine(AppContext.BaseDirectory, "Data", "seed_inicial.json"),
+                    Path.Combine(AppContext.BaseDirectory, "seed_inicial.json"),
+                    Path.Combine(Directory.GetCurrentDirectory(), "Data", "seed_inicial.json"),
+                    Path.Combine(Directory.GetCurrentDirectory(), "seed_inicial.json"),
+                    Path.Combine(Directory.GetCurrentDirectory(), "Test", "seed_inovasaude_caceres_100_real.json"),
+                    Path.Combine(Directory.GetCurrentDirectory(), "..", "Test", "seed_inovasaude_caceres_100_real.json")
+                };
+
+                var caminhoSeed = caminhosCandidatos.FirstOrDefault(File.Exists);
+
+                if (!string.IsNullOrEmpty(caminhoSeed))
+                {
+                    logger.LogInformation($"[SeedData] Arquivo de backup para seed encontrado em: {caminhoSeed}");
+                    var json = await File.ReadAllTextAsync(caminhoSeed);
+                    var backupData = backupService.DesserializarBackup(json);
+                    if (backupData != null)
+                    {
+                        var resultado = await backupService.ImportarAsync(backupData);
+                        if (resultado.Sucesso)
+                        {
+                            logger.LogInformation($"[SeedData] Backup importado com sucesso! ESFs: {resultado.ESFsImportadas}, Funcionários: {resultado.FuncionariosImportados}, Usuários: {resultado.UsuariosImportados}, Despesas: {resultado.DespesasImportadas}");
+                        }
+                        else
+                        {
+                            logger.LogWarning($"[SeedData] Aviso ao importar backup: {resultado.Erro}");
+                        }
+                    }
+                }
+                else
+                {
+                    logger.LogInformation("[SeedData] Nenhum arquivo JSON de backup encontrado para importação automática.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "[SeedData] Erro ao importar dados a partir do arquivo de backup");
+        }
+
+        // 2. Garantir usuários essenciais (se o banco estiver sem usuários ou em modo desenvolvimento)
+        if (!await context.Usuarios.AnyAsync() || environment?.IsDevelopment() == true)
         {
             var usuariosTeste = new[]
             {
